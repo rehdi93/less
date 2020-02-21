@@ -185,7 +185,7 @@ shell_quote(s)
 	newstr = p = (char *) ecalloc(len, sizeof(char));
 	if (use_quotes)
 	{
-		SNPRINTF3(newstr, len, "%c%s%c", openquote, s, closequote);
+		snprintf(newstr, len, "%c%s%c", openquote, s, closequote);
 	} else
 	{
 		while (*s != '\0')
@@ -227,7 +227,7 @@ dirfile(dirname, filename)
 	pathname = (char *) calloc(len, sizeof(char));
 	if (pathname == NULL)
 		return (NULL);
-	SNPRINTF3(pathname, len, "%s%s%s", dirname, PATHNAME_SEP, filename);
+	snprintf(pathname, len, "%s%s%s", dirname, PATHNAME_SEP, filename);
 	/*
 	 * Make sure the file exists.
 	 */
@@ -421,15 +421,15 @@ fcomplete(s)
 		len = (int) strlen(s) + 4;
 		fpat = (char *) ecalloc(len, sizeof(char));
 		if (strchr(slash, '.') == NULL)
-			SNPRINTF1(fpat, len, "%s*.*", s);
+			snprintf(fpat, len, "%s*.*", s);
 		else
-			SNPRINTF1(fpat, len, "%s*", s);
+			snprintf(fpat, len, "%s*", s);
 	}
 #else
 	{
 	int len = (int) strlen(s) + 2;
 	fpat = (char *) ecalloc(len, sizeof(char));
-	SNPRINTF1(fpat, len, "%s*", s);
+	snprintf(fpat, len, "%s*", s);
 	}
 #endif
 	qs = lglob(fpat);
@@ -585,7 +585,7 @@ shellcmd(cmd)
 		{
 			int len = (int) (strlen(shell) + strlen(esccmd) + 5);
 			scmd = (char *) ecalloc(len, sizeof(char));
-			SNPRINTF3(scmd, len, "%s %s %s", shell, shell_coption(), esccmd);
+			snprintf(scmd, len, "%s %s %s", shell, shell_coption(), esccmd);
 			free(esccmd);
 			fd = popen(scmd, "r");
 			free(scmd);
@@ -689,7 +689,7 @@ lglob(filename)
 	do {
 		n = (int) (strlen(drive) + strlen(dir) + strlen(fnd.GLOB_NAME) + 1);
 		pfilename = (char *) ecalloc(n, sizeof(char));
-		SNPRINTF3(pfilename, n, "%s%s%s", drive, dir, fnd.GLOB_NAME);
+		snprintf(pfilename, n, "%s%s%s", drive, dir, fnd.GLOB_NAME);
 		qfilename = shell_quote(pfilename);
 		free(pfilename);
 		if (qfilename != NULL)
@@ -752,7 +752,7 @@ lglob(filename)
 	 */
 	len = (int) (strlen(lessecho) + strlen(filename) + (7*strlen(metachars())) + 24);
 	cmd = (char *) ecalloc(len, sizeof(char));
-	SNPRINTF4(cmd, len, "%s -p0x%x -d0x%x -e%s ", lessecho, openquote, closequote, esc);
+	snprintf(cmd, len, "%s -p0x%x -d0x%x -e%s ", lessecho, openquote, closequote, esc);
 	free(esc);
 	for (s = metachars();  *s != '\0';  s++)
 		sprintf(cmd + strlen(cmd), "-n0x%x ", *s);
@@ -889,7 +889,7 @@ open_altfile(filename, pf, pfd)
 	qfilename = shell_quote(filename);
 	len = (int) (strlen(lessopen) + strlen(qfilename) + 2);
 	cmd = (char *) ecalloc(len, sizeof(char));
-	SNPRINTF1(cmd, len, lessopen, qfilename);
+	snprintf(cmd, len, lessopen, qfilename);
 	free(qfilename);
 	fd = shellcmd(cmd);
 	free(cmd);
@@ -973,7 +973,7 @@ close_altfile(altfilename, filename)
 	}
 	len = (int) (strlen(lessclose) + strlen(filename) + strlen(altfilename) + 2);
 	cmd = (char *) ecalloc(len, sizeof(char));
-	SNPRINTF2(cmd, len, lessclose, filename, altfilename);
+	snprintf(cmd, len, lessclose, filename, altfilename);
 	fd = shellcmd(cmd);
 	free(cmd);
 	if (fd != NULL)

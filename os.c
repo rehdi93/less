@@ -232,7 +232,7 @@ errno_message(filename)
 #endif
 	len = (int) (strlen(filename) + strlen(p) + 3);
 	m = (char *) ecalloc(len, sizeof(char));
-	SNPRINTF2(m, len, "%s: %s", filename, p);
+	snprintf(m, len, "%s: %s", filename, p);
 	return (m);
 }
 

@@ -1424,7 +1424,7 @@ histfile_name(VOID_PARAM)
 	}
 	len = (int) (strlen(home) + strlen(LESSHISTFILE) + 2);
 	name = (char *) ecalloc(len, sizeof(char));
-	SNPRINTF2(name, len, "%s/%s", home, LESSHISTFILE);
+	snprintf(name, len, "%s/%s", home, LESSHISTFILE);
 	return (name);
 }
 

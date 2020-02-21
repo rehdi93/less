@@ -181,17 +181,9 @@ void free();
 #endif
 #endif
 
-#if HAVE_SNPRINTF
-#define SNPRINTF1(str, size, fmt, v1)             snprintf((str), (size), (fmt), (v1))
-#define SNPRINTF2(str, size, fmt, v1, v2)         snprintf((str), (size), (fmt), (v1), (v2))
-#define SNPRINTF3(str, size, fmt, v1, v2, v3)     snprintf((str), (size), (fmt), (v1), (v2), (v3))
-#define SNPRINTF4(str, size, fmt, v1, v2, v3, v4) snprintf((str), (size), (fmt), (v1), (v2), (v3), (v4))
-#else
+#if !HAVE_SNPRINTF
 /* Use unsafe sprintf if we don't have snprintf. */
-#define SNPRINTF1(str, size, fmt, v1)             sprintf((str), (fmt), (v1))
-#define SNPRINTF2(str, size, fmt, v1, v2)         sprintf((str), (fmt), (v1), (v2))
-#define SNPRINTF3(str, size, fmt, v1, v2, v3)     sprintf((str), (fmt), (v1), (v2), (v3))
-#define SNPRINTF4(str, size, fmt, v1, v2, v3, v4) sprintf((str), (fmt), (v1), (v2), (v3), (v4))
+#define snprintf(str, size, fmt, ...)	sprintf((str), (fmt), __VA_ARGS__)
 #endif
 
 #define	BAD_LSEEK	((off_t)-1)
