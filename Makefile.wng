@@ -112,13 +112,10 @@ lessecho: lessecho.o version.o
 defines.h: defines.wn
 	copy $< $@
 
-funcs.h:
-	perl mkfuncs.pl ${LESS_SRC}  > $@
-
 help.c: less.hlp
 	perl mkhelp.pl  < $<  > $@
 
-${OBJ}: less.h defines.h funcs.h
+${OBJ}: less.h defines.h functions.h
 
 TAGS:
 	etags *.c *.h
@@ -127,6 +124,5 @@ clean:
 	-del *.o
 	-del *.exe
 	-del defines.h
-	-del funcs.h
 	-del help.c
 	-if exist TAGS del TAGS

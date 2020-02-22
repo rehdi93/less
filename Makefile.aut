@@ -27,7 +27,7 @@ DISTFILES = \
 	${SRC} regexp.c regexp.h \
 	COPYING INSTALL LICENSE Makefile.in Makefile.aut NEWS README \
 	configure.ac lesskey.c lessecho.c scrsize.c \
-	charset.h cmd.h funcs.h lglob.h less.h lesskey.h option.h \
+	charset.h cmd.h functions.h lglob.h less.h lesskey.h option.h \
 	pckeys.h pattern.h position.h \
 	install.sh defines.h.in mkinstalldirs \
 	less.nro less.man lesskey.nro lesskey.man lessecho.nro lessecho.man \
@@ -36,7 +36,7 @@ DISTFILES = \
 	mkutable $(UNICODE_FILES) \
 	${DISTFILES_W}
 
-all: help.c funcs.h $(UNICODE_FILES) ${srcdir}/configure 
+all: help.c functions.h $(UNICODE_FILES) ${srcdir}/configure 
 
 release: .FORCE
 	${MAKE} -f Makefile.aut tagall 
@@ -55,11 +55,6 @@ help.c: less.hlp
 ${srcdir}/configure: ${srcdir}/configure.ac \
 		${srcdir}/Makefile.in
 	cd ${srcdir}; autoheader; autoconf
-
-funcs.h: ${SRC:%=${srcdir}/%}
-	-mv -f ${srcdir}/funcs.h ${srcdir}/funcs.h.old
-	perl ${srcdir}/mkfuncs.pl ${SRC:%=${srcdir}/%} >${srcdir}/funcs.h
-	if cmp -s funcs.h funcs.h.old; then mv -f funcs.h.old funcs.h; fi
 
 lint:
 	lint -I. ${CPPFLAGS} ${SRC}

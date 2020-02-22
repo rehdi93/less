@@ -43,7 +43,7 @@ defines.h: defines.wn
 	-del defines.h
 	-copy defines.wn defines.h
 
-$(OBJ): less.h defines.h funcs.h cmd.h
+$(OBJ): less.h defines.h functions.h cmd.h
 
 clean:
 	-del *.obj 

@@ -55,7 +55,7 @@ lessecho: lessecho.${O} version.${O}
 defines.h: defines.ds
 	command.com /c copy $< $@
 
-${OBJ}: ${srcdir}/less.h defines.h ${srcdir}/funcs.h
+${OBJ}: ${srcdir}/less.h defines.h ${srcdir}/functions.h
 
 install: all ${srcdir}/less.man ${srcdir}/lesskey.man
 	${INSTALL_PROGRAM} less.exe ${bindir}/less.exe
