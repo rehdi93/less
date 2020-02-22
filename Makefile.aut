@@ -31,8 +31,7 @@ DISTFILES = \
 	pckeys.h pattern.h position.h \
 	install.sh defines.h.in mkinstalldirs \
 	less.nro less.man lesskey.nro lesskey.man lessecho.nro lessecho.man \
-	less.hlp \
-	mkfuncs.pl mkhelp.pl \
+	less.hlp mkhelp.pl \
 	mkutable $(UNICODE_FILES) \
 	${DISTFILES_W}
 

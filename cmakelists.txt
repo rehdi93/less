@@ -34,15 +34,6 @@ set(SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
     output.c pattern.c position.c prompt.c search.c signal.c
     tags.c ttyin.c regexp.c)
 
-if(NOT EXISTS ${CMAKE_SOURCE_DIR}/funcs.h)
-    execute_process(
-        COMMAND ${perl_exe} mkfuncs.pl ${SRC}
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_FILE funcs.h
-        
-    )    
-endif()
-
 if(NOT EXISTS ${CMAKE_SOURCE_DIR}/help.c)
     execute_process(
         COMMAND ${perl_exe} mkhelp.pl
