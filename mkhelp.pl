@@ -40,5 +40,5 @@ use strict;
     }
     # Add an extra null char to avoid having a trailing comma.
     print " 0 };\n";
-    print "constant int size_helpdata = sizeof(helpdata) - 1;\n";
+    print "const int size_helpdata = sizeof(helpdata) - 1;\n";
 }
