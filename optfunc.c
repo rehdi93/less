@@ -135,7 +135,7 @@ opt__O(type, s)
 	int type;
 	char *s;
 {
-	force_logfile = TRUE;
+	force_logfile = true;
 	opt_o(type, s);
 }
 #endif
@@ -387,7 +387,7 @@ opt_p(type, s)
 			every_first_cmd = save(s);
 		} else
 		{
-			plusoption = TRUE;
+			plusoption = true;
 			ungetcc(CHAR_END_COMMAND);
 			ungetsc(s);
 			 /*

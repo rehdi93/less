@@ -26,6 +26,7 @@ extern int fd0;
 #undef NONLS
 #undef NOVIRTUALKEYCODES
 #undef NOUSER
+#undef NOMB
 #include <windows.h>
 #endif
 #endif
@@ -2438,7 +2439,7 @@ win32_kbhit()
 	DWORD read;
 
 	if (keyCount > 0)
-		return (TRUE);
+		return (true);
 
 	currentKey.ascii = 0;
 	currentKey.scan = 0;
@@ -2448,7 +2449,7 @@ win32_kbhit()
 		currentKey.ascii = x11mousebuf[x11mousePos++];
 		--x11mouseCount;
 		keyCount = 1;
-		return (TRUE);
+		return (true);
 	}
 
 	/*
@@ -2459,7 +2460,7 @@ win32_kbhit()
 	{
 		PeekConsoleInput(tty, &ip, 1, &read);
 		if (read == 0)
-			return (FALSE);
+			return (false);
 		ReadConsoleInput(tty, &ip, 1, &read);
 		/* generate an X11 mouse sequence from the mouse event */
 		if (mousecap && ip.EventType == MOUSE_EVENT &&
@@ -2487,10 +2488,10 @@ win32_kbhit()
 			x11mouseCount = 5;
 			currentKey.ascii = ESC;
 			keyCount = 1;
-			return (TRUE);
+			return (true);
 		}
 	} while (ip.EventType != KEY_EVENT ||
-		ip.Event.KeyEvent.bKeyDown != TRUE ||
+		ip.Event.KeyEvent.bKeyDown != true ||
 		ip.Event.KeyEvent.wVirtualScanCode == 0 ||
 		ip.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT ||
 		ip.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL ||
@@ -2534,7 +2535,7 @@ win32_kbhit()
 		}
 	}
 
-	return (TRUE);
+	return (true);
 }
 
 /*
@@ -2552,7 +2553,7 @@ WIN32getch()
 	}
 
 	do {
-		while (win32_kbhit() == FALSE)
+		while (win32_kbhit() == false)
 		{
 			Sleep(20);
 			if (ABORT_SIGS())

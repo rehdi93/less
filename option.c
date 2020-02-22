@@ -14,7 +14,7 @@
 #include "option.h"
 
 static struct loption *pendopt;
-int plusoption = FALSE;
+int plusoption = false;
 
 static char *optstring (char *s, char **p_str, char *printopt,
     char *validchars);
@@ -99,7 +99,7 @@ scan_option(s)
 		return;
 	}
 
-	set_default = FALSE;
+	set_default = false;
 	optname = NULL;
 
 	while (*s != '\0')
@@ -139,7 +139,7 @@ scan_option(s)
 			 * "++" means process the commands at the start of
 			 * EVERY input file.
 			 */
-			plusoption = TRUE;
+			plusoption = true;
 			s = optstring(s, &str, propt('+'), NULL);
 			if (s == NULL)
 				return;
@@ -475,7 +475,7 @@ toggle_option(o, lower, s, how_toggle)
 	}
 
 	if (how_toggle != OPT_NO_TOGGLE && (o->otype & REPAINT))
-		screen_trashed = TRUE;
+		screen_trashed = true;
 }
 
 /*
@@ -607,7 +607,7 @@ num_error(printopt, errp)
 
 	if (errp != NULL)
 	{
-		*errp = TRUE;
+		*errp = true;
 		return (-1);
 	}
 	if (printopt != NULL)
@@ -634,10 +634,10 @@ getnum(sp, printopt, errp)
 	int neg;
 
 	s = skipsp(*sp);
-	neg = FALSE;
+	neg = false;
 	if (*s == '-')
 	{
-		neg = TRUE;
+		neg = true;
 		s++;
 	}
 	if (*s < '0' || *s > '9')
@@ -648,7 +648,7 @@ getnum(sp, printopt, errp)
 		n = 10 * n + *s++ - '0';
 	*sp = s;
 	if (errp != NULL)
-		*errp = FALSE;
+		*errp = false;
 	if (neg)
 		n = -n;
 	return (n);
@@ -687,7 +687,7 @@ getfraction(sp, printopt, errp)
 			frac *= 10;
 	*sp = s;
 	if (errp != NULL)
-		*errp = FALSE;
+		*errp = false;
 	return (frac);
 }
 

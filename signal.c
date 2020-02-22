@@ -114,11 +114,11 @@ wbreak_handler(dwCtrlType)
 	case CTRL_C_EVENT:
 	case CTRL_BREAK_EVENT:
 		sigs |= S_INTERRUPT;
-		return (TRUE);
+		return (true);
 	default:
 		break;
 	}
-	return (FALSE);
+	return (false);
 }
 #endif
 
@@ -142,7 +142,7 @@ init_signals(on)
 		 * Set signal handlers.
 		 */
 #if MSDOS_COMPILER==WIN32C
-		SetConsoleCtrlHandler(wbreak_handler, TRUE);
+		SetConsoleCtrlHandler(wbreak_handler, true);
 #else
 		(void) LSIGNAL(SIGINT, u_interrupt);
 #endif
@@ -167,7 +167,7 @@ init_signals(on)
 		 * Restore signals to defaults.
 		 */
 #if MSDOS_COMPILER==WIN32C
-		SetConsoleCtrlHandler(wbreak_handler, FALSE);
+		SetConsoleCtrlHandler(wbreak_handler, false);
 #else
 		(void) LSIGNAL(SIGINT, SIG_DFL);
 #endif

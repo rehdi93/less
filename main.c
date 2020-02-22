@@ -17,7 +17,7 @@ int	is_tty;
 IFILE	curr_ifile = NULL_IFILE;
 IFILE	old_ifile = NULL_IFILE;
 struct scrpos initial_scrpos;
-int	any_display = FALSE;
+int	any_display = false;
 POSITION	start_attnpos = NULL_POSITION;
 POSITION	end_attnpos = NULL_POSITION;
 int	wscroll;
@@ -28,7 +28,7 @@ int	dohelp;
 
 #if LOGFILE
 int	logfile = -1;
-int	force_logfile = FALSE;
+int	force_logfile = false;
 char *	namelogfile = NULL;
 #endif
 
@@ -271,7 +271,7 @@ main(argc, argv)
 		if (quit_if_one_screen)
 		{
 			if (nifile() > 1) /* If more than one file, -F cannot be used */
-				quit_if_one_screen = FALSE;
+				quit_if_one_screen = false;
 			else if (!no_init)
 				one_screen = get_one_screen();
 		}

@@ -162,7 +162,7 @@ ch_get()
 			return bp->data[ch_offset];
 	}
 
-	slept = FALSE;
+	slept = false;
 
 	/*
 	 * Look for a buffer holding the desired block.
@@ -312,7 +312,7 @@ ch_get()
 			Sleep(1000);
 #endif
 #endif
-			slept = TRUE;
+			slept = true;
 
 #if HAVE_STAT_INO
 			if (follow_mode == FOLLOW_NAME)
@@ -388,13 +388,13 @@ ch_ungetchar(c)
 	void
 end_logfile()
 {
-	static int tried = FALSE;
+	static int tried = false;
 
 	if (logfile < 0)
 		return;
 	if (!tried && ch_fsize == NULL_POSITION)
 	{
-		tried = TRUE;
+		tried = true;
 		ierror("Finishing logfile", NULL_PARG);
 		while (ch_forw_get() != EOI)
 			if (ABORT_SIGS())
@@ -415,21 +415,21 @@ sync_logfile()
 {
 	struct buf *bp;
 	struct bufnode *bn;
-	int warned = FALSE;
+	int warned = false;
 	BLOCKNUM block;
 	BLOCKNUM nblocks;
 
 	nblocks = (ch_fpos + LBUFSIZE - 1) / LBUFSIZE;
 	for (block = 0;  block < nblocks;  block++)
 	{
-		int wrote = FALSE;
+		int wrote = false;
 		FOR_BUFS(bn)
 		{
 			bp = bufnode_buf(bn);
 			if (bp->block == block)
 			{
 				write(logfile, (char *) bp->data, bp->datasize);
-				wrote = TRUE;
+				wrote = true;
 				break;
 			}
 		}
@@ -437,7 +437,7 @@ sync_logfile()
 		{
 			error("Warning: log file is incomplete",
 				NULL_PARG);
-			warned = TRUE;
+			warned = true;
 		}
 	}
 }
@@ -460,9 +460,9 @@ buffered(block)
 	{
 		bp = bufnode_buf(bn);
 		if (bp->block == block)
-			return (TRUE);
+			return (true);
 	}
-	return (FALSE);
+	return (false);
 }
 
 /*
@@ -886,7 +886,7 @@ ch_init(f, flags)
 	void
 ch_close()
 {
-	int keepstate = FALSE;
+	int keepstate = false;
 
 	if (thisfile == NULL)
 		return;
@@ -898,7 +898,7 @@ ch_close()
 		 */
 		ch_delbufs();
 	} else
-		keepstate = TRUE;
+		keepstate = true;
 	if (!(ch_flags & CH_KEEPOPEN))
 	{
 		/*
@@ -911,7 +911,7 @@ ch_close()
 			close(ch_file);
 		ch_file = -1;
 	} else
-		keepstate = TRUE;
+		keepstate = true;
 	if (!keepstate)
 	{
 		/*

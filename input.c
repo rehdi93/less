@@ -136,7 +136,7 @@ get_forw_line:
 	/*
 	 * Read each character in the line and append to the line buffer.
 	 */
-	chopped = FALSE;
+	chopped = false;
 	for (;;)
 	{
 		if (ABORT_SIGS())
@@ -154,9 +154,9 @@ get_forw_line:
 			if (backchars > 0 && !chopline && hshift == 0)
 			{
 				new_pos -= backchars + 1;
-				endline = FALSE;
+				endline = false;
 			} else
-				endline = TRUE;
+				endline = true;
 			break;
 		}
 		if (c != '\r')
@@ -185,13 +185,13 @@ get_forw_line:
 					c = ch_forw_get();
 				} while (c != '\n' && c != EOI);
 				new_pos = ch_tell();
-				endline = TRUE;
-				quit_if_one_screen = FALSE;
-				chopped = TRUE;
+				endline = true;
+				quit_if_one_screen = false;
+				chopped = true;
 			} else
 			{
 				new_pos = ch_tell() - backchars;
-				endline = FALSE;
+				endline = false;
 			}
 			break;
 		}
@@ -349,13 +349,13 @@ get_back_line:
 		null_line();
 		return (NULL_POSITION);
 	}
-	endline = FALSE;
+	endline = false;
 	prewind();
 	plinenum(new_pos);
     loop:
 	begin_new_pos = new_pos;
 	(void) ch_seek(new_pos);
-	chopped = FALSE;
+	chopped = false;
 
 	do
 	{
@@ -374,7 +374,7 @@ get_back_line:
 				backchars++;
 				goto shift;
 			}
-			endline = TRUE;
+			endline = true;
 			break;
 		}
 		backchars = pappend(c, ch_tell()-1);
@@ -387,9 +387,9 @@ get_back_line:
 			 */
 			if (chopline || hshift > 0)
 			{
-				endline = TRUE;
-				chopped = TRUE;
-				quit_if_one_screen = FALSE;
+				endline = true;
+				chopped = true;
+				quit_if_one_screen = false;
 				break;
 			}
 		shift:

@@ -805,7 +805,7 @@ is_ubin_char(ch)
 		/*
 		 * Consider it binary if it can't be converted.
 		 */
-		BOOL used_default = TRUE;
+		BOOL used_default = true;
 		WideCharToMultiByte(GetConsoleOutputCP(), WC_NO_BEST_FIT_CHARS, (LPCWSTR) &ch, 1, NULL, 0, NULL, &used_default);
 		if (used_default)
 			ubin = 1;

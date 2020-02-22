@@ -341,7 +341,7 @@ mca_opt_first_char(c)
 		{
 		case '_':
 			/* "__" = long option name. */
-			optgetname = TRUE;
+			optgetname = true;
 			mca_opt_toggle();
 			return (MCA_MORE);
 		}
@@ -367,7 +367,7 @@ mca_opt_first_char(c)
 			return (MCA_MORE);
 		case '-':
 			/* "--" = long option name. */
-			optgetname = TRUE;
+			optgetname = true;
 			mca_opt_toggle();
 			return (MCA_MORE);
 		}
@@ -465,7 +465,7 @@ mca_opt_char(c)
 			error("There is no --%s option", &parg);
 			return (MCA_DONE);
 		}
-		optgetname = FALSE;
+		optgetname = false;
 		cmd_reset();
 	} else
 	{
@@ -1792,7 +1792,7 @@ commands()
 			 * Change the setting of an  option.
 			 */
 			optflag = OPT_TOGGLE;
-			optgetname = FALSE;
+			optgetname = false;
 			mca_opt_toggle();
 			c = getcc();
 			goto again;
@@ -1802,7 +1802,7 @@ commands()
 			 * Report the setting of an option.
 			 */
 			optflag = OPT_NO_TOGGLE;
-			optgetname = FALSE;
+			optgetname = false;
 			mca_opt_toggle();
 			c = getcc();
 			goto again;

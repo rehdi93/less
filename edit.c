@@ -432,7 +432,7 @@ edit_ifile(ifile)
 	set_altpipe(curr_ifile, altpipe);
 	set_open(curr_ifile); /* File has been opened */
 	get_pos(curr_ifile, &initial_scrpos);
-	new_file = TRUE;
+	new_file = true;
 	ch_init(f, chflags);
 
 	if (!(chflags & CH_HELPFILE))
@@ -463,7 +463,7 @@ edit_ifile(ifile)
 
 	no_display = !any_display;
 	flush();
-	any_display = TRUE;
+	any_display = true;
 
 	if (is_tty)
 	{
