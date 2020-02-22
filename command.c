@@ -83,7 +83,7 @@ struct ungot {
 };
 static struct ungot* ungot = NULL;
 
-static void multi_search LESSPARAMS((char *pattern, int n, int silent));
+static void multi_search (char *pattern, int n, int silent);
 
 /*
  * Move the cursor to start of prompt line before executing a command.
@@ -91,7 +91,7 @@ static void multi_search LESSPARAMS((char *pattern, int n, int silent));
  * updating the screen.
  */
 	static void
-cmd_exec(VOID_PARAM)
+cmd_exec()
 {
 	clear_attn();
 	clear_bot();
@@ -115,7 +115,7 @@ set_mca(action)
  * Indicate we are not reading a multi-character command.
  */
 	static void
-clear_mca(VOID_PARAM)
+clear_mca()
 {
 	if (mca == 0)
 		return;
@@ -129,7 +129,7 @@ clear_mca(VOID_PARAM)
 	static void
 start_mca(action, prompt, mlist, cmdflags)
 	int action;
-	constant char *prompt;
+	const char *prompt;
 	void *mlist;
 	int cmdflags;
 {
@@ -139,7 +139,7 @@ start_mca(action, prompt, mlist, cmdflags)
 }
 
 	public int
-in_mca(VOID_PARAM)
+in_mca()
 {
 	return (mca != 0 && mca != A_PREFIX);
 }
@@ -148,7 +148,7 @@ in_mca(VOID_PARAM)
  * Set up the display to start a new search command.
  */
 	static void
-mca_search(VOID_PARAM)
+mca_search()
 {
 #if HILITE_SEARCH
 	if (search_type & SRCH_FILTER)
@@ -188,7 +188,7 @@ mca_search(VOID_PARAM)
  * Set up the display to start a new toggle-option command.
  */
 	static void
-mca_opt_toggle(VOID_PARAM)
+mca_opt_toggle()
 {
 	int no_prompt;
 	int flag;
@@ -221,7 +221,7 @@ mca_opt_toggle(VOID_PARAM)
  * Execute a multicharacter command.
  */
 	static void
-exec_mca(VOID_PARAM)
+exec_mca()
 {
 	char *cbuf;
 
@@ -661,7 +661,7 @@ mca_char(c)
  * Discard any buffered file data.
  */
 	static void
-clear_buffers(VOID_PARAM)
+clear_buffers()
 {
 	if (!(ch_getflags() & CH_CANSEEK))
 		return;
@@ -676,7 +676,7 @@ clear_buffers(VOID_PARAM)
  * Make sure the screen is displayed.
  */
 	static void
-make_display(VOID_PARAM)
+make_display()
 {
 	/*
 	 * If nothing is displayed yet, display starting from initial_scrpos.
@@ -716,9 +716,9 @@ make_display(VOID_PARAM)
  * Display the appropriate prompt.
  */
 	static void
-prompt(VOID_PARAM)
+prompt()
 {
-	constant char *p;
+	const char *p;
 
 	if (ungot != NULL && ungot->ug_char != CHAR_END_COMMAND)
 	{
@@ -807,7 +807,7 @@ prompt(VOID_PARAM)
  * Display the less version message.
  */
 	public void
-dispversion(VOID_PARAM)
+dispversion()
 {
 	PARG parg;
 
@@ -819,7 +819,7 @@ dispversion(VOID_PARAM)
  * Return a character to complete a partial command, if possible.
  */
 	static LWCHAR
-getcc_end_command(VOID_PARAM)
+getcc_end_command()
 {
 	switch (mca)
 	{
@@ -843,7 +843,7 @@ getcc_end_command(VOID_PARAM)
  * (characters previously given to ungetcc or ungetsc).
  */
 	static LWCHAR
-getccu(VOID_PARAM)
+getccu()
 {
 	LWCHAR c;
 	if (ungot == NULL)
@@ -874,7 +874,7 @@ getccu(VOID_PARAM)
 getcc_repl(orig, repl, gr_getc, gr_ungetc)
 	char const* orig;
 	char const* repl;
-	LWCHAR (*gr_getc)(VOID_PARAM);
+	LWCHAR (*gr_getc)();
 	void (*gr_ungetc)(LWCHAR);
 {
 	LWCHAR c;
@@ -915,7 +915,7 @@ getcc_repl(orig, repl, gr_getc, gr_ungetc)
  * Get command character.
  */
 	public int
-getcc(VOID_PARAM)
+getcc()
 {
 	/* Replace kent (keypad Enter) with a newline. */
 	return getcc_repl(kent, "\n", getccu, ungetcc);
@@ -954,7 +954,7 @@ ungetsc(s)
  * Peek the next command character, without consuming it.
  */
 	public LWCHAR
-peekcc(VOID_PARAM)
+peekcc()
 {
 	LWCHAR c = getcc();
 	ungetcc(c);
@@ -1105,7 +1105,7 @@ forw_loop(until_hilite)
  * Accept and execute commands until a quit command.
  */
 	public void
-commands(VOID_PARAM)
+commands()
 {
 	int c;
 	int action;

@@ -290,7 +290,7 @@ main(argc, argv)
  */
 	public char *
 save(s)
-	constant char *s;
+	const char *s;
 {
 	char *p;
 
@@ -303,14 +303,14 @@ save(s)
  * Allocate memory.
  * Like calloc(), but never returns an error (NULL).
  */
-	public VOID_POINTER
+	public void*
 ecalloc(count, size)
 	int count;
 	unsigned int size;
 {
-	VOID_POINTER p;
+	void* p;
 
-	p = (VOID_POINTER) calloc(count, size);
+	p = (void*) calloc(count, size);
 	if (p != NULL)
 		return (p);
 	error("Cannot allocate memory", NULL_PARG);

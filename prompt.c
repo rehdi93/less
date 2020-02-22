@@ -32,25 +32,25 @@ extern char *editproto;
  * Prototypes for the three flavors of prompts.
  * These strings are expanded by pr_expand().
  */
-static constant char s_proto[] =
+static const char s_proto[] =
   "?n?f%f .?m(%T %i of %m) ..?e(END) ?x- Next\\: %x..%t";
-static constant char m_proto[] =
+static const char m_proto[] =
   "?n?f%f .?m(%T %i of %m) ..?e(END) ?x- Next\\: %x.:?pB%pB\\%:byte %bB?s/%s...%t";
-static constant char M_proto[] =
+static const char M_proto[] =
   "?f%f .?n?m(%T %i of %m) ..?ltlines %lt-%lb?L/%L. :byte %bB?s/%s. .?e(END) ?x- Next\\: %x.:?pB%pB\\%..%t";
-static constant char e_proto[] =
+static const char e_proto[] =
   "?f%f .?m(%T %i of %m) .?ltlines %lt-%lb?L/%L. .byte %bB?s/%s. ?e(END) :?pB%pB\\%..%t";
-static constant char h_proto[] =
+static const char h_proto[] =
   "HELP -- ?eEND -- Press g to see it again:Press RETURN for more., or q when done";
-static constant char w_proto[] =
+static const char w_proto[] =
   "Waiting for data";
-static constant char more_proto[] =
+static const char more_proto[] =
   "--More--(?eEND ?x- Next\\: %x.:?pB%pB\\%:byte %bB?s/%s...%t)";
 
 public char *prproto[3];
-public char constant *eqproto = e_proto;
-public char constant *hproto = h_proto;
-public char constant *wproto = w_proto;
+public char const *eqproto = e_proto;
+public char const *hproto = h_proto;
+public char const *wproto = w_proto;
 
 static char message[PROMPT_SIZE];
 static char *mp;
@@ -59,7 +59,7 @@ static char *mp;
  * Initialize the prompt prototype strings.
  */
 	public void
-init_prompt(VOID_PARAM)
+init_prompt()
 {
 	prproto[0] = save(s_proto);
 	prproto[1] = save(less_is_more ? more_proto : m_proto);
@@ -143,7 +143,7 @@ ap_int(num)
  * Append a question mark to the end of the message.
  */
 	static void
-ap_quest(VOID_PARAM)
+ap_quest()
 {
 	ap_str("?");
 }
@@ -394,9 +394,9 @@ protochar(c, where, iseditproto)
  * where to resume parsing the string.
  * We must keep track of nested IFs and skip them properly.
  */
-	static constant char *
+	static const char *
 skipcond(p)
-	constant char *p;
+	const char *p;
 {
 	int iflevel;
 
@@ -452,9 +452,9 @@ skipcond(p)
 /*
  * Decode a char that represents a position on the screen.
  */
-	static constant char *
+	static const char *
 wherechar(p, wp)
-	char constant *p;
+	char const *p;
 	int *wp;
 {
 	switch (*p)
@@ -478,10 +478,10 @@ wherechar(p, wp)
  */
 	public char *
 pr_expand(proto, maxwidth)
-	constant char *proto;
+	const char *proto;
 	int maxwidth;
 {
-	constant char *p;
+	const char *p;
 	int c;
 	int where;
 
@@ -553,7 +553,7 @@ pr_expand(proto, maxwidth)
  * Return a message suitable for printing by the "=" command.
  */
 	public char *
-eq_message(VOID_PARAM)
+eq_message()
 {
 	return (pr_expand(eqproto, 0));
 }
@@ -565,7 +565,7 @@ eq_message(VOID_PARAM)
  * and the caller will prompt with a colon.
  */
 	public char *
-pr_string(VOID_PARAM)
+pr_string()
 {
 	char *prompt;
 	int type;
@@ -582,7 +582,7 @@ pr_string(VOID_PARAM)
  * Return a message suitable for printing while waiting in the F command.
  */
 	public char *
-wait_message(VOID_PARAM)
+wait_message()
 {
 	return (pr_expand(wproto, sc_width-so_s_width-so_e_width-2));
 }

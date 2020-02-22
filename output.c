@@ -43,7 +43,7 @@ extern int have_ul;
  * Display the line which is in the line buffer.
  */
 	public void
-put_line(VOID_PARAM)
+put_line()
 {
 	int c;
 	int i;
@@ -93,7 +93,7 @@ static char *ob = obuf;
  * overwritten or scrolled away.
  */
 	public void
-flush(VOID_PARAM)
+flush()
 {
 	int n;
 	int fd;
@@ -444,7 +444,7 @@ putchr(c)
  */
 	public void
 putstr(s)
-	constant char *s;
+	const char *s;
 {
 	while (*s != '\0')
 		putchr(*s++);
@@ -580,7 +580,7 @@ less_printf(fmt, parg)
  * become the next command.
  */
 	public void
-get_return(VOID_PARAM)
+get_return()
 {
 	int c;
 

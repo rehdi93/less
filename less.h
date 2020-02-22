@@ -29,28 +29,6 @@
 #undef HAVE_SIGSETMASK
 #endif
 
-/*
- * Language details.
- */
-#if HAVE_ANSI_PROTOS
-#define LESSPARAMS(a) a
-#else
-#define LESSPARAMS(a) ()
-#endif
-#if HAVE_VOID
-#define	VOID_POINTER	void *
-#define	VOID_PARAM	void
-#else
-#define	VOID_POINTER	char *
-#define	VOID_PARAM
-#define	void  int
-#endif
-#if HAVE_CONST
-#define	constant	const
-#else
-#define	constant
-#endif
-
 #define	public		/* PUBLIC FUNCTION */
 
 /* Library function declarations */
@@ -107,7 +85,7 @@
 #if !HAVE_STDLIB_H
 char *getenv();
 off_t lseek();
-VOID_POINTER calloc();
+void* calloc();
 void free();
 #endif
 
@@ -271,7 +249,7 @@ typedef off_t		LINENUM;
 /*
  * An IFILE represents an input file.
  */
-#define	IFILE		VOID_POINTER
+#define	IFILE		void*
 #define	NULL_IFILE	((IFILE)NULL)
 
 /*
@@ -521,14 +499,15 @@ struct mlist;
 struct loption;
 struct hilite_tree;
 #include "pattern.h"
-#include "funcs.h"
+#include "functions.h"
 
 /* Functions not included in funcs.h */
-void postoa LESSPARAMS ((POSITION, char*));
-void linenumtoa LESSPARAMS ((LINENUM, char*));
-void inttoa LESSPARAMS ((int, char*));
-int lstrtoi LESSPARAMS ((char*, char**));
-POSITION lstrtopos LESSPARAMS ((char*, char**));
+void postoa (POSITION, char*);
+void linenumtoa (LINENUM, char*);
+void inttoa (int, char*);
+int lstrtoi (char*, char**);
+POSITION lstrtopos (char*, char**);
+
 #if MSDOS_COMPILER==WIN32C
-int pclose LESSPARAMS ((FILE*));
+int pclose(FILE*);
 #endif

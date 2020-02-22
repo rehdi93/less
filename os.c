@@ -169,7 +169,7 @@ start:
  * Interrupt a pending iread().
  */
 	public void
-intread(VOID_PARAM)
+intread()
 {
 	LONG_JUMP(read_label, 1);
 }
@@ -179,7 +179,7 @@ intread(VOID_PARAM)
  */
 #if HAVE_TIME
 	public time_type
-get_time(VOID_PARAM)
+get_time()
 {
 	time_type t;
 
@@ -306,10 +306,10 @@ strchr(s, c)
 #endif
 
 #if !HAVE_MEMCPY
-	VOID_POINTER
+	void*
 memcpy(dst, src, len)
-	VOID_POINTER dst;
-	VOID_POINTER src;
+	void* dst;
+	void* src;
 	int len;
 {
 	char *dstp = (char *) dst;

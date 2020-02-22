@@ -213,7 +213,7 @@ int errors;
 extern char version[];
 
 	void
-usage(VOID_PARAM)
+usage()
 {
 	fprintf(stderr, "usage: lesskey [-o output] [input]\n");
 	exit(1);
@@ -336,7 +336,7 @@ parse_args(argc, argv)
  * Initialize data structures.
  */
 	void
-init_tables(VOID_PARAM)
+init_tables()
 {
 	cmdtable.names = cmdnames;
 	cmdtable.pbuffer = cmdtable.buffer;

@@ -40,9 +40,9 @@ static POSITION pendpos;
 static char *end_ansi_chars;
 static char *mid_ansi_chars;
 
-static int attr_swidth LESSPARAMS ((int a));
-static int attr_ewidth LESSPARAMS ((int a));
-static int do_append LESSPARAMS ((LWCHAR ch, char *rep, POSITION pos));
+static int attr_swidth (int a);
+static int attr_ewidth (int a);
+static int do_append (LWCHAR ch, char *rep, POSITION pos);
 
 extern int sigs;
 extern int bs_mode;
@@ -72,7 +72,7 @@ static POSITION mbc_pos;
  * Initialize from environment variables.
  */
 	public void
-init_line(VOID_PARAM)
+init_line()
 {
 	end_ansi_chars = lgetenv("LESSANSIENDCHARS");
 	if (isnullenv(end_ansi_chars))
@@ -91,7 +91,7 @@ init_line(VOID_PARAM)
  * Expand the line buffer.
  */
 	static int
-expand_linebuf(VOID_PARAM)
+expand_linebuf()
 {
 	/* Double the size of the line buffer. */
 	int new_size = size_linebuf * 2;
@@ -141,7 +141,7 @@ is_ascii_char(ch)
  * Rewind the line buffer.
  */
 	public void
-prewind(VOID_PARAM)
+prewind()
 {
 	curr = 0;
 	column = 0;
@@ -380,7 +380,7 @@ pshift(shift)
  *
  */
 	public void
-pshift_all(VOID_PARAM)
+pshift_all()
 {
 	pshift(column);
 }
@@ -504,7 +504,7 @@ pwidth(ch, a, prev_ch)
  * Return 1 if one is found.
  */
 	static int
-backc(VOID_PARAM)
+backc()
 {
 	LWCHAR prev_ch;
 	char *p = linebuf + curr;
@@ -532,7 +532,7 @@ backc(VOID_PARAM)
  * Are we currently within a recognized ANSI escape sequence?
  */
 	static int
-in_ansi_esc_seq(VOID_PARAM)
+in_ansi_esc_seq()
 {
 	char *p;
 
@@ -584,7 +584,7 @@ is_ansi_middle(ch)
 	public void
 skip_ansi(pp, limit)
 	char **pp;
-	constant char *limit;
+	const char *limit;
 {
 	LWCHAR c;
 	do {
@@ -1031,7 +1031,7 @@ do_append(ch, rep, pos)
  *
  */
 	public int
-pflushmbc(VOID_PARAM)
+pflushmbc()
 {
 	int r = 0;
 
@@ -1048,7 +1048,7 @@ pflushmbc(VOID_PARAM)
  * Switch to normal attribute at end of line.
  */
 	static void
-add_attr_normal(VOID_PARAM)
+add_attr_normal()
 {
 	char *p = "\033[m";
 
@@ -1200,7 +1200,7 @@ gline(i, ap)
  * Indicate that there is no current line.
  */
 	public void
-null_line(VOID_PARAM)
+null_line()
 {
 	is_null_line = 1;
 	cshift = 0;
@@ -1334,7 +1334,7 @@ back_raw_line(curr_pos, linep, line_lenp)
  * Find the shift necessary to show the end of the longest displayed line.
  */
 	public int
-rrshift(VOID_PARAM)
+rrshift()
 {
 	POSITION pos;
 	int save_width;

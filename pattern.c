@@ -57,7 +57,7 @@ compile_pattern2(pattern, search_type, comp_pattern, show_error)
 	*comp_pattern = comp;
 #endif
 #if HAVE_PCRE
-	constant char *errstring;
+	const char *errstring;
 	int erroffset;
 	PARG parg;
 	pcre *comp = pcre_compile(pattern,
@@ -422,7 +422,7 @@ match_pattern(pattern, tpattern, line, line_len, sp, ep, notbol, search_type)
  * Return the name of the pattern matching library.
  */
 	public char *
-pattern_lib_name(VOID_PARAM)
+pattern_lib_name()
 {
 #if HAVE_GNU_REGEX
 	return ("GNU");

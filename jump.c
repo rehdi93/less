@@ -19,7 +19,7 @@ extern int top_scroll;
  * Jump to the end of the file.
  */
 	public void
-jump_forw(VOID_PARAM)
+jump_forw()
 {
 	POSITION pos;
 	POSITION end_pos;
@@ -57,7 +57,7 @@ jump_forw(VOID_PARAM)
  * Jump to the last buffered line in the file.
  */
 	public void
-jump_forw_buffered(VOID_PARAM)
+jump_forw_buffered()
 {
 	POSITION end;
 
@@ -108,7 +108,7 @@ jump_back(linenum)
  * Repaint the screen.
  */
 	public void
-repaint(VOID_PARAM)
+repaint()
 {
 	struct scrpos scrpos;
 	/*

@@ -504,7 +504,7 @@ static struct loption option[] =
  * Initialize each option to its default value.
  */
 	public void
-init_option(VOID_PARAM)
+init_option()
 {
 	struct loption *o;
 	char *p;

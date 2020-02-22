@@ -66,7 +66,7 @@ extern int screen_trashed;
  * Initialize the line number structures.
  */
 	public void
-clr_linenum(VOID_PARAM)
+clr_linenum()
 {
 	struct linenum_info *p;
 
@@ -202,7 +202,7 @@ add_lnum(linenum, pos)
  * line number, print a message to tell the user what we're doing.
  */
 	static void
-longloopmessage(VOID_PARAM)
+longloopmessage()
 {
 	ierror("Calculating line numbers", NULL_PARG);
 }
@@ -213,7 +213,7 @@ static time_type startime;
 #endif
 
 	static void
-longish(VOID_PARAM)
+longish()
 {
 #if HAVE_TIME
 	if (loopcount >= 0 && ++loopcount > 100)
@@ -239,7 +239,7 @@ longish(VOID_PARAM)
  * a lengthy line number calculation.
  */
 	static void
-abort_long(VOID_PARAM)
+abort_long()
 {
 	if (linenums == OPT_ONPLUS)
 		/*

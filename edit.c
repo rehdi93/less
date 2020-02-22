@@ -165,7 +165,7 @@ close_pipe(FILE *pipefd)
  * Close the current input file.
  */
 	static void
-close_file(VOID_PARAM)
+close_file()
 {
 	struct scrpos scrpos;
 	int chflags;
@@ -569,7 +569,7 @@ edit_list(filelist)
  * Edit the first file in the command line (ifile) list.
  */
 	public int
-edit_first(VOID_PARAM)
+edit_first()
 {
 	if (nifile() == 0)
 		return (edit_stdin());
@@ -581,7 +581,7 @@ edit_first(VOID_PARAM)
  * Edit the last file in the command line (ifile) list.
  */
 	public int
-edit_last(VOID_PARAM)
+edit_last()
 {
 	curr_ifile = NULL_IFILE;
 	return (edit_prev(1));
@@ -688,7 +688,7 @@ edit_index(n)
 }
 
 	public IFILE
-save_curr_ifile(VOID_PARAM)
+save_curr_ifile()
 {
 	if (curr_ifile != NULL_IFILE)
 		hold_ifile(curr_ifile, 1);
@@ -741,7 +741,7 @@ reedit_ifile(save_ifile)
 }
 
 	public void
-reopen_curr_ifile(VOID_PARAM)
+reopen_curr_ifile()
 {
 	IFILE save_ifile = save_curr_ifile();
 	close_file();
@@ -752,7 +752,7 @@ reopen_curr_ifile(VOID_PARAM)
  * Edit standard input.
  */
 	public int
-edit_stdin(VOID_PARAM)
+edit_stdin()
 {
 	if (isatty(fd0))
 	{
@@ -767,7 +767,7 @@ edit_stdin(VOID_PARAM)
  * Used if standard output is not a tty.
  */
 	public void
-cat_file(VOID_PARAM)
+cat_file()
 {
 	int c;
 

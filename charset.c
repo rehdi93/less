@@ -239,7 +239,7 @@ icharset(name, no_error)
  * Define a charset, given a locale name.
  */
 	static void
-ilocale(VOID_PARAM)
+ilocale()
 {
 	int c;
 
@@ -268,7 +268,7 @@ setfmt(s, fmtvarptr, attrptr, default_fmt)
 	if (s && utf_mode)
 	{
 		/* It would be too hard to account for width otherwise.  */
-		char constant *t = s;
+		char const *t = s;
 		while (*t)
 		{
 			if (*t < ' ' || *t > '~')
@@ -309,7 +309,7 @@ setfmt(s, fmtvarptr, attrptr, default_fmt)
  *
  */
 	static void
-set_charset(VOID_PARAM)
+set_charset()
 {
 	char *s;
 
@@ -389,7 +389,7 @@ set_charset(VOID_PARAM)
  * Initialize charset data structures.
  */
 	public void
-init_charset(VOID_PARAM)
+init_charset()
 {
 	char *s;
 
@@ -578,7 +578,7 @@ utf_skip_to_lead(pp, limit)
  */
 	public LWCHAR
 get_wchar(p)
-	constant char *p;
+	const char *p;
 {
 	switch (utf_len(p[0]))
 	{
@@ -682,7 +682,7 @@ put_wchar(pp, ch)
 step_char(pp, dir, limit)
 	char **pp;
 	signed int dir;
-	constant char *limit;
+	const char *limit;
 {
 	LWCHAR ch;
 	int len;

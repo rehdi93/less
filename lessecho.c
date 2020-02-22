@@ -31,14 +31,14 @@ static char metachars[64] = "";
 static int num_metachars = 0;
 
 	static void
-pr_usage(VOID_PARAM)
+pr_usage()
 {
 	fprintf(stderr,
 		"usage: lessecho [-ox] [-cx] [-pn] [-dn] [-mx] [-nn] [-ex] [-fn] [-a] file ...\n");
 }
 
 	static void
-pr_version(VOID_PARAM)
+pr_version()
 {
 	char *p;
 	char buf[10];

@@ -197,7 +197,7 @@ init_pattern(info)
  * Initialize search variables.
  */
 	public void
-init_search(VOID_PARAM)
+init_search()
 {
 	init_pattern(&search_info);
 	init_pattern(&filter_info);
@@ -207,7 +207,7 @@ init_search(VOID_PARAM)
  * Determine which text conversions to perform before pattern matching.
  */
 	static int
-get_cvt_ops(VOID_PARAM)
+get_cvt_ops()
 {
 	int ops = 0;
 	if (is_caseless || bs_mode == BS_SPECIAL)
@@ -290,7 +290,7 @@ repaint_hilite(on)
  * Clear the attn hilite.
  */
 	public void
-clear_attn(VOID_PARAM)
+clear_attn()
 {
 	int sindex;
 	POSITION old_start_attnpos;
@@ -337,7 +337,7 @@ clear_attn(VOID_PARAM)
  * Hide search string highlighting.
  */
 	public void
-undo_search(VOID_PARAM)
+undo_search()
 {
 	if (!prev_pattern(&search_info))
 	{
@@ -382,13 +382,13 @@ clr_hlist(anchor)
 }
 
 	public void
-clr_hilite(VOID_PARAM)
+clr_hilite()
 {
 	clr_hlist(&hilite_anchor);
 }
 
 	public void
-clr_filter(VOID_PARAM)
+clr_filter()
 {
 	clr_hlist(&filter_anchor);
 }
@@ -1024,7 +1024,7 @@ hilite_line(linepos, line, line_len, chpos, sp, ep, cvt_ops)
  * Find matching text which is currently on screen and highlight it.
  */
 	static void
-hilite_screen(VOID_PARAM)
+hilite_screen()
 {
 	struct scrpos scrpos;
 
@@ -1039,7 +1039,7 @@ hilite_screen(VOID_PARAM)
  * Change highlighting parameters.
  */
 	public void
-chg_hilite(VOID_PARAM)
+chg_hilite()
 {
 	/*
 	 * Erase any highlights currently on screen.
@@ -1370,7 +1370,7 @@ hist_pattern(search_type)
  * Updates the internal search state to reflect a change in the -i flag.
  */
 	public void
-chg_caseless(VOID_PARAM)
+chg_caseless()
 {
 	if (!is_ucase_pattern)
 		/*
@@ -1723,7 +1723,7 @@ set_filter_pattern(pattern, search_type)
  * Is there a line filter in effect?
  */
 	public int
-is_filtering(VOID_PARAM)
+is_filtering()
 {
 	if (ch_getflags() & CH_HELPFILE)
 		return (0);

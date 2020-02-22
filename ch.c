@@ -123,8 +123,8 @@ extern int sigs;
 extern int secure;
 extern int screen_trashed;
 extern int follow_mode;
-extern constant char helpdata[];
-extern constant int size_helpdata;
+extern const char helpdata[];
+extern const int size_helpdata;
 extern IFILE curr_ifile;
 #if LOGFILE
 extern int logfile;
@@ -138,7 +138,7 @@ static int ch_addbuf();
  * Get the character pointed to by the read pointer.
  */
 	int
-ch_get(VOID_PARAM)
+ch_get()
 {
 	struct buf *bp;
 	struct bufnode *bn;
@@ -386,7 +386,7 @@ ch_ungetchar(c)
  * If we haven't read all of standard input into it, do that now.
  */
 	public void
-end_logfile(VOID_PARAM)
+end_logfile()
 {
 	static int tried = FALSE;
 
@@ -411,7 +411,7 @@ end_logfile(VOID_PARAM)
  * Write all the existing buffered data to the log file.
  */
 	public void
-sync_logfile(VOID_PARAM)
+sync_logfile()
 {
 	struct buf *bp;
 	struct bufnode *bn;
@@ -509,7 +509,7 @@ ch_seek(pos)
  * Seek to the end of the file.
  */
 	public int
-ch_end_seek(VOID_PARAM)
+ch_end_seek()
 {
 	POSITION len;
 
@@ -536,7 +536,7 @@ ch_end_seek(VOID_PARAM)
  * Seek to the last position in the file that is currently buffered.
  */
 	public int
-ch_end_buffer_seek(VOID_PARAM)
+ch_end_buffer_seek()
 {
 	struct buf *bp;
 	struct bufnode *bn;
@@ -564,7 +564,7 @@ ch_end_buffer_seek(VOID_PARAM)
  * beginning of the pipe is no longer buffered.
  */
 	public int
-ch_beg_seek(VOID_PARAM)
+ch_beg_seek()
 {
 	struct bufnode *bn;
 	struct bufnode *firstbn;
@@ -596,7 +596,7 @@ ch_beg_seek(VOID_PARAM)
  * Return the length of the file, if known.
  */
 	public POSITION
-ch_length(VOID_PARAM)
+ch_length()
 {
 	if (thisfile == NULL)
 		return (NULL_POSITION);
@@ -613,7 +613,7 @@ ch_length(VOID_PARAM)
  * Return the current position in the file.
  */
 	public POSITION
-ch_tell(VOID_PARAM)
+ch_tell()
 {
 	if (thisfile == NULL)
 		return (NULL_POSITION);
@@ -624,7 +624,7 @@ ch_tell(VOID_PARAM)
  * Get the current char and post-increment the read pointer.
  */
 	public int
-ch_forw_get(VOID_PARAM)
+ch_forw_get()
 {
 	int c;
 
@@ -647,7 +647,7 @@ ch_forw_get(VOID_PARAM)
  * Pre-decrement the read pointer and get the new current char.
  */
 	public int
-ch_back_get(VOID_PARAM)
+ch_back_get()
 {
 	if (thisfile == NULL)
 		return (EOI);
@@ -687,7 +687,7 @@ ch_setbufspace(bufspace)
  * Flush (discard) any saved file state, including buffer contents.
  */
 	public void
-ch_flush(VOID_PARAM)
+ch_flush()
 {
 	struct bufnode *bn;
 
@@ -754,7 +754,7 @@ ch_flush(VOID_PARAM)
  * The buffer is added to the tail of the buffer chain.
  */
 	static int
-ch_addbuf(VOID_PARAM)
+ch_addbuf()
 {
 	struct buf *bp;
 	struct bufnode *bn;
@@ -779,7 +779,7 @@ ch_addbuf(VOID_PARAM)
  *
  */
 	static void
-init_hashtbl(VOID_PARAM)
+init_hashtbl()
 {
 	int h;
 
@@ -794,7 +794,7 @@ init_hashtbl(VOID_PARAM)
  * Delete all buffers for this file.
  */
 	static void
-ch_delbufs(VOID_PARAM)
+ch_delbufs()
 {
 	struct bufnode *bn;
 
@@ -834,7 +834,7 @@ seekable(f)
  * This is used after an ignore_eof read, during which the EOF may change.
  */
 	public void
-ch_set_eof(VOID_PARAM)
+ch_set_eof()
 {
 	ch_fsize = ch_fpos;
 }
@@ -884,7 +884,7 @@ ch_init(f, flags)
  * Close a filestate.
  */
 	public void
-ch_close(VOID_PARAM)
+ch_close()
 {
 	int keepstate = FALSE;
 
@@ -927,7 +927,7 @@ ch_close(VOID_PARAM)
  * Return ch_flags for the current file.
  */
 	public int
-ch_getflags(VOID_PARAM)
+ch_getflags()
 {
 	if (thisfile == NULL)
 		return (0);
