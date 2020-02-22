@@ -51,7 +51,7 @@ extern char closequote;
 /*
  * Remove quotes around a filename.
  */
-	public char *
+	char *
 shell_unquote(str)
 	char *str;
 {
@@ -90,7 +90,7 @@ shell_unquote(str)
 /*
  * Get the shell's escape character.
  */
-	public char *
+	char *
 get_meta_escape()
 {
 	char *s;
@@ -131,7 +131,7 @@ metachar(c)
 /*
  * Insert a backslash before each metacharacter in a string.
  */
-	public char *
+	char *
 shell_quote(s)
 	char *s;
 {
@@ -246,7 +246,7 @@ dirfile(dirname, filename)
 /*
  * Return the full pathname of the given file in the "home directory".
  */
-	public char *
+	char *
 homefile(filename)
 	char *filename;
 {
@@ -296,7 +296,7 @@ homefile(filename)
  * Likewise for a string of N "#"s.
  * {{ This is a lot of work just to support % and #. }}
  */
-	public char *
+	char *
 fexpand(s)
 	char *s;
 {
@@ -392,7 +392,7 @@ fexpand(s)
  * Return a blank-separated list of filenames which "complete"
  * the given string.
  */
-	public char *
+	char *
 fcomplete(s)
 	char *s;
 {
@@ -452,7 +452,7 @@ fcomplete(s)
  * Try to determine if a file is "binary".
  * This is just a guess, and we need not try too hard to make it accurate.
  */
-	public int
+	int
 bin_file(f)
 	int f;
 {
@@ -609,7 +609,7 @@ shellcmd(cmd)
 /*
  * Expand a filename, doing any system-specific metacharacter substitutions.
  */
-	public char *
+	char *
 lglob(filename)
 	char *filename;
 {
@@ -790,7 +790,7 @@ lglob(filename)
 /*
  * @@@
  */
-	public char *
+	char *
 lrealpath(path)
 	char *path;
 {
@@ -832,7 +832,7 @@ num_pct_s(lessopen)
  * See if we should open a "replacement file" 
  * instead of the file we're about to open.
  */
-	public char *
+	char *
 open_altfile(filename, pf, pfd)
 	char *filename;
 	int *pf;
@@ -950,7 +950,7 @@ open_altfile(filename, pf, pfd)
 /*
  * Close a replacement file.
  */
-	public void
+	void
 close_altfile(altfilename, filename)
 	char *altfilename;
 	char *filename;
@@ -984,7 +984,7 @@ close_altfile(altfilename, filename)
 /*
  * Is the specified file a directory?
  */
-	public int
+	int
 is_dir(filename)
 	char *filename;
 {
@@ -1018,7 +1018,7 @@ is_dir(filename)
  * is an ordinary file, otherwise an error message
  * (if it cannot be opened or is a directory, etc.)
  */
-	public char *
+	char *
 bad_file(filename)
 	char *filename;
 {
@@ -1062,7 +1062,7 @@ bad_file(filename)
  * Return the size of a file, as cheaply as possible.
  * In Unix, we can stat the file.
  */
-	public POSITION
+	POSITION
 filesize(f)
 	int f;
 {
@@ -1085,7 +1085,7 @@ filesize(f)
 /*
  * 
  */
-	public char *
+	char *
 shell_coption()
 {
 	return ("-c");
@@ -1094,7 +1094,7 @@ shell_coption()
 /*
  * Return last component of a pathname.
  */
-	public char *
+	char *
 last_component(name)
 	char *name;
 {

@@ -11,30 +11,30 @@
 #include <windows.h>
 #endif
 
-public char *	every_first_cmd = NULL;
-public int	new_file;
-public int	is_tty;
-public IFILE	curr_ifile = NULL_IFILE;
-public IFILE	old_ifile = NULL_IFILE;
-public struct scrpos initial_scrpos;
-public int	any_display = FALSE;
-public POSITION	start_attnpos = NULL_POSITION;
-public POSITION	end_attnpos = NULL_POSITION;
-public int	wscroll;
-public char *	progname;
-public int	quitting;
-public int	secure;
-public int	dohelp;
+char *	every_first_cmd = NULL;
+int	new_file;
+int	is_tty;
+IFILE	curr_ifile = NULL_IFILE;
+IFILE	old_ifile = NULL_IFILE;
+struct scrpos initial_scrpos;
+int	any_display = FALSE;
+POSITION	start_attnpos = NULL_POSITION;
+POSITION	end_attnpos = NULL_POSITION;
+int	wscroll;
+char *	progname;
+int	quitting;
+int	secure;
+int	dohelp;
 
 #if LOGFILE
-public int	logfile = -1;
-public int	force_logfile = FALSE;
-public char *	namelogfile = NULL;
+int	logfile = -1;
+int	force_logfile = FALSE;
+char *	namelogfile = NULL;
 #endif
 
 #if EDITOR
-public char *	editor;
-public char *	editproto;
+char *	editor;
+char *	editproto;
 #endif
 
 #if TAGS
@@ -47,7 +47,7 @@ extern int	jump_sline;
 static char consoleTitle[256];
 #endif
 
-public int	one_screen;
+int	one_screen;
 extern int	less_is_more;
 extern int	missing_cap;
 extern int	know_dumb;
@@ -288,7 +288,7 @@ main(argc, argv)
  * Copy a string to a "safe" place
  * (that is, to a buffer allocated by calloc).
  */
-	public char *
+	char *
 save(s)
 	const char *s;
 {
@@ -303,7 +303,7 @@ save(s)
  * Allocate memory.
  * Like calloc(), but never returns an error (NULL).
  */
-	public void*
+	void*
 ecalloc(count, size)
 	int count;
 	unsigned int size;
@@ -322,7 +322,7 @@ ecalloc(count, size)
 /*
  * Skip leading spaces in a string.
  */
-	public char *
+	char *
 skipsp(s)
 	char *s;
 {
@@ -336,7 +336,7 @@ skipsp(s)
  * If uppercase is true, the first string must begin with an uppercase
  * character; the remainder of the first string may be either case.
  */
-	public int
+	int
 sprefix(ps, s, uppercase)
 	char *ps;
 	char *s;
@@ -369,7 +369,7 @@ sprefix(ps, s, uppercase)
 /*
  * Exit the program.
  */
-	public void
+	void
 quit(status)
 	int status;
 {

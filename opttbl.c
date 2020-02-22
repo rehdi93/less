@@ -11,52 +11,52 @@
 /*
  * Variables controlled by command line options.
  */
-public int quiet;		/* Should we suppress the audible bell? */
-public int how_search;		/* Where should forward searches start? */
-public int top_scroll;		/* Repaint screen from top?
+int quiet;		/* Should we suppress the audible bell? */
+int how_search;		/* Where should forward searches start? */
+int top_scroll;		/* Repaint screen from top?
 				   (alternative is scroll from bottom) */
-public int pr_type;		/* Type of prompt (short, medium, long) */
-public int bs_mode;		/* How to process backspaces */
-public int know_dumb;		/* Don't complain about dumb terminals */
-public int quit_at_eof;		/* Quit after hitting end of file twice */
-public int quit_if_one_screen;	/* Quit if EOF on first screen */
-public int squeeze;		/* Squeeze multiple blank lines into one */
-public int tabstop;		/* Tab settings */
-public int back_scroll;		/* Repaint screen on backwards movement */
-public int forw_scroll;		/* Repaint screen on forward movement */
-public int caseless;		/* Do "caseless" searches */
-public int linenums;		/* Use line numbers */
-public int autobuf;		/* Automatically allocate buffers as needed */
-public int bufspace;		/* Max buffer space per file (K) */
-public int ctldisp;		/* Send control chars to screen untranslated */
-public int force_open;		/* Open the file even if not regular file */
-public int swindow;		/* Size of scrolling window */
-public int jump_sline;		/* Screen line of "jump target" */
-public long jump_sline_fraction = -1;
-public long shift_count_fraction = -1;
-public int chopline;		/* Truncate displayed lines at screen width */
-public int no_init;		/* Disable sending ti/te termcap strings */
-public int no_keypad;		/* Disable sending ks/ke termcap strings */
-public int twiddle;             /* Show tildes after EOF */
-public int show_attn;		/* Hilite first unread line */
-public int shift_count;		/* Number of positions to shift horizontally */
-public int status_col;		/* Display a status column */
-public int use_lessopen;	/* Use the LESSOPEN filter */
-public int quit_on_intr;	/* Quit on interrupt */
-public int follow_mode;		/* F cmd Follows file desc or file name? */
-public int oldbot;		/* Old bottom of screen behavior {{REMOVE}} */
-public int opt_use_backslash;	/* Use backslash escaping in option parsing */
-public char rscroll_char;	/* Char which marks chopped lines with -S */
-public int rscroll_attr;	/* Attribute of rscroll_char */
-public int no_hist_dups;	/* Remove dups from history list */
-public int mousecap;		/* Allow mouse for scrolling */
-public int wheel_lines;		/* Number of lines to scroll on mouse wheel scroll */
-public int perma_marks;		/* Save marks in history file */
+int pr_type;		/* Type of prompt (short, medium, long) */
+int bs_mode;		/* How to process backspaces */
+int know_dumb;		/* Don't complain about dumb terminals */
+int quit_at_eof;		/* Quit after hitting end of file twice */
+int quit_if_one_screen;	/* Quit if EOF on first screen */
+int squeeze;		/* Squeeze multiple blank lines into one */
+int tabstop;		/* Tab settings */
+int back_scroll;		/* Repaint screen on backwards movement */
+int forw_scroll;		/* Repaint screen on forward movement */
+int caseless;		/* Do "caseless" searches */
+int linenums;		/* Use line numbers */
+int autobuf;		/* Automatically allocate buffers as needed */
+int bufspace;		/* Max buffer space per file (K) */
+int ctldisp;		/* Send control chars to screen untranslated */
+int force_open;		/* Open the file even if not regular file */
+int swindow;		/* Size of scrolling window */
+int jump_sline;		/* Screen line of "jump target" */
+long jump_sline_fraction = -1;
+long shift_count_fraction = -1;
+int chopline;		/* Truncate displayed lines at screen width */
+int no_init;		/* Disable sending ti/te termcap strings */
+int no_keypad;		/* Disable sending ks/ke termcap strings */
+int twiddle;             /* Show tildes after EOF */
+int show_attn;		/* Hilite first unread line */
+int shift_count;		/* Number of positions to shift horizontally */
+int status_col;		/* Display a status column */
+int use_lessopen;	/* Use the LESSOPEN filter */
+int quit_on_intr;	/* Quit on interrupt */
+int follow_mode;		/* F cmd Follows file desc or file name? */
+int oldbot;		/* Old bottom of screen behavior {{REMOVE}} */
+int opt_use_backslash;	/* Use backslash escaping in option parsing */
+char rscroll_char;	/* Char which marks chopped lines with -S */
+int rscroll_attr;	/* Attribute of rscroll_char */
+int no_hist_dups;	/* Remove dups from history list */
+int mousecap;		/* Allow mouse for scrolling */
+int wheel_lines;		/* Number of lines to scroll on mouse wheel scroll */
+int perma_marks;		/* Save marks in history file */
 #if HILITE_SEARCH
-public int hilite_search;	/* Highlight matched search patterns? */
+int hilite_search;	/* Highlight matched search patterns? */
 #endif
 
-public int less_is_more = 0;	/* Make compatible with POSIX more */
+int less_is_more = 0;	/* Make compatible with POSIX more */
 
 /*
  * Long option names.
@@ -503,7 +503,7 @@ static struct loption option[] =
 /*
  * Initialize each option to its default value.
  */
-	public void
+	void
 init_option()
 {
 	struct loption *o;
@@ -528,7 +528,7 @@ init_option()
 /*
  * Find an option in the option table, given its option letter.
  */
-	public struct loption *
+	struct loption *
 findopt(c)
 	int c;
 {
@@ -566,7 +566,7 @@ is_optchar(c)
  * is updated to point after the matched name.
  * p_oname if non-NULL is set to point to the full option name.
  */
-	public struct loption *
+	struct loption *
 findopt_name(p_optname, p_oname, p_err)
 	char **p_optname;
 	char **p_oname;

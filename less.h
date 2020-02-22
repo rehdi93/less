@@ -29,8 +29,6 @@
 #undef HAVE_SIGSETMASK
 #endif
 
-#define	public		/* PUBLIC FUNCTION */
-
 /* Library function declarations */
 
 #if HAVE_SYS_TYPES_H

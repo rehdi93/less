@@ -467,7 +467,7 @@ tstr(pp, xlate)
 /*
  * Skip leading spaces in a string.
  */
-	public char *
+	char *
 skipsp(s)
 	char *s;
 {
@@ -479,7 +479,7 @@ skipsp(s)
 /*
  * Skip non-space characters in a string.
  */
-	public char *
+	char *
 skipnsp(s)
 	char *s;
 {

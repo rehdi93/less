@@ -13,10 +13,10 @@
 #endif
 #endif
 
-public int errmsgs;	/* Count of messages displayed by error() */
-public int need_clr;
-public int final_attr;
-public int at_prompt;
+int errmsgs;	/* Count of messages displayed by error() */
+int need_clr;
+int final_attr;
+int at_prompt;
 
 extern int sigs;
 extern int sc_width;
@@ -42,7 +42,7 @@ extern int have_ul;
 /*
  * Display the line which is in the line buffer.
  */
-	public void
+	void
 put_line()
 {
 	int c;
@@ -92,7 +92,7 @@ static char *ob = obuf;
  * sure these messages can be seen before they are
  * overwritten or scrolled away.
  */
-	public void
+	void
 flush()
 {
 	int n;
@@ -388,7 +388,7 @@ flush()
 /*
  * Output a character.
  */
-	public int
+	int
 putchr(c)
 	int c;
 {
@@ -442,7 +442,7 @@ putchr(c)
 /*
  * Output a string.
  */
-	public void
+	void
 putstr(s)
 	const char *s;
 {
@@ -579,7 +579,7 @@ less_printf(fmt, parg)
  * If some other non-trivial char is pressed, unget it, so it will
  * become the next command.
  */
-	public void
+	void
 get_return()
 {
 	int c;
@@ -598,7 +598,7 @@ get_return()
  * Output a message in the lower left corner of the screen
  * and wait for carriage return.
  */
-	public void
+	void
 error(fmt, parg)
 	char *fmt;
 	PARG *parg;
@@ -653,7 +653,7 @@ static char intr_to_abort[] = "... (interrupt to abort)";
  * Usually used to warn that we are beginning a potentially
  * time-consuming operation.
  */
-	public void
+	void
 ierror(fmt, parg)
 	char *fmt;
 	PARG *parg;
@@ -672,7 +672,7 @@ ierror(fmt, parg)
  * Output a message in the lower left corner of the screen
  * and return a single-character response.
  */
-	public int
+	int
 query(fmt, parg)
 	char *fmt;
 	PARG *parg;

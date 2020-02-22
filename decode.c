@@ -307,7 +307,7 @@ expand_cmd_table(tlist)
 /*
  * Expand special key abbreviations in all command tables.
  */
-	public void
+	void
 expand_cmd_tables()
 {
 	expand_cmd_table(list_fcmd_tables);
@@ -320,7 +320,7 @@ expand_cmd_tables()
 /*
  * Initialize the command lists.
  */
-	public void
+	void
 init_cmds()
 {
 	/*
@@ -379,7 +379,7 @@ add_cmd_table(tlist, buf, len)
 /*
  * Add a command table.
  */
-	public void
+	void
 add_fcmd_table(buf, len)
 	char *buf;
 	int len;
@@ -391,7 +391,7 @@ add_fcmd_table(buf, len)
 /*
  * Add an editing command table.
  */
-	public void
+	void
 add_ecmd_table(buf, len)
 	char *buf;
 	int len;
@@ -649,7 +649,7 @@ cmd_decode(tlist, cmd, sp)
 /*
  * Decode a command from the cmdtables list.
  */
-	public int
+	int
 fcmd_decode(cmd, sp)
 	char *cmd;
 	char **sp;
@@ -660,7 +660,7 @@ fcmd_decode(cmd, sp)
 /*
  * Decode a command from the edittables list.
  */
-	public int
+	int
 ecmd_decode(cmd, sp)
 	char *cmd;
 	char **sp;
@@ -672,7 +672,7 @@ ecmd_decode(cmd, sp)
  * Get the value of an environment variable.
  * Looks first in the lesskey file, then in the real environment.
  */
-	public char *
+	char *
 lgetenv(var)
 	char *var;
 {
@@ -694,7 +694,7 @@ lgetenv(var)
 /*
  * Is a string null or empty? 
  */
-	public int
+	int
 isnullenv(s)
 	char* s;
 {
@@ -796,7 +796,7 @@ new_lesskey(buf, len, sysvar)
 /*
  * Set up a user command table, based on a "lesskey" file.
  */
-	public int
+	int
 lesskey(filename, sysvar)
 	char *filename;
 	int sysvar;
@@ -864,7 +864,7 @@ lesskey(filename, sysvar)
 /*
  * Add the standard lesskey file "$HOME/.less"
  */
-	public void
+	void
 add_hometable(envname, def_filename, sysvar)
 	char *envname;
 	char *def_filename;
@@ -893,7 +893,7 @@ add_hometable(envname, def_filename, sysvar)
 /*
  * See if a char is a special line-editing command.
  */
-	public int
+	int
 editchar(c, flags)
 	int c;
 	int flags;

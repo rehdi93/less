@@ -14,7 +14,7 @@
 #include "option.h"
 
 static struct loption *pendopt;
-public int plusoption = FALSE;
+int plusoption = FALSE;
 
 static char *optstring (char *s, char **p_str, char *printopt,
     char *validchars);
@@ -45,7 +45,7 @@ opt_desc(o)
  * Return a string suitable for printing as the "name" of an option.
  * For example, if the option letter is 'x', just return "-x".
  */
-	public char *
+	char *
 propt(c)
 	int c;
 {
@@ -59,7 +59,7 @@ propt(c)
  * Scan an argument (either from the command line or from the 
  * LESS environment variable) and process it.
  */
-	public void
+	void
 scan_option(s)
 	char *s;
 {
@@ -295,7 +295,7 @@ scan_option(s)
  *	OPT_UNSET	set to the default value
  *	OPT_SET		set to the inverse of the default value
  */
-	public void
+	void
 toggle_option(o, lower, s, how_toggle)
 	struct loption *o;
 	int lower;
@@ -495,7 +495,7 @@ flip_triple(val, lc)
 /*
  * Determine if an option takes a parameter.
  */
-	public int
+	int
 opt_has_param(o)
 	struct loption *o;
 {
@@ -510,7 +510,7 @@ opt_has_param(o)
  * Return the prompt to be used for a given option letter.
  * Only string and number valued options have prompts.
  */
-	public char *
+	char *
 opt_prompt(o)
 	struct loption *o;
 {
@@ -526,7 +526,7 @@ opt_prompt(o)
  * In that case, the current option is taken to be the string for
  * the previous option.
  */
-	public int
+	int
 isoptpending()
 {
 	return (pendopt != NULL);
@@ -547,7 +547,7 @@ nostring(printopt)
 /*
  * Print error message if a STRING type option is not followed by a string.
  */
-	public void
+	void
 nopendopt()
 {
 	nostring(opt_desc(pendopt));
@@ -623,7 +623,7 @@ num_error(printopt, errp)
  * Like atoi(), but takes a pointer to a char *, and updates
  * the char * to point after the translated number.
  */
-	public int
+	int
 getnum(sp, printopt, errp)
 	char **sp;
 	char *printopt;
@@ -660,7 +660,7 @@ getnum(sp, printopt, errp)
  * The value of the fraction is returned as parts per NUM_FRAC_DENOM.
  * That is, if "n" is returned, the fraction intended is n/NUM_FRAC_DENOM.
  */
-	public long
+	long
 getfraction(sp, printopt, errp)
 	char **sp;
 	char *printopt;
@@ -695,7 +695,7 @@ getfraction(sp, printopt, errp)
 /*
  * Get the value of the -e flag.
  */
-	public int
+	int
 get_quit_at_eof()
 {
 	if (!less_is_more)

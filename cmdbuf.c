@@ -43,8 +43,8 @@ static int cmd_left();
 static int cmd_right();
 
 #if SPACES_IN_FILENAMES
-public char openquote = '"';
-public char closequote = '"';
+char openquote = '"';
+char closequote = '"';
 #endif
 
 #if CMD_HISTORY
@@ -72,25 +72,25 @@ struct mlist
  */
 struct mlist mlist_search =  
 	{ &mlist_search,  &mlist_search,  &mlist_search,  NULL, 0 };
-public void *ml_search = (void *) &mlist_search;
+void *ml_search = (void *) &mlist_search;
 
 struct mlist mlist_examine = 
 	{ &mlist_examine, &mlist_examine, &mlist_examine, NULL, 0 };
-public void *ml_examine = (void *) &mlist_examine;
+void *ml_examine = (void *) &mlist_examine;
 
 #if SHELL_ESCAPE || PIPEC
 struct mlist mlist_shell =   
 	{ &mlist_shell,   &mlist_shell,   &mlist_shell,   NULL, 0 };
-public void *ml_shell = (void *) &mlist_shell;
+void *ml_shell = (void *) &mlist_shell;
 #endif
 
 #else /* CMD_HISTORY */
 
 /* If CMD_HISTORY is off, these are just flags. */
-public void *ml_search = (void *)1;
-public void *ml_examine = (void *)2;
+void *ml_search = (void *)1;
+void *ml_examine = (void *)2;
 #if SHELL_ESCAPE || PIPEC
-public void *ml_shell = (void *)3;
+void *ml_shell = (void *)3;
 #endif
 
 #endif /* CMD_HISTORY */
@@ -109,7 +109,7 @@ static int cmd_mbc_buf_index;
 /*
  * Reset command buffer (to empty).
  */
-	public void
+	void
 cmd_reset()
 {
 	cp = cmdbuf;
@@ -124,7 +124,7 @@ cmd_reset()
 /*
  * Clear command line.
  */
-	public void
+	void
 clear_cmd()
 {
 	cmd_col = prompt_col = 0;
@@ -135,7 +135,7 @@ clear_cmd()
 /*
  * Display a string, usually as a prompt for input into the command buffer.
  */
-	public void
+	void
 cmd_putstr(s)
 	const char *s;
 {
@@ -164,7 +164,7 @@ cmd_putstr(s)
 /*
  * How many characters are in the command buffer?
  */
-	public int
+	int
 len_cmdbuf()
 {
 	char *s = cmdbuf;
@@ -633,7 +633,7 @@ cmd_kill()
 /*
  * Select an mlist structure to be the current command history.
  */
-	public void
+	void
 set_mlist(mlist, cmdflags)
 	void *mlist;
 	int cmdflags;
@@ -743,7 +743,7 @@ ml_unlink(ml)
 /*
  * Add a string to an mlist.
  */
-	public void
+	void
 cmd_addhist(mlist, cmd, modified)
 	struct mlist *mlist;
 	const char *cmd;
@@ -801,7 +801,7 @@ cmd_addhist(mlist, cmd, modified)
  * Accept the command in the command buffer.
  * Add it to the currently selected history list.
  */
-	public void
+	void
 cmd_accept()
 {
 #if CMD_HISTORY
@@ -1237,7 +1237,7 @@ fail:
  *	CC_QUIT		The char requests the command to be aborted.
  *	CC_ERROR	The char could not be accepted due to an error.
  */
-	public int
+	int
 cmd_char(c)
 	int c;
 {
@@ -1334,7 +1334,7 @@ cmd_char(c)
 /*
  * Return the number currently in the command buffer.
  */
-	public LINENUM
+	LINENUM
 cmd_int(frac)
 	long *frac;
 {
@@ -1356,7 +1356,7 @@ cmd_int(frac)
 /*
  * Return a pointer to the command buffer.
  */
-	public char *
+	char *
 get_cmdbuf()
 {
 	return (cmdbuf);
@@ -1366,7 +1366,7 @@ get_cmdbuf()
 /*
  * Return the last (most recent) string in the current command history.
  */
-	public char *
+	char *
 cmd_lastpattern()
 {
 	if (curr_mlist == NULL)
@@ -1525,7 +1525,7 @@ addhist_init(void *uparam, struct mlist *ml, char *string)
 /*
  * Initialize history from a .lesshist file.
  */
-	public void
+	void
 init_cmdhist()
 {
 #if CMD_HISTORY
@@ -1692,7 +1692,7 @@ static void replace_file(const char* oldfile, const char* newfile)
 /*
  * Update the .lesshst file.
  */
-	public void
+	void
 save_cmdhist()
 {
 #if CMD_HISTORY

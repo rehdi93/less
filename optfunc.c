@@ -54,7 +54,7 @@ extern int force_logfile;
 extern int logfile;
 #endif
 #if TAGS
-public char *tagoption = NULL;
+char *tagoption = NULL;
 extern char *tags;
 extern char ztags[];
 #endif
@@ -77,7 +77,7 @@ extern int sgr_mode;
 /*
  * Handler for -o option.
  */
-	public void
+	void
 opt_o(type, s)
 	int type;
 	char *s;
@@ -130,7 +130,7 @@ opt_o(type, s)
 /*
  * Handler for -O option.
  */
-	public void
+	void
 opt__O(type, s)
 	int type;
 	char *s;
@@ -143,7 +143,7 @@ opt__O(type, s)
 /*
  * Handlers for -j option.
  */
-	public void
+	void
 opt_j(type, s)
 	int type;
 	char *s;
@@ -197,7 +197,7 @@ opt_j(type, s)
 	}
 }
 
-	public void
+	void
 calc_jump_sline()
 {
 	if (jump_sline_fraction < 0)
@@ -208,7 +208,7 @@ calc_jump_sline()
 /*
  * Handlers for -# option.
  */
-	public void
+	void
 opt_shift(type, s)
 	int type;
 	char *s;
@@ -261,7 +261,7 @@ opt_shift(type, s)
 		break;
 	}
 }
-	public void
+	void
 calc_shift_count()
 {
 	if (shift_count_fraction < 0)
@@ -270,7 +270,7 @@ calc_shift_count()
 }
 
 #if USERFILE
-	public void
+	void
 opt_k(type, s)
 	int type;
 	char *s;
@@ -294,7 +294,7 @@ opt_k(type, s)
 /*
  * Handler for -t option.
  */
-	public void
+	void
 opt_t(type, s)
 	int type;
 	char *s;
@@ -335,7 +335,7 @@ opt_t(type, s)
 /*
  * Handler for -T option.
  */
-	public void
+	void
 opt__T(type, s)
 	int type;
 	char *s;
@@ -367,7 +367,7 @@ opt__T(type, s)
 /*
  * Handler for -p option.
  */
-	public void
+	void
 opt_p(type, s)
 	int type;
 	char *s;
@@ -403,7 +403,7 @@ opt_p(type, s)
 /*
  * Handler for -P option.
  */
-	public void
+	void
 opt__P(type, s)
 	int type;
 	char *s;
@@ -442,7 +442,7 @@ opt__P(type, s)
  * Handler for the -b option.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt_b(type, s)
 	int type;
 	char *s;
@@ -465,7 +465,7 @@ opt_b(type, s)
  * Handler for the -i option.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt_i(type, s)
 	int type;
 	char *s;
@@ -485,7 +485,7 @@ opt_i(type, s)
  * Handler for the -V option.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt__V(type, s)
 	int type;
 	char *s;
@@ -580,7 +580,7 @@ colordesc(s, fg_color, bg_color)
  * Handler for the -D option.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt_D(type, s)
 	int type;
 	char *s;
@@ -632,7 +632,7 @@ opt_D(type, s)
 /*
  * Handler for the -x option.
  */
-	public void
+	void
 opt_x(type, s)
 	int type;
 	char *s;
@@ -690,7 +690,7 @@ opt_x(type, s)
 /*
  * Handler for the -" option.
  */
-	public void
+	void
 opt_quote(type, s)
 	int type;
 	char *s;
@@ -732,7 +732,7 @@ opt_quote(type, s)
  * Handler for the --rscroll option.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt_rscroll(type, s)
 	int type;
 	char *s;
@@ -767,7 +767,7 @@ opt_rscroll(type, s)
  * If from the command line, exit immediately.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt_query(type, s)
 	int type;
 	char *s;
@@ -787,7 +787,7 @@ opt_query(type, s)
  * Handler for the --mouse option.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt_mousecap(type, s)
 	int type;
 	char *s;
@@ -810,7 +810,7 @@ opt_mousecap(type, s)
  * Handler for the --wheel-lines option.
  */
 	/*ARGSUSED*/
-	public void
+	void
 opt_wheel_lines(type, s)
 	int type;
 	char *s;
@@ -830,7 +830,7 @@ opt_wheel_lines(type, s)
 /*
  * Get the "screen window" size.
  */
-	public int
+	int
 get_swindow()
 {
 	if (swindow > 0)

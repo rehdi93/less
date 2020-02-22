@@ -18,9 +18,9 @@
 #undef NOWINMESSAGES
 #include <windows.h>
 static DWORD console_mode;
-public HANDLE tty;
+HANDLE tty;
 #else
-public int tty;
+int tty;
 #endif
 extern int sigs;
 extern int utf_mode;
@@ -29,7 +29,7 @@ extern int wheel_lines;
 /*
  * Open keyboard for input.
  */
-	public void
+	void
 open_getchr()
 {
 #if MSDOS_COMPILER==WIN32C
@@ -83,7 +83,7 @@ open_getchr()
 /*
  * Close the keyboard.
  */
-	public void
+	void
 close_getchr()
 {
 #if MSDOS_COMPILER==WIN32C
@@ -111,7 +111,7 @@ pclose(f)
 /*
  * Get the number of lines to scroll when mouse wheel is moved.
  */
-	public int
+	int
 default_wheel_lines()
 {
 	int lines = 1;
@@ -128,7 +128,7 @@ default_wheel_lines()
 /*
  * Get a character from the keyboard.
  */
-	public int
+	int
 getchr()
 {
 	char c;

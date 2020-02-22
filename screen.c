@@ -142,21 +142,21 @@ static void win32_deinit_term();
 #endif
 
 #if MSDOS_COMPILER
-public int nm_fg_color;		/* Color of normal text */
-public int nm_bg_color;
-public int bo_fg_color;		/* Color of bold text */
-public int bo_bg_color;
-public int ul_fg_color;		/* Color of underlined text */
-public int ul_bg_color;
-public int so_fg_color;		/* Color of standout text */
-public int so_bg_color;
-public int bl_fg_color;		/* Color of blinking text */
-public int bl_bg_color;
+int nm_fg_color;		/* Color of normal text */
+int nm_bg_color;
+int bo_fg_color;		/* Color of bold text */
+int bo_bg_color;
+int ul_fg_color;		/* Color of underlined text */
+int ul_bg_color;
+int so_fg_color;		/* Color of standout text */
+int so_bg_color;
+int bl_fg_color;		/* Color of blinking text */
+int bl_bg_color;
 static int sy_fg_color;		/* Color of system text (before less) */
 static int sy_bg_color;
-public int sgr_mode;		/* Honor ANSI sequences rather than using above */
+int sgr_mode;		/* Honor ANSI sequences rather than using above */
 #if MSDOS_COMPILER==WIN32C
-public int have_ul;		/* Is underline available? */
+int have_ul;		/* Is underline available? */
 #endif
 #else
 
@@ -193,22 +193,22 @@ static char
 
 static int init_done = 0;
 
-public int auto_wrap;		/* Terminal does \r\n when write past margin */
-public int ignaw;		/* Terminal ignores \n immediately after wrap */
-public int erase_char;		/* The user's erase char */
-public int erase2_char;		/* The user's other erase char */
-public int kill_char;		/* The user's line-kill char */
-public int werase_char;		/* The user's word-erase char */
-public int sc_width, sc_height;	/* Height & width of screen */
-public int bo_s_width, bo_e_width;	/* Printing width of boldface seq */
-public int ul_s_width, ul_e_width;	/* Printing width of underline seq */
-public int so_s_width, so_e_width;	/* Printing width of standout seq */
-public int bl_s_width, bl_e_width;	/* Printing width of blink seq */
-public int above_mem, below_mem;	/* Memory retained above/below screen */
-public int can_goto_line;		/* Can move cursor to any line */
-public int clear_bg;		/* Clear fills with background color */
-public int missing_cap = 0;	/* Some capability is missing */
-public char *kent = NULL;	/* Keypad ENTER sequence */
+int auto_wrap;		/* Terminal does \r\n when write past margin */
+int ignaw;		/* Terminal ignores \n immediately after wrap */
+int erase_char;		/* The user's erase char */
+int erase2_char;		/* The user's other erase char */
+int kill_char;		/* The user's line-kill char */
+int werase_char;		/* The user's word-erase char */
+int sc_width, sc_height;	/* Height & width of screen */
+int bo_s_width, bo_e_width;	/* Printing width of boldface seq */
+int ul_s_width, ul_e_width;	/* Printing width of underline seq */
+int so_s_width, so_e_width;	/* Printing width of standout seq */
+int bl_s_width, bl_e_width;	/* Printing width of blink seq */
+int above_mem, below_mem;	/* Memory retained above/below screen */
+int can_goto_line;		/* Can move cursor to any line */
+int clear_bg;		/* Clear fills with background color */
+int missing_cap = 0;	/* Some capability is missing */
+char *kent = NULL;	/* Keypad ENTER sequence */
 
 static int attrmode = AT_NORMAL;
 static int termcap_debug = -1;
@@ -270,7 +270,7 @@ extern char *tgoto();
  *	   etc. are NOT disabled.
  * It doesn't matter whether an input \n is mapped to \r, or vice versa.
  */
-	public void
+	void
 raw_mode(on)
 	int on;
 {
@@ -705,7 +705,7 @@ ltgetstr(capname, pp)
 /*
  * Get size of the output screen.
  */
-	public void
+	void
 scrsize()
 {
 	char *s;
@@ -880,7 +880,7 @@ delay(msec)
 /*
  * Return the characters actually input by a "special" key.
  */
-	public char *
+	char *
 special_key_str(key)
 	int key;
 {
@@ -1049,7 +1049,7 @@ special_key_str(key)
 /*
  * Get terminal capabilities via termcap.
  */
-	public void
+	void
 get_term()
 {
 	termcap_debug = !isnullenv(lgetenv("LESS_TERMCAP_DEBUG"));
@@ -1548,7 +1548,7 @@ win32_deinit_term()
  * Configure the termimal so mouse clicks and wheel moves 
  * produce input to less.
  */
-	public void
+	void
 init_mouse()
 {
 	if (!mousecap)
@@ -1566,7 +1566,7 @@ init_mouse()
  * Configure the terminal so mouse clicks and wheel moves
  * are handled by the system (so text can be selected, etc).
  */
-	public void
+	void
 deinit_mouse()
 {
 	if (!mousecap)
@@ -1583,7 +1583,7 @@ deinit_mouse()
 /*
  * Initialize terminal
  */
-	public void
+	void
 init()
 {
 #if !MSDOS_COMPILER
@@ -1623,7 +1623,7 @@ init()
 /*
  * Deinitialize terminal
  */
-	public void
+	void
 deinit()
 {
 	if (!init_done)
@@ -1654,7 +1654,7 @@ deinit()
 /*
  * Home cursor (move to upper left corner of screen).
  */
-	public void
+	void
 home()
 {
 #if !MSDOS_COMPILER
@@ -1669,7 +1669,7 @@ home()
  * Add a blank line (called with cursor at home).
  * Should scroll the display down.
  */
-	public void
+	void
 add_line()
 {
 #if !MSDOS_COMPILER
@@ -1727,7 +1727,7 @@ add_line()
  * window upward.  This is needed to stop leaking the topmost line 
  * into the scrollback buffer when we go down-one-line (in WIN32).
  */
-	public void
+	void
 remove_top(n)
 	int n;
 {
@@ -1812,7 +1812,7 @@ win32_clear()
  * Remove the n topmost lines and scroll everything below it in the 
  * window upward.
  */
-	public void
+	void
 win32_scroll_up(n)
 	int n;
 {
@@ -1878,7 +1878,7 @@ win32_scroll_up(n)
 /*
  * Move cursor to lower left corner of screen.
  */
-	public void
+	void
 lower_left()
 {
 	if (!init_done)
@@ -1894,7 +1894,7 @@ lower_left()
 /*
  * Move cursor to left position of current line.
  */
-	public void
+	void
 line_left()
 {
 #if !MSDOS_COMPILER
@@ -1926,7 +1926,7 @@ line_left()
  * Check if the console size has changed and reset internals 
  * (in lieu of SIGWINCH for WIN32).
  */
-	public void
+	void
 check_winch()
 {
 #if MSDOS_COMPILER==WIN32C
@@ -1956,7 +1956,7 @@ check_winch()
 /*
  * Goto a specific line on the screen.
  */
-	public void
+	void
 goto_line(sindex)
 	int sindex;
 {
@@ -2022,7 +2022,7 @@ create_flash()
 /*
  * Output the "visual bell", if there is one.
  */
-	public void
+	void
 vbell()
 {
 #if !MSDOS_COMPILER
@@ -2103,7 +2103,7 @@ beep()
 /*
  * Ring the terminal bell.
  */
-	public void
+	void
 bell()
 {
 	if (quiet == VERY_QUIET)
@@ -2115,7 +2115,7 @@ bell()
 /*
  * Clear the screen.
  */
-	public void
+	void
 clear()
 {
 #if !MSDOS_COMPILER
@@ -2134,7 +2134,7 @@ clear()
  * Clear from the cursor to the end of the cursor's line.
  * {{ This must not move the cursor. }}
  */
-	public void
+	void
 clear_eol()
 {
 #if !MSDOS_COMPILER
@@ -2210,7 +2210,7 @@ clear_eol_bot()
  * Clear the bottom line of the display.
  * Leave the cursor at the beginning of the bottom line.
  */
-	public void
+	void
 clear_bot()
 {
 	/*
@@ -2235,7 +2235,7 @@ clear_bot()
 	}
 }
 
-	public void
+	void
 at_enter(attr)
 	int attr;
 {
@@ -2274,7 +2274,7 @@ at_enter(attr)
 	attrmode = attr;
 }
 
-	public void
+	void
 at_exit()
 {
 #if !MSDOS_COMPILER
@@ -2295,7 +2295,7 @@ at_exit()
 	attrmode = AT_NORMAL;
 }
 
-	public void
+	void
 at_switch(attr)
 	int attr;
 {
@@ -2309,7 +2309,7 @@ at_switch(attr)
 	}
 }
 
-	public int
+	int
 is_at_equiv(attr1, attr2)
 	int attr1;
 	int attr2;
@@ -2320,7 +2320,7 @@ is_at_equiv(attr1, attr2)
 	return (attr1 == attr2);
 }
 
-	public int
+	int
 apply_at_specials(attr)
 	int attr;
 {
@@ -2338,7 +2338,7 @@ apply_at_specials(attr)
  * Erase the character to the left of the cursor 
  * and move the cursor left.
  */
-	public void
+	void
 backspace()
 {
 #if !MSDOS_COMPILER
@@ -2387,7 +2387,7 @@ backspace()
 /*
  * Output a plain backspace, without erasing the previous char.
  */
-	public void
+	void
 putbs()
 {
 	if (termcap_debug)
@@ -2431,7 +2431,7 @@ putbs()
 /*
  * Determine whether an input character is waiting to be read.
  */
-	public int
+	int
 win32_kbhit()
 {
 	INPUT_RECORD ip;
@@ -2540,7 +2540,7 @@ win32_kbhit()
 /*
  * Read a character from the keyboard.
  */
-	public char
+	char
 WIN32getch()
 {
 	int ascii;
@@ -2577,7 +2577,7 @@ WIN32getch()
 #if MSDOS_COMPILER
 /*
  */
-	public void
+	void
 WIN32setcolors(fg, bg)
 	int fg;
 	int bg;
@@ -2587,7 +2587,7 @@ WIN32setcolors(fg, bg)
 
 /*
  */
-	public void
+	void
 WIN32textout(text, len)
 	char *text;
 	int len;

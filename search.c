@@ -196,7 +196,7 @@ init_pattern(info)
 /*
  * Initialize search variables.
  */
-	public void
+	void
 init_search()
 {
 	init_pattern(&search_info);
@@ -247,7 +247,7 @@ prev_pattern(info)
  * Repaint each line which contains highlighted text.
  * If on==0, force all hilites off.
  */
-	public void
+	void
 repaint_hilite(on)
 	int on;
 {
@@ -289,7 +289,7 @@ repaint_hilite(on)
 /*
  * Clear the attn hilite.
  */
-	public void
+	void
 clear_attn()
 {
 	int sindex;
@@ -336,7 +336,7 @@ clear_attn()
 /*
  * Hide search string highlighting.
  */
-	public void
+	void
 undo_search()
 {
 	if (!prev_pattern(&search_info))
@@ -359,7 +359,7 @@ undo_search()
 /*
  * Clear the hilite list.
  */
-	public void
+	void
 clr_hlist(anchor)
 	struct hilite_tree *anchor;
 {
@@ -381,13 +381,13 @@ clr_hlist(anchor)
 	prep_startpos = prep_endpos = NULL_POSITION;
 }
 
-	public void
+	void
 clr_hilite()
 {
 	clr_hlist(&hilite_anchor);
 }
 
-	public void
+	void
 clr_filter()
 {
 	clr_hlist(&filter_anchor);
@@ -528,7 +528,7 @@ is_hilited_range(pos, epos)
 /* 
  * Is a line "filtered" -- that is, should it be hidden?
  */
-	public int
+	int
 is_filtered(pos)
 	POSITION pos;
 {
@@ -545,7 +545,7 @@ is_filtered(pos)
  * If pos is hidden, return the next position which isn't, otherwise
  * just return pos.
  */
-	public POSITION
+	POSITION
 next_unfiltered(pos)
 	POSITION pos;
 {
@@ -567,7 +567,7 @@ next_unfiltered(pos)
  * If pos is hidden, return the previous position which isn't or 0 if
  * we're filtered right to the beginning, otherwise just return pos.
  */
-	public POSITION
+	POSITION
 prev_unfiltered(pos)
 	POSITION pos;
 {
@@ -593,7 +593,7 @@ prev_unfiltered(pos)
  * Should any characters in a specified range be highlighted?
  * If nohide is nonzero, don't consider hide_hilite.
  */
-	public int
+	int
 is_hilited(pos, epos, nohide, p_matches)
 	POSITION pos;
 	POSITION epos;
@@ -1038,7 +1038,7 @@ hilite_screen()
 /*
  * Change highlighting parameters.
  */
-	public void
+	void
 chg_hilite()
 {
 	/*
@@ -1369,7 +1369,7 @@ hist_pattern(search_type)
  * Change the caseless-ness of searches.  
  * Updates the internal search state to reflect a change in the -i flag.
  */
-	public void
+	void
 chg_caseless()
 {
 	if (!is_ucase_pattern)
@@ -1398,7 +1398,7 @@ chg_caseless()
  * Caller may continue the search in another file 
  * if less than n matches are found in this file.
  */
-	public int
+	int
 search(search_type, pattern, n)
 	int search_type;
 	char *pattern;
@@ -1536,7 +1536,7 @@ search(search_type, pattern, n)
  * If prep_endpos == NULL_POSITION, the prep region extends to EOF.
  * prep_hilite asks that the range (spos,epos) be covered by the prep region.
  */
-	public void
+	void
 prep_hilite(spos, epos, maxlines)
 	POSITION spos;
 	POSITION epos;
@@ -1706,7 +1706,7 @@ prep_hilite(spos, epos, maxlines)
 /*
  * Set the pattern to be used for line filtering.
  */
-	public void
+	void
 set_filter_pattern(pattern, search_type)
 	char *pattern;
 	int search_type;
@@ -1722,7 +1722,7 @@ set_filter_pattern(pattern, search_type)
 /*
  * Is there a line filter in effect?
  */
-	public int
+	int
 is_filtering()
 {
 	if (ch_getflags() & CH_HELPFILE)
@@ -1736,7 +1736,7 @@ is_filtering()
  * This function is called by the V8 regcomp to report 
  * errors in regular expressions.
  */
-public int reg_show_error = 1;
+int reg_show_error = 1;
 
 	void 
 regerror(s) 

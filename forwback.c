@@ -9,11 +9,11 @@
 #include "less.h"
 #include "position.h"
 
-public int screen_trashed;
-public int squished;
-public int no_back_scroll = 0;
-public int forw_prompt;
-public int same_pos_bell = 1;
+int screen_trashed;
+int squished;
+int no_back_scroll = 0;
+int forw_prompt;
+int same_pos_bell = 1;
 
 extern int sigs;
 extern int top_scroll;
@@ -50,7 +50,7 @@ eof_bell()
 /*
  * Check to see if the end of file is currently displayed.
  */
-	public int
+	int
 eof_displayed()
 {
 	POSITION pos;
@@ -77,7 +77,7 @@ eof_displayed()
 /*
  * Check to see if the entire file is currently displayed.
  */
-	public int
+	int
 entire_file_displayed()
 {
 	POSITION pos;
@@ -97,7 +97,7 @@ entire_file_displayed()
  * of the screen; this can happen when we display a short file
  * for the first time.
  */
-	public void
+	void
 squish_check()
 {
 	if (!squished)
@@ -115,7 +115,7 @@ squish_check()
  *   real line.  If nblank > 0, the pos must be NULL_POSITION.
  *   The first real line after the blanks will start at ch_zero().
  */
-	public void
+	void
 forw(n, pos, force, only_last, nblank)
 	int n;
 	POSITION pos;
@@ -289,7 +289,7 @@ forw(n, pos, force, only_last, nblank)
 /*
  * Display n lines, scrolling backward.
  */
-	public void
+	void
 back(n, pos, force, only_last)
 	int n;
 	POSITION pos;
@@ -351,7 +351,7 @@ back(n, pos, force, only_last)
  * Display n more lines, forward.
  * Start just after the line currently displayed at the bottom of the screen.
  */
-	public void
+	void
 forward(n, force, only_last)
 	int n;
 	int force;
@@ -403,7 +403,7 @@ forward(n, force, only_last)
  * Display n more lines, backward.
  * Start just before the line currently displayed at the top of the screen.
  */
-	public void
+	void
 backward(n, force, only_last)
 	int n;
 	int force;
@@ -426,7 +426,7 @@ backward(n, force, only_last)
  * back_scroll, because the default case depends on sc_height and
  * top_scroll, as well as back_scroll.
  */
-	public int
+	int
 get_back_scroll()
 {
 	if (no_back_scroll)
@@ -441,7 +441,7 @@ get_back_scroll()
 /*
  * Will the entire file fit on one screen?
  */
-	public int
+	int
 get_one_screen()
 {
 	int nlines;

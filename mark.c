@@ -36,7 +36,7 @@ struct mark
 #define	MOUSEMARK	(NMARKS-2)
 #define	LASTMARK	(NMARKS-1)
 static struct mark marks[NMARKS];
-public int marks_modified = 0;
+int marks_modified = 0;
 
 
 /*
@@ -58,7 +58,7 @@ cmark(m, ifile, pos, ln)
 /*
  * Initialize the mark table to show no marks are set.
  */
-	public void
+	void
 init_mark()
 {
 	int i;
@@ -186,7 +186,7 @@ getmark(c)
 /*
  * Is a mark letter invalid?
  */
-	public int
+	int
 badmark(c)
 	int c;
 {
@@ -196,7 +196,7 @@ badmark(c)
 /*
  * Set a user-defined mark.
  */
-	public void
+	void
 setmark(c, where)
 	int c;
 	int where;
@@ -220,7 +220,7 @@ setmark(c, where)
 /*
  * Clear a user-defined mark.
  */
-	public void
+	void
 clrmark(c)
 	int c;
 {
@@ -241,7 +241,7 @@ clrmark(c)
 /*
  * Set lmark (the mark named by the apostrophe).
  */
-	public void
+	void
 lastmark()
 {
 	struct scrpos scrpos;
@@ -257,7 +257,7 @@ lastmark()
 /*
  * Go to a mark.
  */
-	public void
+	void
 gomark(c)
 	int c;
 {
@@ -300,7 +300,7 @@ gomark(c)
  * is associated with, but this doesn't matter much,
  * because it's always the first non-blank line on the screen.
  */
-	public POSITION
+	POSITION
 markpos(c)
 	int c;
 {
@@ -321,7 +321,7 @@ markpos(c)
 /*
  * Return the mark associated with a given position, if any.
  */
-	public char
+	char
 posmark(pos)
 	POSITION pos;
 {
@@ -343,7 +343,7 @@ posmark(pos)
 /*
  * Clear the marks associated with a specified ifile.
  */
-	public void
+	void
 unmark(ifile)
 	IFILE ifile;
 {
@@ -358,7 +358,7 @@ unmark(ifile)
  * Check if any marks refer to a specified ifile vi m_filename
  * rather than m_ifile.
  */
-	public void
+	void
 mark_check_ifile(ifile)
 	IFILE ifile;
 {
@@ -385,7 +385,7 @@ mark_check_ifile(ifile)
 /*
  * Save marks to history file.
  */
-	public void
+	void
 save_marks(fout, hdr)
 	FILE *fout;
 	char *hdr;
@@ -418,7 +418,7 @@ save_marks(fout, hdr)
 /*
  * Restore one mark from the history file.
  */
-	public void
+	void
 restore_mark(line)
 	char *line;
 {

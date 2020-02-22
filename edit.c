@@ -11,7 +11,7 @@
 #endif
 #include <stdbool.h>
 
-public int fd0 = 0;
+int fd0 = 0;
 
 extern int new_file;
 extern int errmsgs;
@@ -37,8 +37,8 @@ extern char *namelogfile;
 #endif
 
 #if HAVE_STAT_INO
-public dev_t curr_dev;
-public ino_t curr_ino;
+dev_t curr_dev;
+ino_t curr_ino;
 #endif
 
 
@@ -49,7 +49,7 @@ public ino_t curr_ino;
  * words, returning each one as a standard null-terminated string.
  * back_textlist does the same, but runs thru the list backwards.
  */
-	public void
+	void
 init_textlist(tlist, str)
 	struct textlist *tlist;
 	char *str;
@@ -93,7 +93,7 @@ init_textlist(tlist, str)
 	}
 }
 
-	public char *
+	char *
 forw_textlist(tlist, prev)
 	struct textlist *tlist;
 	char *prev;
@@ -117,7 +117,7 @@ forw_textlist(tlist, prev)
 	return (s);
 }
 
-	public char *
+	char *
 back_textlist(tlist, prev)
 	struct textlist *tlist;
 	char *prev;
@@ -217,7 +217,7 @@ close_file()
  * Filename == "-" means standard input.
  * Filename == NULL means just close the current file.
  */
-	public int
+	int
 edit(filename)
 	char *filename;
 {
@@ -230,7 +230,7 @@ edit(filename)
  * Edit a new file (given its IFILE).
  * ifile == NULL means just close the current file.
  */
-	public int
+	int
 edit_ifile(ifile)
 	IFILE ifile;
 {
@@ -507,7 +507,7 @@ edit_ifile(ifile)
  * For each filename in the list, enter it into the ifile list.
  * Then edit the first one.
  */
-	public int
+	int
 edit_list(filelist)
 	char *filelist;
 {
@@ -568,7 +568,7 @@ edit_list(filelist)
 /*
  * Edit the first file in the command line (ifile) list.
  */
-	public int
+	int
 edit_first()
 {
 	if (nifile() == 0)
@@ -580,7 +580,7 @@ edit_first()
 /*
  * Edit the last file in the command line (ifile) list.
  */
-	public int
+	int
 edit_last()
 {
 	curr_ifile = NULL_IFILE;
@@ -641,7 +641,7 @@ edit_inext(h, n)
 	return (edit_istep(h, n, +1));
 }
 
-	public int
+	int
 edit_next(n)
 	int n;
 {
@@ -656,7 +656,7 @@ edit_iprev(h, n)
 	return (edit_istep(h, n, -1));
 }
 
-	public int
+	int
 edit_prev(n)
 	int n;
 {
@@ -666,7 +666,7 @@ edit_prev(n)
 /*
  * Edit a specific file in the command line (ifile) list.
  */
-	public int
+	int
 edit_index(n)
 	int n;
 {
@@ -687,7 +687,7 @@ edit_index(n)
 	return (edit_ifile(h));
 }
 
-	public IFILE
+	IFILE
 save_curr_ifile()
 {
 	if (curr_ifile != NULL_IFILE)
@@ -695,7 +695,7 @@ save_curr_ifile()
 	return (curr_ifile);
 }
 
-	public void
+	void
 unsave_ifile(save_ifile)
 	IFILE save_ifile;
 {
@@ -706,7 +706,7 @@ unsave_ifile(save_ifile)
 /*
  * Reedit the ifile which was previously open.
  */
-	public void
+	void
 reedit_ifile(save_ifile)
 	IFILE save_ifile;
 {
@@ -740,7 +740,7 @@ reedit_ifile(save_ifile)
 	quit(QUIT_ERROR);
 }
 
-	public void
+	void
 reopen_curr_ifile()
 {
 	IFILE save_ifile = save_curr_ifile();
@@ -751,7 +751,7 @@ reopen_curr_ifile()
 /*
  * Edit standard input.
  */
-	public int
+	int
 edit_stdin()
 {
 	if (isatty(fd0))
@@ -766,7 +766,7 @@ edit_stdin()
  * Copy a file directly to standard output.
  * Used if standard output is not a tty.
  */
-	public void
+	void
 cat_file()
 {
 	int c;
@@ -783,7 +783,7 @@ cat_file()
  * is standard input, create the log file.  
  * We take care not to blindly overwrite an existing file.
  */
-	public void
+	void
 use_logfile(filename)
 	char *filename;
 {

@@ -17,7 +17,7 @@
 /*
  * "sigs" contains bits indicating signals which need to be processed.
  */
-public int sigs;
+int sigs;
 
 extern int sc_width, sc_height;
 extern int screen_trashed;
@@ -87,7 +87,7 @@ stop(type)
  * "Window" change handler
  */
 	/* ARGSUSED*/
-	public RETSIGTYPE
+	RETSIGTYPE
 winch(type)
 	int type;
 {
@@ -132,7 +132,7 @@ terminate(type)
 /*
  * Set up the signal handlers.
  */
-	public void
+	void
 init_signals(on)
 	int on;
 {
@@ -193,7 +193,7 @@ init_signals(on)
  * Process any signals we have received.
  * A received signal cause a bit to be set in "sigs".
  */
-	public void
+	void
 psignals()
 {
 	int tsignals;

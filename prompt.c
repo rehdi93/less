@@ -47,10 +47,10 @@ static const char w_proto[] =
 static const char more_proto[] =
   "--More--(?eEND ?x- Next\\: %x.:?pB%pB\\%:byte %bB?s/%s...%t)";
 
-public char *prproto[3];
-public char const *eqproto = e_proto;
-public char const *hproto = h_proto;
-public char const *wproto = w_proto;
+char *prproto[3];
+char const *eqproto = e_proto;
+char const *hproto = h_proto;
+char const *wproto = w_proto;
 
 static char message[PROMPT_SIZE];
 static char *mp;
@@ -58,7 +58,7 @@ static char *mp;
 /*
  * Initialize the prompt prototype strings.
  */
-	public void
+	void
 init_prompt()
 {
 	prproto[0] = save(s_proto);
@@ -476,7 +476,7 @@ wherechar(p, wp)
 /*
  * Construct a message based on a prototype string.
  */
-	public char *
+	char *
 pr_expand(proto, maxwidth)
 	const char *proto;
 	int maxwidth;
@@ -552,7 +552,7 @@ pr_expand(proto, maxwidth)
 /*
  * Return a message suitable for printing by the "=" command.
  */
-	public char *
+	char *
 eq_message()
 {
 	return (pr_expand(eqproto, 0));
@@ -564,7 +564,7 @@ eq_message()
  * If we can't come up with an appropriate prompt, return NULL
  * and the caller will prompt with a colon.
  */
-	public char *
+	char *
 pr_string()
 {
 	char *prompt;
@@ -581,7 +581,7 @@ pr_string()
 /*
  * Return a message suitable for printing while waiting in the F command.
  */
-	public char *
+	char *
 wait_message()
 {
 	return (pr_expand(wproto, sc_width-so_s_width-so_e_width-2));

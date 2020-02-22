@@ -41,7 +41,7 @@
 #define LONG_JUMP	longjmp
 #endif
 
-public int reading;
+int reading;
 
 static jmp_buf read_label;
 
@@ -52,7 +52,7 @@ extern int sigs;
  * A call to intread() from a signal handler will interrupt
  * any pending iread().
  */
-	public int
+	int
 iread(fd, buf, len)
 	int fd;
 	unsigned char *buf;
@@ -168,7 +168,7 @@ start:
 /*
  * Interrupt a pending iread().
  */
-	public void
+	void
 intread()
 {
 	LONG_JUMP(read_label, 1);
@@ -178,7 +178,7 @@ intread()
  * Return the current time.
  */
 #if HAVE_TIME
-	public time_type
+	time_type
 get_time()
 {
 	time_type t;
@@ -215,7 +215,7 @@ strerror(err)
 /*
  * errno_message: Return an error message based on the value of "errno".
  */
-	public char *
+	char *
 errno_message(filename)
 	char *filename;
 {
@@ -262,7 +262,7 @@ muldiv(val, num, den)
  * Return the ratio of two POSITIONS, as a percentage.
  * {{ Assumes a POSITION is a long int. }}
  */
-	public int
+	int
 percentage(num, den)
 	POSITION num;
 	POSITION den;
@@ -273,7 +273,7 @@ percentage(num, den)
 /*
  * Return the specified percentage of a POSITION.
  */
-	public POSITION
+	POSITION
 percent_pos(pos, percent, fraction)
 	POSITION pos;
 	int percent;
@@ -327,7 +327,7 @@ memcpy(dst, src, len)
 /*
  * This implements an ANSI-style intercept setup for Microware C 3.2
  */
-	public int 
+	int 
 os9_signal(type, handler)
 	int type;
 	RETSIGTYPE (*handler)();

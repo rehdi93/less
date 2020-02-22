@@ -138,7 +138,7 @@ start_mca(action, prompt, mlist, cmdflags)
 	set_mlist(mlist, cmdflags);
 }
 
-	public int
+	int
 in_mca()
 {
 	return (mca != 0 && mca != A_PREFIX);
@@ -806,7 +806,7 @@ prompt()
 /*
  * Display the less version message.
  */
-	public void
+	void
 dispversion()
 {
 	PARG parg;
@@ -914,7 +914,7 @@ getcc_repl(orig, repl, gr_getc, gr_ungetc)
 /*
  * Get command character.
  */
-	public int
+	int
 getcc()
 {
 	/* Replace kent (keypad Enter) with a newline. */
@@ -925,7 +925,7 @@ getcc()
  * "Unget" a command character.
  * The next getcc() will return this character.
  */
-	public void
+	void
 ungetcc(c)
 	LWCHAR c;
 {
@@ -940,7 +940,7 @@ ungetcc(c)
  * Unget a whole string of command characters.
  * The next sequence of getcc()'s will return this string.
  */
-	public void
+	void
 ungetsc(s)
 	char *s;
 {
@@ -953,7 +953,7 @@ ungetsc(s)
 /*
  * Peek the next command character, without consuming it.
  */
-	public LWCHAR
+	LWCHAR
 peekcc()
 {
 	LWCHAR c = getcc();
@@ -1104,7 +1104,7 @@ forw_loop(until_hilite)
  * Main command processor.
  * Accept and execute commands until a quit command.
  */
-	public void
+	void
 commands()
 {
 	int c;

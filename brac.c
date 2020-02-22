@@ -16,7 +16,7 @@
  * The characters which serve as "open bracket" and 
  * "close bracket" are given.
  */
-	public void
+	void
 match_brac(obrac, cbrac, forwdir, n)
 	int obrac;
 	int cbrac;

@@ -33,7 +33,7 @@ extern int size_linebuf;
  * a line.  The new position is the position of the first character
  * of the NEXT line.  The line obtained is the line starting at curr_pos.
  */
-	public POSITION
+	POSITION
 forw_line(curr_pos)
 	POSITION curr_pos;
 {
@@ -243,7 +243,7 @@ get_forw_line:
  * a line.  The new position is the position of the first character
  * of the PREVIOUS line.  The line obtained is the one starting at new_pos.
  */
-	public POSITION
+	POSITION
 back_line(curr_pos)
 	POSITION curr_pos;
 {
@@ -426,7 +426,7 @@ get_back_line:
 /*
  * Set attnpos.
  */
-	public void
+	void
 set_attnpos(pos)
 	POSITION pos;
 {

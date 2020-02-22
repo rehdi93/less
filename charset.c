@@ -23,7 +23,7 @@
 
 extern int bs_mode;
 
-public int utf_mode = 0;
+int utf_mode = 0;
 
 /*
  * Predefined character sets,
@@ -115,7 +115,7 @@ struct cs_alias {
 static char chardef[256];
 static char *binfmt = NULL;
 static char *utfbinfmt = NULL;
-public int binattr = AT_STANDOUT;
+int binattr = AT_STANDOUT;
 
 
 /*
@@ -258,7 +258,7 @@ ilocale()
 /*
  * Define the printing format for control (or binary utf) chars.
  */
-	public void
+	void
 setfmt(s, fmtvarptr, attrptr, default_fmt)
 	char *s;
 	char **fmtvarptr;
@@ -388,7 +388,7 @@ set_charset()
 /*
  * Initialize charset data structures.
  */
-	public void
+	void
 init_charset()
 {
 	char *s;
@@ -409,7 +409,7 @@ init_charset()
 /*
  * Is a given character a "binary" character?
  */
-	public int
+	int
 binary_char(c)
 	LWCHAR c;
 {
@@ -422,7 +422,7 @@ binary_char(c)
 /*
  * Is a given character a "control" character?
  */
-	public int
+	int
 control_char(c)
 	LWCHAR c;
 {
@@ -434,7 +434,7 @@ control_char(c)
  * Return the printable form of a character.
  * For example, in the "ascii" charset '\3' is printed as "^C".
  */
-	public char *
+	char *
 prchar(c)
 	LWCHAR c;
 {
@@ -470,7 +470,7 @@ prchar(c)
 /*
  * Return the printable form of a UTF-8 character.
  */
-	public char *
+	char *
 prutfchar(ch)
 	LWCHAR ch;
 {
@@ -501,7 +501,7 @@ prutfchar(ch)
 /*
  * Get the length of a UTF-8 character in bytes.
  */
-	public int
+	int
 utf_len(ch)
 	int ch;
 {
@@ -524,7 +524,7 @@ utf_len(ch)
 /*
  * Does the parameter point to the lead byte of a well-formed UTF-8 character?
  */
-	public int
+	int
 is_utf8_well_formed(ss, slen)
 	char *ss;
 	int slen;
@@ -562,7 +562,7 @@ is_utf8_well_formed(ss, slen)
 /*
  * Skip bytes until a UTF-8 lead byte (11xxxxxx) or ASCII byte (0xxxxxxx) is found.
  */
-	public void
+	void
 utf_skip_to_lead(pp, limit)
 	char **pp;
 	char *limit;
@@ -576,7 +576,7 @@ utf_skip_to_lead(pp, limit)
 /*
  * Get the value of a UTF-8 character.
  */
-	public LWCHAR
+	LWCHAR
 get_wchar(p)
 	const char *p;
 {
@@ -628,7 +628,7 @@ get_wchar(p)
 /*
  * Store a character into a UTF-8 string.
  */
-	public void
+	void
 put_wchar(pp, ch)
 	char **pp;
 	LWCHAR ch;
@@ -678,7 +678,7 @@ put_wchar(pp, ch)
 /*
  * Step forward or backward one character in a string.
  */
-	public LWCHAR
+	LWCHAR
 step_char(pp, dir, limit)
 	char **pp;
 	signed int dir;
@@ -782,7 +782,7 @@ is_in_table(ch, table)
  * Is a character a UTF-8 composing character?
  * If a composing character follows any char, the two combine into one glyph.
  */
-	public int
+	int
 is_composing_char(ch)
 	LWCHAR ch;
 {
@@ -793,7 +793,7 @@ is_composing_char(ch)
 /*
  * Should this UTF-8 character be treated as binary?
  */
-	public int
+	int
 is_ubin_char(ch)
 	LWCHAR ch;
 {
@@ -817,7 +817,7 @@ is_ubin_char(ch)
 /*
  * Is this a double width UTF-8 character?
  */
-	public int
+	int
 is_wide_char(ch)
 	LWCHAR ch;
 {
@@ -829,7 +829,7 @@ is_wide_char(ch)
  * A combining char acts like an ordinary char, but if it follows
  * a specific char (not any char), the two combine into one glyph.
  */
-	public int
+	int
 is_combining_char(ch1, ch2)
 	LWCHAR ch1;
 	LWCHAR ch2;

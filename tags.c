@@ -7,8 +7,8 @@
 
 #if TAGS
 
-public char ztags[] = "tags";
-public char *tags = ztags;
+char ztags[] = "tags";
+char *tags = ztags;
 
 static int total;
 static int curseq;
@@ -81,7 +81,7 @@ static struct tag *curtag;
 /*
  * Delete tag structures.
  */
-	public void
+	void
 cleantags()
 {
 	struct tag *tp;
@@ -133,7 +133,7 @@ maketagent(name, file, linenum, pattern, endline)
 /*
  * Get tag mode.
  */
-	public int
+	int
 gettagtype()
 {
 	int f;
@@ -164,7 +164,7 @@ gettagtype()
  * and "tagpattern" to the search pattern which should be used
  * to find the tag.
  */
-	public void
+	void
 findtag(tag)
 	char *tag;
 {
@@ -195,7 +195,7 @@ findtag(tag)
 /*
  * Search for a tag.
  */
-	public POSITION
+	POSITION
 tagsearch()
 {
 	if (curtag == NULL)
@@ -209,7 +209,7 @@ tagsearch()
 /*
  * Go to the next tag.
  */
-	public char *
+	char *
 nexttag(n)
 	int n;
 {
@@ -223,7 +223,7 @@ nexttag(n)
 /*
  * Go to the previous tag.
  */
-	public char *
+	char *
 prevtag(n)
 	int n;
 {
@@ -237,7 +237,7 @@ prevtag(n)
 /*
  * Return the total number of tags.
  */
-	public int
+	int
 ntags()
 {
 	return total;
@@ -246,7 +246,7 @@ ntags()
 /*
  * Return the sequence number of current tag.
  */
-	public int
+	int
 curr_tag()
 {
 	return curseq;
@@ -372,7 +372,7 @@ findctag(tag)
 /*
  * Edit current tagged file.
  */
-	public int
+	int
 edit_tagfile()
 {
 	if (curtag == NULL)
