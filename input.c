@@ -41,8 +41,8 @@ forw_line(curr_pos)
 	POSITION new_pos;
 	int c;
 	int blankline;
-	int endline;
-	int chopped;
+	bool endline;
+	bool chopped;
 	int backchars;
 
 get_forw_line:
@@ -249,8 +249,8 @@ back_line(curr_pos)
 {
 	POSITION new_pos, begin_new_pos, base_pos;
 	int c;
-	int endline;
-	int chopped;
+	bool endline;
+	bool chopped;
 	int backchars;
 
 get_back_line:

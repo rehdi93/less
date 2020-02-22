@@ -23,13 +23,13 @@
 extern int nbufs;
 extern int bufspace;
 extern int pr_type;
-extern int plusoption;
+extern bool plusoption;
 extern int swindow;
 extern int sc_width;
 extern int sc_height;
 extern int secure;
 extern int dohelp;
-extern int any_display;
+extern bool any_display;
 extern char openquote;
 extern char closequote;
 extern char *prproto[];
@@ -50,7 +50,7 @@ extern int wheel_lines;
 extern int less_is_more;
 #if LOGFILE
 extern char *namelogfile;
-extern int force_logfile;
+extern bool force_logfile;
 extern int logfile;
 #endif
 #if TAGS

@@ -13,11 +13,11 @@
 
 int fd0 = 0;
 
-extern int new_file;
+extern bool new_file;
 extern int errmsgs;
 extern int cbufs;
 extern char *every_first_cmd;
-extern int any_display;
+extern bool any_display;
 extern int force_open;
 extern int is_tty;
 extern int sigs;
@@ -32,7 +32,7 @@ extern char closequote;
 
 #if LOGFILE
 extern int logfile;
-extern int force_logfile;
+extern bool force_logfile;
 extern char *namelogfile;
 #endif
 

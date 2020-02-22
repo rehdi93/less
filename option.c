@@ -14,7 +14,7 @@
 #include "option.h"
 
 static struct loption *pendopt;
-int plusoption = false;
+bool plusoption = false;
 
 static char *optstring (char *s, char **p_str, char *printopt,
     char *validchars);
@@ -68,7 +68,7 @@ scan_option(s)
 	char *optname;
 	char *printopt;
 	char *str;
-	int set_default;
+	bool set_default;
 	int lc;
 	int err;
 	PARG parg;
@@ -631,7 +631,7 @@ getnum(sp, printopt, errp)
 {
 	char *s;
 	int n;
-	int neg;
+	bool neg;
 
 	s = skipsp(*sp);
 	neg = false;

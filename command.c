@@ -68,7 +68,7 @@ static long fraction;		/* The fractional part of the number */
 static struct loption *curropt;
 static int opt_lower;
 static int optflag;
-static int optgetname;
+static bool optgetname;
 static POSITION bottompos;
 static int save_hshift;
 static int save_bs_mode;

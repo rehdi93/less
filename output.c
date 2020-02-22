@@ -22,7 +22,7 @@ extern int sigs;
 extern int sc_width;
 extern int so_s_width, so_e_width;
 extern int screen_trashed;
-extern int any_display;
+extern bool any_display;
 extern int is_tty;
 extern int oldbot;
 
@@ -459,7 +459,7 @@ void funcname(num, buf) \
 	type num; \
 	char *buf; \
 { \
-	int neg = (num < 0); \
+	bool neg = (num < 0); \
 	char tbuf[INT_STRLEN_BOUND(num)+2]; \
 	char *s = tbuf + sizeof(tbuf); \
 	if (neg) num = -num; \

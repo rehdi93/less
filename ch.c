@@ -143,7 +143,7 @@ ch_get()
 	struct buf *bp;
 	struct bufnode *bn;
 	int n;
-	int slept;
+	bool slept;
 	int h;
 	POSITION pos;
 	POSITION len;
@@ -388,7 +388,7 @@ ch_ungetchar(c)
 	void
 end_logfile()
 {
-	static int tried = false;
+	static bool tried = false;
 
 	if (logfile < 0)
 		return;
@@ -415,14 +415,14 @@ sync_logfile()
 {
 	struct buf *bp;
 	struct bufnode *bn;
-	int warned = false;
+	bool warned = false;
 	BLOCKNUM block;
 	BLOCKNUM nblocks;
 
 	nblocks = (ch_fpos + LBUFSIZE - 1) / LBUFSIZE;
 	for (block = 0;  block < nblocks;  block++)
 	{
-		int wrote = false;
+		bool wrote = false;
 		FOR_BUFS(bn)
 		{
 			bp = bufnode_buf(bn);
@@ -886,7 +886,7 @@ ch_init(f, flags)
 	void
 ch_close()
 {
-	int keepstate = false;
+	bool keepstate = false;
 
 	if (thisfile == NULL)
 		return;

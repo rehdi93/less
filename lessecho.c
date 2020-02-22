@@ -68,7 +68,7 @@ lstrtol(s, radix, pend)
 	char **pend;
 {
 	int v;
-	int neg = 0;
+	bool neg = 0;
 	long n = 0;
 
 	/* Skip leading white space. */

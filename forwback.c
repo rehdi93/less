@@ -19,7 +19,7 @@ extern int sigs;
 extern int top_scroll;
 extern int quiet;
 extern int sc_width, sc_height;
-extern int plusoption;
+extern bool plusoption;
 extern int forw_scroll;
 extern int back_scroll;
 extern int ignore_eoi;

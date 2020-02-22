@@ -14,7 +14,7 @@
 #include "position.h"
 
 extern int pr_type;
-extern int new_file;
+extern bool new_file;
 extern int sc_width;
 extern int so_s_width, so_e_width;
 extern int linenums;
