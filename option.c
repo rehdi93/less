@@ -523,7 +523,7 @@ opt_prompt(o)
  * If the specified option can be toggled, return NULL.
  * Otherwise return an appropriate error message.
  */
-	public char *
+	char *
 opt_toggle_disallowed(c)
 	int c;
 {

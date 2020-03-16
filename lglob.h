@@ -23,8 +23,7 @@
 #define	INIT_GLOB_LIST(list,p)		p = *pp
 #define	GLOB_LIST_DONE(list)		_fnexplodefree(list)
 
-#else
-#if LESS_PLATFORM==WIN32C && (defined(_MSC_VER) || defined(MINGW))
+#elif LESS_PLATFORM==WIN32C && (defined(_MSC_VER) || defined(MINGW))
 
 #define	GLOB_FIRST_NAME(filename,fndp,h) h = _findfirst(filename, fndp)
 #define	GLOB_FIRST_FAILED(handle)	((handle) == -1)
@@ -38,7 +37,4 @@
 					char fname[_MAX_FNAME];	\
 					char ext[_MAX_EXT];	\
 					intptr_t handle;
-#endif
-#endif
-#endif
 #endif
