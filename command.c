@@ -8,7 +8,6 @@
 #include "less.h"
 #if MSDOS_COMPILER==WIN32C
 #include "os_windows_defs.h"
-#undef NONLS
 #include <windows.h>
 #endif
 #include "position.h"
@@ -1795,6 +1794,12 @@ commands()
 			optgetname = false;
 			mca_opt_toggle();
 			c = getcc();
+			cbuf = opt_toggle_disallowed(c);
+			if (cbuf != NULL)
+			{
+				error(cbuf, NULL_PARG);
+				break;
+			}
 			goto again;
 
 		case A_DISP_OPTION:

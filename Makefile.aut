@@ -51,8 +51,7 @@ help.c: less.hlp
 	${srcdir}/mkhelp.pl < less.hlp > help.c
 	if cmp -s help.c help.c.old; then mv -f help.c.old help.c; fi
 
-${srcdir}/configure: ${srcdir}/configure.ac \
-		${srcdir}/Makefile.in
+${srcdir}/configure ${srcdir}/defines.h.in: ${srcdir}/configure.ac ${srcdir}/Makefile.in
 	cd ${srcdir}; autoheader; autoconf
 
 lint:
@@ -60,6 +59,7 @@ lint:
 
 clean: 
 	rm -f Makefile config.status config.log config.cache defines.h stamp-h \
+		configure defines.h.in funcs.h help.c \
 		README NEWS \
 		less.nro less.man lesskey.nro lesskey.man lessecho.nro lessecho.man 
 
@@ -109,7 +109,7 @@ unicode/UnicodeData.txt:
 	curl -s -u 'anonymous:${EMAIL}' -o $@ ftp://ftp.unicode.org/Public/UNIDATA/UnicodeData.txt
 unicode/EastAsianWidth.txt:
 	mkdir -p unicode
-	curl -s -u 'anonymous:$(EMAIL)' -o $@ ftp://ftp.unicode.org/Public/UNIDATA/EastAsianWidth.txt
+	curl -s -u 'anonymous:${EMAIL}' -o $@ ftp://ftp.unicode.org/Public/UNIDATA/EastAsianWidth.txt
 
 distfiles: ${DISTFILES}
 

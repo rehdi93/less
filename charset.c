@@ -10,14 +10,15 @@
 #if HAVE_LOCALE
 #include <locale.h>
 #include <ctype.h>
+#if HAVE_LANGINFO
 #include <langinfo.h>
+#endif
 #endif
 
 #include "charset.h"
 
 #if MSDOS_COMPILER==WIN32C
 #include "os_windows_defs.h"
-#undef NONLS
 #include <windows.h>
 #endif
 
