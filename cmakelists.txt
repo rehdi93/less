@@ -41,7 +41,6 @@ set(SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
     lsystem.c mark.c optfunc.c option.c opttbl.c os.c
     output.c pattern.c position.c prompt.c search.c signal.c
     tags.c ttyin.c regexp.c)
-    #help.c  funcs.h
 
 add_executable(less ${SRC})
 add_executable(lesskey lesskey.c)
@@ -56,12 +55,11 @@ target_link_libraries(less PRIVATE common)
 target_link_libraries(lesskey PRIVATE common)
 target_link_libraries(lessecho PRIVATE common)
 
-# we may need to generate help.c, funcs.h
-set(generated_files help.c funcs.h)
+# we may need to generate help.c
+set(generated_files help.c)
 find_file(help_c_found  help.c  PATHS ${CMAKE_SOURCE_DIR} NO_DEFAULT_PATH)
-find_file(funcs_h_found funcs.h PATHS ${CMAKE_SOURCE_DIR} NO_DEFAULT_PATH)
 
-if(NOT help_c_found OR NOT funcs_h_found)
+if(NOT help_c_found)
     message(CHECK_START " " "Generating files (${generated_files})")
 
     find_package(Perl REQUIRED)
@@ -82,22 +80,7 @@ if(NOT help_c_found OR NOT funcs_h_found)
         endif()
     endif()
 
-    if(NOT funcs_h_found)
-        message(CHECK_START "  " "Generating funcs.h")
-        execute_process(
-            COMMAND ${PERL_EXECUTABLE} mkfuncs.pl ${SRC} help.c
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            OUTPUT_FILE funcs.h
-            RESULT_VARIABLE gen
-        )
-        if(gen EQUAL 0)
-            message(CHECK_PASS "  " "ok")
-        else()
-            message(CHECK_FAIL "  " "fail")
-        endif()
-    endif()
-
-    if((EXISTS help.c) AND (EXISTS funcs.h))
+    if(EXISTS help.c)
         message(CHECK_PASS "  " "ok")
     else()
         message(CHECK_FAIL "  " "fail")
@@ -105,8 +88,8 @@ if(NOT help_c_found OR NOT funcs_h_found)
     
 endif()
 
-# help.c, funcs.h exists at this point
-target_sources(less PRIVATE help.c funcs.h)
+# help.c exists at this point
+target_sources(less PRIVATE help.c)
 
 
 # find terminal libraries
