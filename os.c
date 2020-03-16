@@ -103,23 +103,6 @@ start:
 
 	flush();
 	reading = 1;
-#if MSDOS_COMPILER==DJGPPC
-	if (isatty(fd))
-	{
-		/*
-		 * Don't try reading from a TTY until a character is
-		 * available, because that makes some background programs
-		 * believe DOS is busy in a way that prevents those
-		 * programs from working while "less" waits.
-		 */
-		fd_set readfds;
-
-		FD_ZERO(&readfds);
-		FD_SET(fd, &readfds);
-		if (select(fd+1, &readfds, 0, 0, 0) == -1)
-			return (-1);
-	}
-#endif
 	n = read(fd, buf, len);
 #if 1
 	/*

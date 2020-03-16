@@ -152,21 +152,7 @@ lsystem(cmd, donemsg)
 	system(p);
 	free(p);
 #else
-#if MSDOS_COMPILER==DJGPPC
-	/*
-	 * Make stdin of the child be in cooked mode.
-	 */
-	setmode(0, O_TEXT);
-	/*
-	 * We don't need to catch signals of the child (it
-	 * also makes trouble with some DPMI servers).
-	 */
-	__djgpp_exception_toggle();
-  	system(cmd);
-	__djgpp_exception_toggle();
-#else
 	system(cmd);
-#endif
 #endif
 
 #if HAVE_DUP

@@ -24,31 +24,6 @@
 #define	GLOB_LIST_DONE(list)		_fnexplodefree(list)
 
 #else
-#if MSDOS_COMPILER==DJGPPC
-
-#define	DECL_GLOB_LIST(list)		glob_t list;  int i;
-#define	GLOB_LIST(filename,list)	glob(filename,GLOB_NOCHECK,0,&list)
-#define	GLOB_LIST_FAILED(list)		0
-#define	SCAN_GLOB_LIST(list,p)		i = 0;  i < list.gl_pathc;  i++
-#define	INIT_GLOB_LIST(list,p)		p = list.gl_pathv[i]
-#define	GLOB_LIST_DONE(list)		globfree(&list)
-
-#else
-#if MSDOS_COMPILER==MSOFTC || MSDOS_COMPILER==BORLANDC
-
-#define	GLOB_FIRST_NAME(filename,fndp,h) h = _dos_findfirst(filename, ~_A_VOLID, fndp)
-#define	GLOB_FIRST_FAILED(handle)	((handle) != 0)
-#define	GLOB_NEXT_NAME(handle,fndp)		_dos_findnext(fndp)
-#define	GLOB_NAME_DONE(handle)
-#define	GLOB_NAME			name
-#define	DECL_GLOB_NAME(fnd,drive,dir,fname,ext,handle) \
-					struct find_t fnd;	\
-					char drive[_MAX_DRIVE];	\
-					char dir[_MAX_DIR];	\
-					char fname[_MAX_FNAME];	\
-					char ext[_MAX_EXT];	\
-					int handle;
-#else
 #if MSDOS_COMPILER==WIN32C && (defined(_MSC_VER) || defined(MINGW))
 
 #define	GLOB_FIRST_NAME(filename,fndp,h) h = _findfirst(filename, fndp)
@@ -63,24 +38,6 @@
 					char fname[_MAX_FNAME];	\
 					char ext[_MAX_EXT];	\
 					intptr_t handle;
-
-#else
-#if MSDOS_COMPILER==WIN32C && !defined(_MSC_VER) /* Borland C for Windows */
-
-#define	GLOB_FIRST_NAME(filename,fndp,h) h = findfirst(filename, fndp, ~FA_LABEL)
-#define	GLOB_FIRST_FAILED(handle)	((handle) != 0)
-#define	GLOB_NEXT_NAME(handle,fndp)	findnext(fndp)
-#define	GLOB_NAME_DONE(handle)
-#define	GLOB_NAME			ff_name
-#define	DECL_GLOB_NAME(fnd,drive,dir,fname,ext,handle) \
-					struct ffblk fnd;	\
-					char drive[MAXDRIVE];	\
-					char dir[MAXDIR];	\
-					char fname[MAXFILE];	\
-					char ext[MAXEXT];	\
-					int handle;
-
-#endif
 #endif
 #endif
 #endif

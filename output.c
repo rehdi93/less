@@ -26,7 +26,7 @@ extern bool any_display;
 extern int is_tty;
 extern int oldbot;
 
-#if MSDOS_COMPILER==WIN32C || MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
+#if MSDOS_COMPILER==WIN32C
 extern int ctldisp;
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
@@ -102,16 +102,7 @@ flush()
 	if (n == 0)
 		return;
 
-#if MSDOS_COMPILER==MSOFTC
-	if (is_tty && any_display)
-	{
-		*ob = '\0';
-		_outtext(obuf);
-		ob = obuf;
-		return;
-	}
-#else
-#if MSDOS_COMPILER==WIN32C || MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
+#if MSDOS_COMPILER==WIN32C
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
@@ -129,7 +120,6 @@ flush()
 			static int fg, fgi, bg, bgi;
 			static int at;
 			int f, b;
-#if MSDOS_COMPILER==WIN32C
 			/* Screen colors used by 3x and 4x SGR commands. */
 			static unsigned char screen_color[] = {
 				0, /* BLACK */

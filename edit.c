@@ -343,14 +343,6 @@ edit_ifile(ifile)
 			 * Must switch stdin to BINARY mode.
 			 */
 			SET_BINARY(f);
-#if MSDOS_COMPILER==DJGPPC
-			/*
-			 * Setting stdin to binary by default causes
-			 * Ctrl-C to not raise SIGINT.  We must undo
-			 * that side-effect.
-			 */
-			__djgpp_set_ctrl_c(1);
-#endif
 		} else if (strcmp(open_filename, FAKE_EMPTYFILE) == 0)
 		{
 			f = -1;

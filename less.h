@@ -73,13 +73,6 @@
 #include <io.h>
 #endif
 
-#if MSDOS_COMPILER==DJGPPC
-#include <io.h>
-#include <sys/exceptn.h>
-#include <conio.h>
-#include <pc.h>
-#endif
-
 #if !HAVE_STDLIB_H
 char *getenv();
 off_t lseek();
@@ -214,14 +207,10 @@ typedef off_t		LINENUM;
 /*
  * Set a file descriptor to binary mode.
  */
-#if MSDOS_COMPILER==MSOFTC
-#define	SET_BINARY(f)	_setmode(f, _O_BINARY);
-#else
 #if MSDOS_COMPILER || OS2
 #define	SET_BINARY(f)	setmode(f, O_BINARY)
 #else
 #define	SET_BINARY(f)
-#endif
 #endif
 
 /*

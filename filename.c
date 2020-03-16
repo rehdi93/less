@@ -13,11 +13,6 @@
 #if MSDOS_COMPILER==WIN32C && !defined(_MSC_VER)
 #include <dir.h>
 #endif
-#if MSDOS_COMPILER==DJGPPC
-#include <glob.h>
-#include <dir.h>
-#define _MAX_PATH	PATH_MAX
-#endif
 #endif
 #ifdef _OSK
 #include <rbf.h>
@@ -271,17 +266,7 @@ homefile(filename)
 	 * Look for the file anywhere on search path.
 	 */
 	pathname = (char *) calloc(_MAX_PATH, sizeof(char));
-#if MSDOS_COMPILER==DJGPPC
-	{
-		char *res = searchpath(filename);
-		if (res == 0)
-			*pathname = '\0';
-		else
-			strcpy(pathname, res);
-	}
-#else
 	_searchenv(filename, "PATH", pathname);
-#endif
 	if (*pathname != '\0')
 		return (pathname);
 	free(pathname);
@@ -404,34 +389,11 @@ fcomplete(s)
 	/*
 	 * Complete the filename "s" by globbing "s*".
 	 */
-#if MSDOS_COMPILER && (MSDOS_COMPILER == MSOFTC || MSDOS_COMPILER == BORLANDC)
-	/*
-	 * But in DOS, we have to glob "s*.*".
-	 * But if the final component of the filename already has
-	 * a dot in it, just do "s*".  
-	 * (Thus, "FILE" is globbed as "FILE*.*", 
-	 *  but "FILE.A" is globbed as "FILE.A*").
-	 */
 	{
-		char *slash;
-		int len;
-		for (slash = s+strlen(s)-1;  slash > s;  slash--)
-			if (*slash == *PATHNAME_SEP || *slash == '/')
-				break;
-		len = (int) strlen(s) + 4;
+		int len = (int) strlen(s) + 2;
 		fpat = (char *) ecalloc(len, sizeof(char));
-		if (strchr(slash, '.') == NULL)
-			snprintf(fpat, len, "%s*.*", s);
-		else
-			snprintf(fpat, len, "%s*", s);
+		snprintf(fpat, len, "%s*", s);
 	}
-#else
-	{
-	int len = (int) strlen(s) + 2;
-	fpat = (char *) ecalloc(len, sizeof(char));
-	snprintf(fpat, len, "%s*", s);
-	}
-#endif
 	qs = lglob(fpat);
 	s = shell_unquote(qs);
 	if (strcmp(s,fpat) == 0)

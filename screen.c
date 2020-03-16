@@ -11,22 +11,11 @@
 
 #if MSDOS_COMPILER
 #include "pckeys.h"
-#if MSDOS_COMPILER==MSOFTC
-#include <graph.h>
-#else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-#include <conio.h>
-#if MSDOS_COMPILER==DJGPPC
-#include <pc.h>
-extern int fd0;
-#endif
-#else
 #if MSDOS_COMPILER==WIN32C
 #include "os_windows_defs.h"
 #include <windows.h>
 #endif
-#endif
-#endif
+
 #include <time.h>
 
 #else
@@ -85,24 +74,6 @@ static char *windowid;
 #define	DEFAULT_TERM		"unknown"
 #endif
 
-#if MSDOS_COMPILER==MSOFTC
-static int videopages;
-static long msec_loops;
-static int flash_created = 0;
-#define	SETCOLORS(fg,bg)	{ _settextcolor(fg); _setbkcolor(bg); }
-#endif
-
-#if MSDOS_COMPILER==BORLANDC
-static unsigned short *whitescreen;
-static int flash_created = 0;
-#endif
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-#define _settextposition(y,x)   gotoxy(x,y)
-#define _clearscreen(m)         clrscr()
-#define _outtext(s)             cputs(s)
-#define	SETCOLORS(fg,bg)	{ textcolor(fg); textbackground(bg); }
-extern int sc_height;
-#endif
 
 #if MSDOS_COMPILER==WIN32C
 struct keyRecord
@@ -604,20 +575,7 @@ raw_mode(on)
 	LSIGNAL(SIGINT, SIG_IGN);
 #endif
 	erase_char = '\b';
-#if MSDOS_COMPILER==DJGPPC
-	kill_char = CONTROL('U');
-	/*
-	 * So that when we shell out or run another program, its
-	 * stdin is in cooked mode.  We do not switch stdin to binary 
-	 * mode if fd0 is zero, since that means we were called before
-	 * tty was reopened in open_getchr, in which case we would be
-	 * changing the original stdin device outside less.
-	 */
-	if (fd0 != 0)
-		setmode(0, on ? O_BINARY : O_TEXT);
-#else
 	kill_char = ESC;
-#endif
 	werase_char = CONTROL('W');
 #endif
 #endif
@@ -722,22 +680,6 @@ scrsize()
 
 	sys_width = sys_height = 0;
 
-#if MSDOS_COMPILER==MSOFTC
-	{
-		struct videoconfig w;
-		_getvideoconfig(&w);
-		sys_height = w.numtextrows;
-		sys_width = w.numtextcols;
-	}
-#else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-	{
-		struct text_info w;
-		gettextinfo(&w);
-		sys_height = w.screenheight;
-		sys_width = w.screenwidth;
-	}
-#else
 #if MSDOS_COMPILER==WIN32C
 	{
 		CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -802,8 +744,6 @@ scrsize()
 #endif
 #endif
 #endif
-#endif
-#endif
 
 	if (sys_height > 0)
 		sc_height = sys_height;
@@ -827,52 +767,6 @@ scrsize()
 	if (sc_width <= 0)
 		sc_width = DEF_SC_WIDTH;
 }
-
-#if MSDOS_COMPILER==MSOFTC
-/*
- * Figure out how many empty loops it takes to delay a millisecond.
- */
-	static void
-get_clock()
-{
-	clock_t start;
-	
-	/*
-	 * Get synchronized at the start of a tick.
-	 */
-	start = clock();
-	while (clock() == start)
-		;
-	/*
-	 * Now count loops till the next tick.
-	 */
-	start = clock();
-	msec_loops = 0;
-	while (clock() == start)
-		msec_loops++;
-	/*
-	 * Convert from (loops per clock) to (loops per millisecond).
-	 */
-	msec_loops *= CLOCKS_PER_SEC;
-	msec_loops /= 1000;
-}
-
-/*
- * Delay for a specified number of milliseconds.
- */
-	static void
-delay(msec)
-	int msec;
-{
-	long i;
-	
-	while (msec-- > 0)
-	{
-		for (i = 0;  i < msec_loops;  i++)
-			(void) clock();
-	}
-}
-#endif
 
 /*
  * Return the characters actually input by a "special" key.
@@ -1059,19 +953,6 @@ get_term()
 	 * Set up default colors.
 	 * The xx_s_width and xx_e_width vars are already initialized to 0.
 	 */
-#if MSDOS_COMPILER==MSOFTC
-	sy_bg_color = _getbkcolor();
-	sy_fg_color = _gettextcolor();
-	get_clock();
-#else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-    {
-	struct text_info w;
-	gettextinfo(&w);
-	sy_bg_color = (w.attribute >> 4) & 0x0F;
-	sy_fg_color = (w.attribute >> 0) & 0x0F;
-    }
-#else
 #if MSDOS_COMPILER==WIN32C
     {
 	CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -1087,8 +968,6 @@ get_term()
 	sy_bg_color = (curr_attr & BG_COLORS) >> 4; /* normalize */
 	sy_fg_color = curr_attr & FG_COLORS;
     }
-#endif
-#endif
 #endif
 	nm_fg_color = sy_fg_color;
 	nm_bg_color = sy_bg_color;
@@ -1452,9 +1331,6 @@ _settextposition(int row, int col)
 	static void
 initcolor()
 {
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-	intensevideo();
-#endif
 	SETCOLORS(nm_fg_color, nm_bg_color);
 #if 0
 	/*
@@ -1673,15 +1549,7 @@ add_line()
 	tputs(sc_addline, sc_height, putchr);
 #else
 	flush();
-#if MSDOS_COMPILER==MSOFTC
-	_scrolltextwindow(_GSCROLLDOWN);
-	_settextposition(1,1);
-#else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-	movetext(1,1, sc_width,sc_height-1, 1,2);
-	gotoxy(1,1);
-	clreol();
-#else
+
 #if MSDOS_COMPILER==WIN32C
     {
 	CHAR_INFO fillchar;
@@ -1712,8 +1580,6 @@ add_line()
 	ScrollConsoleScreenBuffer(con_out, &rcSrc, &rcClip, new_org, &fillchar);
 	_settextposition(1,1);
     }
-#endif
-#endif
 #endif
 #endif
 }
@@ -1906,9 +1772,6 @@ line_left()
 		row = scr.dwCursorPosition.Y - scr.srWindow.Top + 1;
 	}
 #else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-		row = wherey();
-#else
 	{
 		struct rccoord tpos = _gettextposition();
 		row = tpos.row;
@@ -1916,7 +1779,6 @@ line_left()
 #endif
 #endif
 	_settextposition(row, 1);
-#endif
 }
 
 /*
@@ -1965,57 +1827,6 @@ goto_line(sindex)
 #endif
 }
 
-#if MSDOS_COMPILER==MSOFTC || MSDOS_COMPILER==BORLANDC
-/*
- * Create an alternate screen which is all white.
- * This screen is used to create a "flash" effect, by displaying it
- * briefly and then switching back to the normal screen.
- * {{ Yuck!  There must be a better way to get a visual bell. }}
- */
-	static void
-create_flash()
-{
-#if MSDOS_COMPILER==MSOFTC
-	struct videoconfig w;
-	char *blanks;
-	int row, col;
-	
-	_getvideoconfig(&w);
-	videopages = w.numvideopages;
-	if (videopages < 2)
-	{
-		at_enter(AT_STANDOUT);
-		at_exit();
-	} else
-	{
-		_setactivepage(1);
-		at_enter(AT_STANDOUT);
-		blanks = (char *) ecalloc(w.numtextcols, sizeof(char));
-		for (col = 0;  col < w.numtextcols;  col++)
-			blanks[col] = ' ';
-		for (row = w.numtextrows;  row > 0;  row--)
-			_outmem(blanks, w.numtextcols);
-		_setactivepage(0);
-		_setvisualpage(0);
-		free(blanks);
-		at_exit();
-	}
-#else
-#if MSDOS_COMPILER==BORLANDC
-	int n;
-
-	whitescreen = (unsigned short *) 
-		malloc(sc_width * sc_height * sizeof(short));
-	if (whitescreen == NULL)
-		return;
-	for (n = 0;  n < sc_width * sc_height;  n++)
-		whitescreen[n] = 0x7020;
-#endif
-#endif
-	flash_created = 1;
-}
-#endif /* MSDOS_COMPILER */
-
 /*
  * Output the "visual bell", if there is one.
  */
@@ -2027,43 +1838,7 @@ vbell()
 		return;
 	tputs(sc_visual_bell, sc_height, putchr);
 #else
-#if MSDOS_COMPILER==DJGPPC
-	ScreenVisualBell();
-#else
-#if MSDOS_COMPILER==MSOFTC
-	/*
-	 * Create a flash screen on the second video page.
-	 * Switch to that page, then switch back.
-	 */
-	if (!flash_created)
-		create_flash();
-	if (videopages < 2)
-		return;
-	_setvisualpage(1);
-	delay(100);
-	_setvisualpage(0);
-#else
-#if MSDOS_COMPILER==BORLANDC
-	unsigned short *currscreen;
 
-	/*
-	 * Get a copy of the current screen.
-	 * Display the flash screen.
-	 * Then restore the old screen.
-	 */
-	if (!flash_created)
-		create_flash();
-	if (whitescreen == NULL)
-		return;
-	currscreen = (unsigned short *) 
-		malloc(sc_width * sc_height * sizeof(short));
-	if (currscreen == NULL) return;
-	gettext(1, 1, sc_width, sc_height, currscreen);
-	puttext(1, 1, sc_width, sc_height, whitescreen);
-	delay(100);
-	puttext(1, 1, sc_width, sc_height, currscreen);
-	free(currscreen);
-#else
 #if MSDOS_COMPILER==WIN32C
 	/* paint screen with an inverse color */
 	clear();
@@ -2073,9 +1848,6 @@ vbell()
 
 	/* restore with a redraw */
 	repaint();
-#endif
-#endif
-#endif
 #endif
 #endif
 }
@@ -2137,34 +1909,6 @@ clear_eol()
 #if !MSDOS_COMPILER
 	tputs(sc_eol_clear, 1, putchr);
 #else
-#if MSDOS_COMPILER==MSOFTC
-	short top, left;
-	short bot, right;
-	struct rccoord tpos;
-	
-	flush();
-	/*
-	 * Save current state.
-	 */
-	tpos = _gettextposition();
-	_gettextwindow(&top, &left, &bot, &right);
-	/*
-	 * Set a temporary window to the current line,
-	 * from the cursor's position to the right edge of the screen.
-	 * Then clear that window.
-	 */
-	_settextwindow(tpos.row, tpos.col, tpos.row, sc_width);
-	_clearscreen(_GWINDOW);
-	/*
-	 * Restore state.
-	 */
-	_settextwindow(top, left, bot, right);
-	_settextposition(tpos.row, tpos.col);
-#else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-	flush();
-	clreol();
-#else
 #if MSDOS_COMPILER==WIN32C
 	DWORD           nchars;
 	COORD           cpos;
@@ -2180,8 +1924,6 @@ clear_eol()
 		scr.dwSize.X - cpos.X, cpos, &nchars);
 	FillConsoleOutputCharacter(con_out, ' ',
 		scr.dwSize.X - cpos.X, cpos, &nchars);
-#endif
-#endif
 #endif
 #endif
 }
@@ -2330,57 +2072,6 @@ apply_at_specials(attr)
 	return attr;
 }
 
-#if 0 /* No longer used */
-/*
- * Erase the character to the left of the cursor 
- * and move the cursor left.
- */
-	void
-backspace()
-{
-#if !MSDOS_COMPILER
-	/* 
-	 * Erase the previous character by overstriking with a space.
-	 */
-	tputs(sc_backspace, 1, putchr);
-	putchr(' ');
-	tputs(sc_backspace, 1, putchr);
-#else
-#if MSDOS_COMPILER==MSOFTC
-	struct rccoord tpos;
-	
-	flush();
-	tpos = _gettextposition();
-	if (tpos.col <= 1)
-		return;
-	_settextposition(tpos.row, tpos.col-1);
-	_outtext(" ");
-	_settextposition(tpos.row, tpos.col-1);
-#else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-	cputs("\b");
-#else
-#if MSDOS_COMPILER==WIN32C
-	COORD cpos;
-	DWORD cChars;
-	CONSOLE_SCREEN_BUFFER_INFO scr;
-
-	flush();
-	GetConsoleScreenBufferInfo(con_out, &scr);
-	cpos = scr.dwCursorPosition;
-	if (cpos.X <= 0)
-		return;
-	cpos.X--;
-	SetConsoleCursorPosition(con_out, cpos);
-	FillConsoleOutputCharacter(con_out, (TCHAR)' ', 1, cpos, &cChars);
-	SetConsoleCursorPosition(con_out, cpos);
-#endif
-#endif
-#endif
-#endif
-}
-#endif /* 0 */
-
 /*
  * Output a plain backspace, without erasing the previous char.
  */
@@ -2398,16 +2089,6 @@ putbs()
 
 	flush();
 	{
-#if MSDOS_COMPILER==MSOFTC
-		struct rccoord tpos;
-		tpos = _gettextposition();
-		row = tpos.row;
-		col = tpos.col;
-#else
-#if MSDOS_COMPILER==BORLANDC || MSDOS_COMPILER==DJGPPC
-		row = wherey();
-		col = wherex();
-#else
 #if MSDOS_COMPILER==WIN32C
 		CONSOLE_SCREEN_BUFFER_INFO scr;
 		GetConsoleScreenBufferInfo(con_out, &scr);
@@ -2415,12 +2096,10 @@ putbs()
 		col = scr.dwCursorPosition.X - scr.srWindow.Left + 1;
 #endif
 #endif
-#endif
 	}
 	if (col <= 1)
 		return;
 	_settextposition(row, col-1);
-#endif /* MSDOS_COMPILER */
 	}
 }
 
