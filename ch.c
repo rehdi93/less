@@ -8,7 +8,7 @@
  */
 
 #include "less.h"
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 #include <errno.h>
 #include "os_windows_defs.h"
 #include <windows.h>
@@ -265,7 +265,7 @@ ch_get()
 		return (EOI);
 	if (n < 0)
 	{
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		if (errno != EPIPE)
 #endif
 		{
@@ -305,12 +305,10 @@ ch_get()
 				parg.p_string = wait_message();
 				ierror("%s", &parg);
 			}
-#if !MSDOS_COMPILER
-	 		sleep(1);
-#else
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 			Sleep(1000);
-#endif
+#else
+	 		sleep(1);
 #endif
 			slept = true;
 
@@ -815,7 +813,7 @@ ch_delbufs()
 seekable(f)
 	int f;
 {
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 	extern int fd0;
 	if (f == fd0 && !isatty(fd0))
 	{

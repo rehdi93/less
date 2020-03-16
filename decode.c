@@ -914,7 +914,7 @@ editchar(c, flags)
 		return (EC_BACKSPACE);
 	if (c == kill_char)
 	{
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		if (!win32_kbhit())
 #endif
 

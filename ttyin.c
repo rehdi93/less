@@ -6,11 +6,13 @@
  */
 
 #include "less.h"
+
 #if OS2
 #include "cmd.h"
 #include "pckeys.h"
 #endif
-#if MSDOS_COMPILER==WIN32C
+
+#if LESS_PLATFORM==WIN32C
 #include "os_windows_defs.h"
 #define _WIN32_WINNT 0x500
 #include <windows.h>
@@ -19,6 +21,7 @@ HANDLE tty;
 #else
 int tty;
 #endif
+
 extern int sigs;
 extern int utf_mode;
 extern int wheel_lines;
@@ -29,7 +32,7 @@ extern int wheel_lines;
 	void
 open_getchr()
 {
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	/* Need this to let child processes inherit our console handle */
 	SECURITY_ATTRIBUTES sa;
 	memset(&sa, 0, sizeof(SECURITY_ATTRIBUTES));
@@ -41,8 +44,7 @@ open_getchr()
 	GetConsoleMode(tty, &console_mode);
 	/* Make sure we get Ctrl+C events. */
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
-#else
-#if MSDOS_COMPILER
+#elif LESS_PLATFORM
 	extern int fd0;
 	/*
 	 * Open a new handle to CON: in binary mode 
@@ -67,7 +69,6 @@ open_getchr()
 	if (tty < 0)
 		tty = 2;
 #endif
-#endif
 }
 
 /*
@@ -76,13 +77,13 @@ open_getchr()
 	void
 close_getchr()
 {
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	SetConsoleMode(tty, console_mode);
 	CloseHandle(tty);
 #endif
 }
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 /*
  * Close the pipe, restoring the keyboard (CMD resets it, losing the mouse).
  */
@@ -105,7 +106,7 @@ pclose(f)
 default_wheel_lines()
 {
 	int lines = 1;
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	if (SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &lines, 0))
 	{
 		if (lines == WHEEL_PAGESCROLL)
@@ -126,12 +127,12 @@ getchr()
 
 	do
 	{
-#if MSDOS_COMPILER && MSDOS_COMPILER != DJGPPC
+#if LESS_PLATFORM
 		/*
 		 * In raw read, we don't see ^C so look here for it.
 		 */
 		flush();
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		if (ABORT_SIGS())
 			return (READ_INTR);
 		c = WIN32getch();

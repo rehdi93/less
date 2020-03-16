@@ -6,11 +6,14 @@
  */
 
 #include "less.h"
-#if MSDOS_COMPILER==WIN32C
+
+#if LESS_PLATFORM==WIN32C
 #include "windows.h"
+
 #ifndef COMMON_LVB_UNDERSCORE
 #define COMMON_LVB_UNDERSCORE 0x8000
 #endif
+
 #endif
 
 int errmsgs;	/* Count of messages displayed by error() */
@@ -26,7 +29,7 @@ extern bool any_display;
 extern int is_tty;
 extern int oldbot;
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 extern int ctldisp;
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
@@ -34,9 +37,7 @@ extern int ul_fg_color, ul_bg_color;
 extern int so_fg_color, so_bg_color;
 extern int bl_fg_color, bl_bg_color;
 extern int sgr_mode;
-#if MSDOS_COMPILER==WIN32C
 extern int have_ul;
-#endif
 #endif
 
 /*
@@ -102,7 +103,7 @@ flush()
 	if (n == 0)
 		return;
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
@@ -249,7 +250,7 @@ flush()
 							at |= 2;
 							break;
 						case 4: /* underline on */
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 							if (have_ul)
 								bgi = COMMON_LVB_UNDERSCORE >> 4;
 							else
@@ -350,7 +351,7 @@ flush()
 					if (at & 16)
 						f = b ^ 8;
 					f &= 0xf;
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 					b &= 0xf | (COMMON_LVB_UNDERSCORE >> 4);
 #else
  					b &= 0xf;
@@ -367,8 +368,6 @@ flush()
 		ob = obuf;
 		return;
 	}
-#endif
-#endif
 	fd = (any_display) ? 1 : 2;
 	if (write(fd, obuf, n) != n)
 		screen_trashed = 1;
@@ -406,17 +405,15 @@ putchr(c)
 		need_clr = 0;
 		clear_bot();
 	}
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 	if (c == '\n' && is_tty)
 	{
 		/* remove_top(1); */
 		putchr('\r');
 	}
-#else
-#ifdef _OSK
+#elif defined(_OSK)
 	if (c == '\n' && is_tty)  /* In OS-9, '\n' == 0x0D */
 		putchr(0x0A);
-#endif
 #endif
 	/*
 	 * Some versions of flush() write to *ob, so we must flush

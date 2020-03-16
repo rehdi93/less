@@ -10,7 +10,7 @@
 #include "charset.h"
 #include "position.h"
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 #include "os_windows_defs.h"
 #include <windows.h>
 #endif

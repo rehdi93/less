@@ -59,7 +59,7 @@
 
 #ifdef WIN32
     #define	PATHNAME_SEP	"\\"
-    #define MSDOS_COMPILER	WIN32C
+    #define LESS_PLATFORM	WIN32C
 
     #define	popen	_popen
     #if _MSC_VER < 1900
@@ -115,12 +115,12 @@
         #pragma warning(disable:4996)
     #endif
 #else
-    #define	MSDOS_COMPILER	0
+    #define	LESS_PLATFORM	UNIX
     #define	PATHNAME_SEP	"/"
     #define TGETENT_OK  1
     #define	HAVE_SHELL	1
 
-    #define	HAVE_DUP	1
+    #define	HAVE_DUP 1
     #define HAVE_FCNTL_H 1
     #define HAVE_POPEN 1
     #define HAVE_STAT 1

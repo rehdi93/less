@@ -10,9 +10,9 @@
 #include <signal.h>
 #include "position.h"
 
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 #include <dos.h>
-#if MSDOS_COMPILER==WIN32C && defined(MINGW)
+#if LESS_PLATFORM==WIN32C && defined(MINGW)
 #include <direct.h>
 #define setdisk(n) _chdrive((n)+1)
 #else
@@ -46,7 +46,7 @@ lsystem(cmd, donemsg)
 	char *p;
 #endif
 	IFILE save_ifile;
-#if MSDOS_COMPILER && MSDOS_COMPILER!=WIN32C
+#if LESS_PLATFORM!=WIN32C
 	char cwd[FILENAME_MAX+1];
 #endif
 
@@ -64,20 +64,9 @@ lsystem(cmd, donemsg)
 		putstr("\n");
 	}
 
-#if MSDOS_COMPILER
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	if (*cmd == '\0')
 		cmd = getenv("COMSPEC");
-#else
-	/*
-	 * Working directory is global on MSDOS.
-	 * The child might change the working directory, so we
-	 * must save and restore CWD across calls to "system",
-	 * or else we won't find our file when we return and
-	 * try to "reedit_ifile" it.
-	 */
-	getcwd(cwd, FILENAME_MAX);
-#endif
 #endif
 
 	/*
@@ -92,7 +81,7 @@ lsystem(cmd, donemsg)
 	deinit();
 	flush();	/* Make sure the deinit chars get out */
 	raw_mode(0);
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	close_getchr();
 #endif
 
@@ -164,7 +153,7 @@ lsystem(cmd, donemsg)
 	close(inp);
 #endif
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	open_getchr();
 #endif
 	init_signals(1);
@@ -179,27 +168,6 @@ lsystem(cmd, donemsg)
 	}
 	init();
 	screen_trashed = 1;
-
-#if MSDOS_COMPILER && MSDOS_COMPILER!=WIN32C
-	/*
-	 * Restore the previous directory (possibly
-	 * changed by the child program we just ran).
-	 */
-	chdir(cwd);
-#if MSDOS_COMPILER != DJGPPC
-	/*
-	 * Some versions of chdir() don't change to the drive
-	 * which is part of CWD.  (DJGPP does this in chdir.)
-	 */
-	if (cwd[1] == ':')
-	{
-		if (cwd[0] >= 'a' && cwd[0] <= 'z')
-			setdisk(cwd[0] - 'a');
-		else if (cwd[0] >= 'A' && cwd[0] <= 'Z')
-			setdisk(cwd[0] - 'A');
-	}
-#endif
-#endif
 
 	/*
 	 * Reopen the current input file.
@@ -302,7 +270,7 @@ pipe_data(cmd, spos, epos)
 	flush();
 	raw_mode(0);
 	init_signals(0);
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	close_getchr();
 #endif
 #ifdef SIGPIPE
@@ -339,7 +307,7 @@ pipe_data(cmd, spos, epos)
 #ifdef SIGPIPE
 	LSIGNAL(SIGPIPE, SIG_DFL);
 #endif
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	open_getchr();
 #endif
 	init_signals(1);

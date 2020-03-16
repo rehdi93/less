@@ -31,7 +31,7 @@ extern long jump_sline_fraction;
 /*
  * Interrupt signal handler.
  */
-#if MSDOS_COMPILER!=WIN32C
+#if LESS_PLATFORM!=WIN32C
 	/* ARGSUSED*/
 	static RETSIGTYPE
 u_interrupt(type)
@@ -89,7 +89,7 @@ winch(type)
 }
 #endif
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 /*
  * Handle CTRL-C and CTRL-BREAK keys.
  */
@@ -132,7 +132,7 @@ init_signals(on)
 		/*
 		 * Set signal handlers.
 		 */
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		SetConsoleCtrlHandler(wbreak_handler, true);
 #else
 		(void) LSIGNAL(SIGINT, u_interrupt);
@@ -157,7 +157,7 @@ init_signals(on)
 		/*
 		 * Restore signals to defaults.
 		 */
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		SetConsoleCtrlHandler(wbreak_handler, false);
 #else
 		(void) LSIGNAL(SIGINT, SIG_DFL);

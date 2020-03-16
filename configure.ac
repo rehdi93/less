@@ -632,10 +632,7 @@ AH_TOP([
 
 /* Settings always true on Unix.  */
 
-/*
- * Define MSDOS_COMPILER if compiling under Microsoft C.
- */
-#define	MSDOS_COMPILER	0
+#define	LESS_PLATFORM	0
 
 /*
  * Pathname separator character.

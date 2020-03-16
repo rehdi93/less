@@ -58,18 +58,18 @@ char *tagoption = NULL;
 extern char *tags;
 extern char ztags[];
 #endif
-#if MSDOS_COMPILER
+#if LESS_PLATFORM==WIN32C
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
 extern int ul_fg_color, ul_bg_color;
 extern int so_fg_color, so_bg_color;
 extern int bl_fg_color, bl_bg_color;
 extern int sgr_mode;
-#if MSDOS_COMPILER==WIN32C
+
 #ifndef COMMON_LVB_UNDERSCORE
 #define COMMON_LVB_UNDERSCORE 0x8000
 #endif
-#endif
+
 #endif
 
 
@@ -516,7 +516,7 @@ opt__V(type, s)
 	}
 }
 
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 /*
  * Parse an MSDOS color descriptor.
  */
@@ -528,7 +528,7 @@ colordesc(s, fg_color, bg_color)
 {
 	int fg, bg;
 	int err;
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	int ul = 0;
  	
 	if (*s == 'u')
@@ -540,7 +540,7 @@ colordesc(s, fg_color, bg_color)
 	fg = getnum(&s, "D", &err);
 	if (err)
 	{
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		if (ul)
 			fg = nm_fg_color;
 		else
@@ -562,7 +562,7 @@ colordesc(s, fg_color, bg_color)
 			return;
 		}
 	}
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	if (*s == 'u')
 	{
 		ul = COMMON_LVB_UNDERSCORE;

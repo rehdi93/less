@@ -9,9 +9,9 @@
 #include "less.h"
 #include "cmd.h"
 
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 #include "pckeys.h"
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 #include "os_windows_defs.h"
 #include <windows.h>
 #endif
@@ -55,7 +55,7 @@
 #include <sys/ptem.h>
 #endif
 
-#endif /* MSDOS_COMPILER */
+#endif /* LESS_PLATFORM */
 
 /*
  * Check for broken termios package that forces you to manually
@@ -75,7 +75,7 @@ static char *windowid;
 #endif
 
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 struct keyRecord
 {
 	int ascii;
@@ -109,7 +109,7 @@ static void win32_deinit_term();
 				error("SETCOLORS failed", NULL_PARG); }
 #endif
 
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 int nm_fg_color;		/* Color of normal text */
 int nm_bg_color;
 int bo_fg_color;		/* Color of bold text */
@@ -123,7 +123,7 @@ int bl_bg_color;
 static int sy_fg_color;		/* Color of system text (before less) */
 static int sy_bg_color;
 int sgr_mode;		/* Honor ANSI sequences rather than using above */
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 int have_ul;		/* Is underline available? */
 #endif
 #else
@@ -183,7 +183,7 @@ static int termcap_debug = -1;
 extern int binattr;
 extern int one_screen;
 
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 static char *cheaper LESSPARAMS((char *t1, char *t2, char *def));
 static void tmodes LESSPARAMS((char *incap, char *outcap, char **instr,
     char **outstr, char *def_instr, char *def_outstr, char **spp));
@@ -217,7 +217,7 @@ extern int mousecap;
 #if HILITE_SEARCH
 extern int hilite_search;
 #endif
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 extern HANDLE tty;
 #else
 extern int tty;
@@ -584,7 +584,7 @@ raw_mode(on)
 	curr_on = on;
 }
 
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 /*
  * Some glue to prevent calling termcap functions if tgetent() failed.
  */
@@ -655,7 +655,7 @@ ltgetstr(capname, pp)
 		return (NULL);
 	return (tgetstr(capname, pp));
 }
-#endif /* MSDOS_COMPILER */
+#endif /* LESS_PLATFORM */
 
 /*
  * Get size of the output screen.
@@ -666,12 +666,12 @@ scrsize()
 	char *s;
 	int sys_height;
 	int sys_width;
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	int n;
 #endif
 
 #define	DEF_SC_WIDTH	80
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 #define	DEF_SC_HEIGHT	25
 #else
 #define	DEF_SC_HEIGHT	24
@@ -680,7 +680,7 @@ scrsize()
 
 	sys_width = sys_height = 0;
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	{
 		CONSOLE_SCREEN_BUFFER_INFO scr;
 		GetConsoleScreenBufferInfo(con_out, &scr);
@@ -749,7 +749,7 @@ scrsize()
 		sc_height = sys_height;
 	else if ((s = lgetenv("LINES")) != NULL)
 		sc_height = atoi(s);
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	else if ((n = ltgetnum("li")) > 0)
  		sc_height = n;
 #endif
@@ -760,7 +760,7 @@ scrsize()
 		sc_width = sys_width;
 	else if ((s = lgetenv("COLUMNS")) != NULL)
 		sc_width = atoi(s);
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	else if ((n = ltgetnum("co")) > 0)
  		sc_width = n;
 #endif
@@ -777,7 +777,7 @@ special_key_str(key)
 {
 	static char tbuf[40];
 	char *s;
-#if MSDOS_COMPILER || OS2
+#if LESS_PLATFORM || OS2
 	static char k_right[]		= { '\340', PCK_RIGHT, 0 };
 	static char k_left[]		= { '\340', PCK_LEFT, 0  };
 	static char k_ctl_right[]	= { '\340', PCK_CTL_RIGHT, 0  };
@@ -795,7 +795,7 @@ special_key_str(key)
 	static char k_pageup[]		= { '\340', PCK_PAGEUP, 0 };
 	static char k_f1[]		= { '\340', PCK_F1, 0 };
 #endif
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	char *sp = tbuf;
 #endif
 
@@ -840,7 +840,7 @@ special_key_str(key)
 		}
 		break;
 #endif
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 	case SK_RIGHT_ARROW:
 		s = k_right;
 		break;
@@ -869,7 +869,7 @@ special_key_str(key)
 		s = k_delete;
 		break;
 #endif
-#if MSDOS_COMPILER || OS2
+#if LESS_PLATFORM || OS2
 	case SK_INSERT:
 		s = k_insert;
 		break;
@@ -944,7 +944,7 @@ special_key_str(key)
 get_term()
 {
 	termcap_debug = !isnullenv(lgetenv("LESS_TERMCAP_DEBUG"));
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 	auto_wrap = 1;
 	ignaw = 0;
 	can_goto_line = 1;
@@ -953,7 +953,7 @@ get_term()
 	 * Set up default colors.
 	 * The xx_s_width and xx_e_width vars are already initialized to 0.
 	 */
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
     {
 	CONSOLE_SCREEN_BUFFER_INFO scr;
 
@@ -988,7 +988,7 @@ get_term()
 	pos_init();
 
 
-#else /* !MSDOS_COMPILER */
+#else /* !LESS_PLATFORM */
 {
 	char *sp;
 	char *t1, *t2;
@@ -1217,10 +1217,10 @@ get_term()
 		no_back_scroll = 1;
 	}
 }
-#endif /* MSDOS_COMPILER */
+#endif /* LESS_PLATFORM */
 }
 
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 /*
  * Return the cost of displaying a termcap string.
  * We use the trick of calling tputs, but as a char printing function
@@ -1300,7 +1300,7 @@ tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
 		*outstr = "";
 }
 
-#endif /* MSDOS_COMPILER */
+#endif /* LESS_PLATFORM */
 
 
 /*
@@ -1309,9 +1309,9 @@ tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
  */
 
 
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	static void
 _settextposition(int row, int col)
 {
@@ -1356,7 +1356,7 @@ initcolor()
 }
 #endif
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 
 /*
  * Termcap-like init with a private win32 console.
@@ -1426,10 +1426,10 @@ init_mouse()
 {
 	if (!mousecap)
 		return;
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_s_mousecap, sc_height, putchr);
 #else
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
 #endif
 #endif
@@ -1444,10 +1444,10 @@ deinit_mouse()
 {
 	if (!mousecap)
 		return;
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_e_mousecap, sc_height, putchr);
 #else
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT);
 #endif
 #endif
@@ -1459,7 +1459,7 @@ deinit_mouse()
 	void
 init()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	if (!(quit_if_one_screen && one_screen))
 	{
 		if (!no_init)
@@ -1483,7 +1483,7 @@ init()
 	} else
 		line_left();
 #else
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	if (!no_init)
 		win32_init_term();
 #endif
@@ -1501,7 +1501,7 @@ deinit()
 {
 	if (!init_done)
 		return;
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	if (!(quit_if_one_screen && one_screen))
 	{
 		deinit_mouse();
@@ -1513,7 +1513,7 @@ deinit()
 #else
 	/* Restore system colors. */
 	SETCOLORS(sy_fg_color, sy_bg_color);
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	if (!no_init)
 		win32_deinit_term();
 #else
@@ -1530,7 +1530,7 @@ deinit()
 	void
 home()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_home, 1, putchr);
 #else
 	flush();
@@ -1545,12 +1545,12 @@ home()
 	void
 add_line()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_addline, sc_height, putchr);
 #else
 	flush();
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
     {
 	CHAR_INFO fillchar;
 	SMALL_RECT rcSrc, rcClip;
@@ -1594,7 +1594,7 @@ add_line()
 remove_top(n)
 	int n;
 {
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	SMALL_RECT rcSrc, rcClip;
 	CHAR_INFO fillchar;
 	COORD new_org;
@@ -1640,7 +1640,7 @@ remove_top(n)
 }
 #endif
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 /*
  * Clear the screen.
  */
@@ -1746,7 +1746,7 @@ lower_left()
 {
 	if (!init_done)
 		return;
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_lower_left, 1, putchr);
 #else
 	flush();
@@ -1760,12 +1760,12 @@ lower_left()
 	void
 line_left()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_return, 1, putchr);
 #else
 	int row;
 	flush();
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	{
 		CONSOLE_SCREEN_BUFFER_INFO scr;
 		GetConsoleScreenBufferInfo(con_out, &scr);
@@ -1788,7 +1788,7 @@ line_left()
 	void
 check_winch()
 {
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	CONSOLE_SCREEN_BUFFER_INFO scr;
 	COORD size;
 
@@ -1819,7 +1819,7 @@ check_winch()
 goto_line(sindex)
 	int sindex;
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(tgoto(sc_move, 0, sindex), 1, putchr);
 #else
 	flush();
@@ -1833,13 +1833,13 @@ goto_line(sindex)
 	void
 vbell()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	if (*sc_visual_bell == '\0')
 		return;
 	tputs(sc_visual_bell, sc_height, putchr);
 #else
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	/* paint screen with an inverse color */
 	clear();
 
@@ -1858,10 +1858,10 @@ vbell()
 	static void
 beep()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	putchr(CONTROL('G'));
 #else
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	MessageBeep(0);
 #else
 	write(1, "\7", 1);
@@ -1887,11 +1887,11 @@ bell()
 	void
 clear()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_clear, sc_height, putchr);
 #else
 	flush();
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	win32_clear();
 #else
 	_clearscreen(_GCLEARSCREEN);
@@ -1906,10 +1906,10 @@ clear()
 	void
 clear_eol()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_eol_clear, 1, putchr);
 #else
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	DWORD           nchars;
 	COORD           cpos;
 	CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -1935,7 +1935,7 @@ clear_eol()
 	static void
 clear_eol_bot()
 {
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 	clear_eol();
 #else
 	if (below_mem)
@@ -1980,7 +1980,7 @@ at_enter(attr)
 {
 	attr = apply_at_specials(attr);
 
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	/* The one with the most priority is last.  */
 	if (attr & AT_UNDERLINE)
 		tputs(sc_u_in, 1, putchr);
@@ -2016,7 +2016,7 @@ at_enter(attr)
 	void
 at_exit()
 {
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	/* Undo things in the reverse order we did them.  */
 	if (attrmode & AT_STANDOUT)
 		tputs(sc_s_out, 1, putchr);
@@ -2082,14 +2082,14 @@ putbs()
 		putstr("<bs>");
 	else
 	{
-#if !MSDOS_COMPILER
+#if LESS_PLATFORM==UNIX
 	tputs(sc_backspace, 1, putchr);
 #else
 	int row, col;
 
 	flush();
 	{
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		CONSOLE_SCREEN_BUFFER_INFO scr;
 		GetConsoleScreenBufferInfo(con_out, &scr);
 		row = scr.dwCursorPosition.Y - scr.srWindow.Top + 1;
@@ -2103,7 +2103,7 @@ putbs()
 	}
 }
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 /*
  * Determine whether an input character is waiting to be read.
  */
@@ -2250,7 +2250,7 @@ WIN32getch()
 }
 #endif
 
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 /*
  */
 	void
@@ -2268,7 +2268,7 @@ WIN32textout(text, len)
 	char *text;
 	int len;
 {
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	DWORD written;
 	if (utf_mode == 2)
 	{

@@ -6,7 +6,7 @@
  */
 
 #include "less.h"
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 #include "os_windows_defs.h"
 #include <windows.h>
 #endif
@@ -177,7 +177,7 @@ main(argc, argv)
 		ifile = get_ifile(FAKE_HELPFILE, ifile);
 	while (argc-- > 0)
 	{
-#if (MSDOS_COMPILER && MSDOS_COMPILER != DJGPPC)
+#if LESS_PLATFORM
 		/*
 		 * Because the "shell" doesn't expand filename patterns,
 		 * treat each argument as a filename pattern rather than
@@ -391,7 +391,7 @@ quit(status)
 	deinit();
 	flush();
 	raw_mode(0);
-#if MSDOS_COMPILER && MSDOS_COMPILER != DJGPPC
+#if LESS_PLATFORM
 	/* 
 	 * If we don't close 2, we get some garbage from
 	 * 2's buffer when it flushes automatically.

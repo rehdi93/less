@@ -6,7 +6,7 @@
  */
 
 #include "less.h"
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 #include "os_windows_defs.h"
 #include <windows.h>
 #endif
@@ -53,7 +53,7 @@ extern int screen_trashed;	/* The screen has been overwritten */
 extern int shift_count;
 extern int oldbot;
 extern int forw_prompt;
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 extern int utf_mode;
 #endif
 
@@ -750,7 +750,7 @@ prompt()
 	    next_ifile(curr_ifile) == NULL_IFILE)
 		quit(QUIT_OK);
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	/* 
 	 * In Win32, display the file name in the window title.
 	 */
@@ -787,7 +787,7 @@ prompt()
 		putchr(':');
 	else
 	{
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 		WCHAR w[MAX_PATH*2];
 		char  a[MAX_PATH*2];
 		MultiByteToWideChar(CP_ACP, 0, p, -1, w, sizeof(w)/sizeof(*w));

@@ -61,11 +61,10 @@ iread(fd, buf, len)
 	int n;
 
 start:
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 	if (ABORT_SIGS())
 		return (READ_INTR);
-#else
-#if MSDOS_COMPILER && MSDOS_COMPILER != DJGPPC
+#elif LESS_PLATFORM
 	if (kbhit())
 	{
 		int c;
@@ -75,7 +74,6 @@ start:
 			return (READ_INTR);
 		ungetch(c);
 	}
-#endif
 #endif
 	if (SET_JUMP(read_label))
 	{

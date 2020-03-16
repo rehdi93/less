@@ -8,11 +8,8 @@
 
 #include "less.h"
 #include "lglob.h"
-#if MSDOS_COMPILER
+#if LESS_PLATFORM
 #include <dos.h>
-#if MSDOS_COMPILER==WIN32C && !defined(_MSC_VER)
-#include <dir.h>
-#endif
 #endif
 #ifdef _OSK
 #include <rbf.h>
@@ -261,7 +258,7 @@ homefile(filename)
 	if (pathname != NULL)
 		return (pathname);
 #endif
-#if MSDOS_COMPILER || OS2
+#if LESS_PLATFORM || OS2
 	/*
 	 * Look for the file anywhere on search path.
 	 */

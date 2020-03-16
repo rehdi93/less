@@ -7,12 +7,12 @@
  */
 
 /*
- * Defines for MSDOS_COMPILER.
+ * Defines for LESS_PLATFORM.
  */
-#define	MSOFTC		1	/* Microsoft C */
-#define	BORLANDC	2	/* Borland C */
-#define	WIN32C		3	/* Windows (Borland C or Microsoft C) */
-#define	DJGPPC		4	/* DJGPP C */
+#define UNIX 0
+#define DOS_LEGACY 1
+#define	WIN32C 3	/* Windows (MSVC) */
+
 
 /*
  * Include the file of compile-time options.
@@ -69,7 +69,7 @@
 #include <floss.h>
 #endif
 
-#if MSDOS_COMPILER==WIN32C || OS2
+#if LESS_PLATFORM==WIN32C || OS2
 #include <io.h>
 #endif
 
@@ -180,7 +180,7 @@ typedef off_t		LINENUM;
 /*
  * Flags for open()
  */
-#if MSDOS_COMPILER || OS2
+#if LESS_PLATFORM || OS2
 #define	OPEN_READ	(O_RDONLY|O_BINARY)
 #else
 #ifdef _OSK
@@ -207,7 +207,7 @@ typedef off_t		LINENUM;
 /*
  * Set a file descriptor to binary mode.
  */
-#if MSDOS_COMPILER || OS2
+#if LESS_PLATFORM || OS2
 #define	SET_BINARY(f)	setmode(f, O_BINARY)
 #else
 #define	SET_BINARY(f)
@@ -216,7 +216,7 @@ typedef off_t		LINENUM;
 /*
  * Does the shell treat "?" as a metacharacter?
  */
-#if MSDOS_COMPILER || OS2 || _OSK
+#if LESS_PLATFORM || OS2 || _OSK
 #define	SHELL_META_QUEST 0
 #else
 #define	SHELL_META_QUEST 1
@@ -486,6 +486,6 @@ void inttoa (int, char*);
 int lstrtoi (char*, char**);
 POSITION lstrtopos (char*, char**);
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 int pclose(FILE*);
 #endif

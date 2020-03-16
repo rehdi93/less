@@ -114,7 +114,7 @@
 
 /* Settings always true for Windows systems.  */
 
-#define MSDOS_COMPILER	WIN32C
+#define LESS_PLATFORM	WIN32C
 
 /*
  * Pathname separator character.
