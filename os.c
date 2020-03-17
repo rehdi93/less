@@ -52,8 +52,7 @@ extern int sigs;
  * A call to intread() from a signal handler will interrupt
  * any pending iread().
  */
-	int
-iread(fd, buf, len)
+int iread(fd, buf, len)
 	int fd;
 	unsigned char *buf;
 	unsigned int len;
@@ -149,8 +148,7 @@ start:
 /*
  * Interrupt a pending iread().
  */
-	void
-intread()
+void intread()
 {
 	LONG_JUMP(read_label, 1);
 }
@@ -159,8 +157,7 @@ intread()
  * Return the current time.
  */
 #if HAVE_TIME
-	time_type
-get_time()
+time_type get_time()
 {
 	time_type t;
 
@@ -174,8 +171,7 @@ get_time()
 /*
  * Local version of strerror, if not available from the system.
  */
-	static char *
-strerror(err)
+static char * strerror(err)
 	int err;
 {
 #if HAVE_SYS_ERRLIST
@@ -196,8 +192,7 @@ strerror(err)
 /*
  * errno_message: Return an error message based on the value of "errno".
  */
-	char *
-errno_message(filename)
+char * errno_message(filename)
 	char *filename;
 {
 	char *p;
@@ -219,8 +214,7 @@ errno_message(filename)
 
 /* #define HAVE_FLOAT 0 */
 
-	static POSITION
-muldiv(val, num, den)
+static POSITION muldiv(val, num, den)
 	POSITION val, num, den;
 {
 #if HAVE_FLOAT
@@ -243,8 +237,7 @@ muldiv(val, num, den)
  * Return the ratio of two POSITIONS, as a percentage.
  * {{ Assumes a POSITION is a long int. }}
  */
-	int
-percentage(num, den)
+int percentage(num, den)
 	POSITION num;
 	POSITION den;
 {
@@ -254,8 +247,7 @@ percentage(num, den)
 /*
  * Return the specified percentage of a POSITION.
  */
-	POSITION
-percent_pos(pos, percent, fraction)
+POSITION percent_pos(pos, percent, fraction)
 	POSITION pos;
 	int percent;
 	long fraction;
@@ -272,8 +264,7 @@ percent_pos(pos, percent, fraction)
 /*
  * strchr is used by regexp.c.
  */
-	char *
-strchr(s, c)
+char * strchr(s, c)
 	char *s;
 	int c;
 {
@@ -287,8 +278,7 @@ strchr(s, c)
 #endif
 
 #if !HAVE_MEMCPY
-	void*
-memcpy(dst, src, len)
+void* memcpy(dst, src, len)
 	void* dst;
 	void* src;
 	int len;
@@ -308,8 +298,7 @@ memcpy(dst, src, len)
 /*
  * This implements an ANSI-style intercept setup for Microware C 3.2
  */
-	int 
-os9_signal(type, handler)
+int  os9_signal(type, handler)
 	int type;
 	RETSIGTYPE (*handler)();
 {
@@ -318,8 +307,7 @@ os9_signal(type, handler)
 
 #include <sgstat.h>
 
-	int 
-isatty(f)
+int  isatty(f)
 	int f;
 {
 	struct sgbuf sgbuf;

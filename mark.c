@@ -42,8 +42,7 @@ int marks_modified = 0;
 /*
  * Initialize a mark struct.
  */
-	static void
-cmark(m, ifile, pos, ln)
+static void cmark(m, ifile, pos, ln)
 	struct mark *m;
 	IFILE ifile;
 	POSITION pos;
@@ -58,8 +57,7 @@ cmark(m, ifile, pos, ln)
 /*
  * Initialize the mark table to show no marks are set.
  */
-	void
-init_mark()
+void init_mark()
 {
 	int i;
 
@@ -79,8 +77,7 @@ init_mark()
 /*
  * Set m_ifile and clear m_filename.
  */
-	static void
-mark_set_ifile(m, ifile)
+static void mark_set_ifile(m, ifile)
 	struct mark *m;
 	IFILE ifile;
 {
@@ -93,8 +90,7 @@ mark_set_ifile(m, ifile)
 /*
  * Populate the m_ifile member of a mark struct from m_filename.
  */
-	static void
-mark_get_ifile(m)
+static void mark_get_ifile(m)
 	struct mark *m;
 {
 	if (m->m_ifile != NULL_IFILE)
@@ -105,8 +101,7 @@ mark_get_ifile(m)
 /*
  * Return the user mark struct identified by a character.
  */
-	static struct mark *
-getumark(c)
+static struct mark * getumark(c)
 	int c;
 {
 	if (c >= 'a' && c <= 'z')
@@ -124,8 +119,7 @@ getumark(c)
  * The mark struct may either be in the mark table (user mark)
  * or may be constructed on the fly for certain characters like ^, $.
  */
-	static struct mark *
-getmark(c)
+static struct mark * getmark(c)
 	int c;
 {
 	struct mark *m;
@@ -186,8 +180,7 @@ getmark(c)
 /*
  * Is a mark letter invalid?
  */
-	int
-badmark(c)
+int badmark(c)
 	int c;
 {
 	return (getmark(c) == NULL);
@@ -196,8 +189,7 @@ badmark(c)
 /*
  * Set a user-defined mark.
  */
-	void
-setmark(c, where)
+void setmark(c, where)
 	int c;
 	int where;
 {
@@ -220,8 +212,7 @@ setmark(c, where)
 /*
  * Clear a user-defined mark.
  */
-	void
-clrmark(c)
+void clrmark(c)
 	int c;
 {
 	struct mark *m;
@@ -241,8 +232,7 @@ clrmark(c)
 /*
  * Set lmark (the mark named by the apostrophe).
  */
-	void
-lastmark()
+void lastmark()
 {
 	struct scrpos scrpos;
 
@@ -257,8 +247,7 @@ lastmark()
 /*
  * Go to a mark.
  */
-	void
-gomark(c)
+void gomark(c)
 	int c;
 {
 	struct mark *m;
@@ -300,8 +289,7 @@ gomark(c)
  * is associated with, but this doesn't matter much,
  * because it's always the first non-blank line on the screen.
  */
-	POSITION
-markpos(c)
+POSITION markpos(c)
 	int c;
 {
 	struct mark *m;
@@ -321,8 +309,7 @@ markpos(c)
 /*
  * Return the mark associated with a given position, if any.
  */
-	char
-posmark(pos)
+char posmark(pos)
 	POSITION pos;
 {
 	int i;
@@ -343,8 +330,7 @@ posmark(pos)
 /*
  * Clear the marks associated with a specified ifile.
  */
-	void
-unmark(ifile)
+void unmark(ifile)
 	IFILE ifile;
 {
 	int i;
@@ -358,8 +344,7 @@ unmark(ifile)
  * Check if any marks refer to a specified ifile vi m_filename
  * rather than m_ifile.
  */
-	void
-mark_check_ifile(ifile)
+void mark_check_ifile(ifile)
 	IFILE ifile;
 {
 	int i;
@@ -385,8 +370,7 @@ mark_check_ifile(ifile)
 /*
  * Save marks to history file.
  */
-	void
-save_marks(fout, hdr)
+void save_marks(fout, hdr)
 	FILE *fout;
 	char *hdr;
 {
@@ -418,8 +402,7 @@ save_marks(fout, hdr)
 /*
  * Restore one mark from the history file.
  */
-	void
-restore_mark(line)
+void restore_mark(line)
 	char *line;
 {
 	struct mark *m;

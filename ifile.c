@@ -43,8 +43,7 @@ static struct ifile anchor = { &anchor, &anchor, NULL, NULL, 0, 0, '\0',
 				{ NULL_POSITION, 0 } };
 static int ifiles = 0;
 
-	static void
-incr_index(p, incr)
+static void incr_index(p, incr)
 	struct ifile *p;
 	int incr;
 {
@@ -55,8 +54,7 @@ incr_index(p, incr)
 /*
  * Link an ifile into the ifile list.
  */
-	static void
-link_ifile(p, prev)
+static void link_ifile(p, prev)
 	struct ifile *p;
 	struct ifile *prev;
 {
@@ -81,8 +79,7 @@ link_ifile(p, prev)
 /*
  * Unlink an ifile from the ifile list.
  */
-	static void
-unlink_ifile(p)
+static void unlink_ifile(p)
 	struct ifile *p;
 {
 	p->h_next->h_prev = p->h_prev;
@@ -97,8 +94,7 @@ unlink_ifile(p)
  * (or at the beginning of the list if "prev" is NULL).
  * Return a pointer to the new ifile structure.
  */
-	static struct ifile *
-new_ifile(filename, prev)
+static struct ifile * new_ifile(filename, prev)
 	char *filename;
 	struct ifile *prev;
 {
@@ -126,8 +122,7 @@ new_ifile(filename, prev)
 /*
  * Delete an existing ifile structure.
  */
-	void
-del_ifile(h)
+void del_ifile(h)
 	IFILE h;
 {
 	struct ifile *p;
@@ -150,8 +145,7 @@ del_ifile(h)
 /*
  * Get the ifile after a given one in the list.
  */
-	IFILE
-next_ifile(h)
+IFILE next_ifile(h)
 	IFILE h;
 {
 	struct ifile *p;
@@ -165,8 +159,7 @@ next_ifile(h)
 /*
  * Get the ifile before a given one in the list.
  */
-	IFILE
-prev_ifile(h)
+IFILE prev_ifile(h)
 	IFILE h;
 {
 	struct ifile *p;
@@ -180,8 +173,7 @@ prev_ifile(h)
 /*
  * Return a different ifile from the given one.
  */
-	IFILE
-getoff_ifile(ifile)
+IFILE getoff_ifile(ifile)
 	IFILE ifile;
 {
 	IFILE newifile;
@@ -196,8 +188,7 @@ getoff_ifile(ifile)
 /*
  * Return the number of ifiles.
  */
-	int
-nifile()
+int nifile()
 {
 	return (ifiles);
 }
@@ -205,8 +196,7 @@ nifile()
 /*
  * Find an ifile structure, given a filename.
  */
-	static struct ifile *
-find_ifile(filename)
+static struct ifile * find_ifile(filename)
 	char *filename;
 {
 	struct ifile *p;
@@ -237,8 +227,7 @@ find_ifile(filename)
  * If the filename has not been seen before,
  * insert the new ifile after "prev" in the list.
  */
-	IFILE
-get_ifile(filename, prev)
+IFILE get_ifile(filename, prev)
 	char *filename;
 	IFILE prev;
 {
@@ -252,8 +241,7 @@ get_ifile(filename, prev)
 /*
  * Get the filename associated with a ifile.
  */
-	char *
-get_filename(ifile)
+char * get_filename(ifile)
 	IFILE ifile;
 {
 	if (ifile == NULL)
@@ -264,8 +252,7 @@ get_filename(ifile)
 /*
  * Get the index of the file associated with a ifile.
  */
-	int
-get_index(ifile)
+int get_index(ifile)
 	IFILE ifile;
 {
 	return (int_ifile(ifile)->h_index); 
@@ -274,8 +261,7 @@ get_index(ifile)
 /*
  * Save the file position to be associated with a given file.
  */
-	void
-store_pos(ifile, scrpos)
+void store_pos(ifile, scrpos)
 	IFILE ifile;
 	struct scrpos *scrpos;
 {
@@ -286,8 +272,7 @@ store_pos(ifile, scrpos)
  * Recall the file position associated with a file.
  * If no position has been associated with the file, return NULL_POSITION.
  */
-	void
-get_pos(ifile, scrpos)
+void get_pos(ifile, scrpos)
 	IFILE ifile;
 	struct scrpos *scrpos;
 {
@@ -297,8 +282,7 @@ get_pos(ifile, scrpos)
 /*
  * Mark the ifile as "opened".
  */
-	void
-set_open(ifile)
+void set_open(ifile)
 	IFILE ifile;
 {
 	int_ifile(ifile)->h_opened = 1;
@@ -307,60 +291,52 @@ set_open(ifile)
 /*
  * Return whether the ifile has been opened previously.
  */
-	int
-opened(ifile)
+int opened(ifile)
 	IFILE ifile;
 {
 	return (int_ifile(ifile)->h_opened);
 }
 
-	void
-hold_ifile(ifile, incr)
+void hold_ifile(ifile, incr)
 	IFILE ifile;
 	int incr;
 {
 	int_ifile(ifile)->h_hold += incr;
 }
 
-	int
-held_ifile(ifile)
+int held_ifile(ifile)
 	IFILE ifile;
 {
 	return (int_ifile(ifile)->h_hold);
 }
 
-	void *
-get_filestate(ifile)
+void * get_filestate(ifile)
 	IFILE ifile;
 {
 	return (int_ifile(ifile)->h_filestate);
 }
 
-	void
-set_filestate(ifile, filestate)
+void set_filestate(ifile, filestate)
 	IFILE ifile;
 	void *filestate;
 {
 	int_ifile(ifile)->h_filestate = filestate;
 }
 
-	void
-set_altpipe(ifile, p)
+void set_altpipe(ifile, p)
 	IFILE ifile;
 	void *p;
 {
 	int_ifile(ifile)->h_altpipe = p;
 }
 
-	void *
-get_altpipe(ifile)
+void * get_altpipe(ifile)
 	IFILE ifile;
 {
 	return (int_ifile(ifile)->h_altpipe);
 }
 
-	void
-set_altfilename(ifile, altfilename)
+void set_altfilename(ifile, altfilename)
 	IFILE ifile;
 	char *altfilename;
 {
@@ -370,16 +346,14 @@ set_altfilename(ifile, altfilename)
 	p->h_altfilename = altfilename;
 }
 
-	char *
-get_altfilename(ifile)
+char * get_altfilename(ifile)
 	IFILE ifile;
 {
 	return (int_ifile(ifile)->h_altfilename);
 }
 
 #if 0
-	void
-if_dump()
+void if_dump()
 {
 	struct ifile *p;
 

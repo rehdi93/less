@@ -12,8 +12,7 @@ extern int utf_mode;
 /*
  * Compile a search pattern, for future use by match_pattern.
  */
-	static int
-compile_pattern2(pattern, search_type, comp_pattern, show_error)
+static int compile_pattern2(pattern, search_type, comp_pattern, show_error)
 	char *pattern;
 	int search_type;
 	PATTERN_TYPE *comp_pattern;
@@ -137,8 +136,7 @@ compile_pattern2(pattern, search_type, comp_pattern, show_error)
 /*
  * Like compile_pattern2, but convert the pattern to lowercase if necessary.
  */
-	int
-compile_pattern(pattern, search_type, comp_pattern)
+int compile_pattern(pattern, search_type, comp_pattern)
 	char *pattern;
 	int search_type;
 	PATTERN_TYPE *comp_pattern;
@@ -162,8 +160,7 @@ compile_pattern(pattern, search_type, comp_pattern)
 /*
  * Forget that we have a compiled pattern.
  */
-	void
-uncompile_pattern(pattern)
+void uncompile_pattern(pattern)
 	PATTERN_TYPE *pattern;
 {
 #if HAVE_GNU_REGEX
@@ -210,8 +207,7 @@ uncompile_pattern(pattern)
 /*
  * Can a pattern be successfully compiled?
  */
-	int
-valid_pattern(pattern)
+int valid_pattern(pattern)
 	char *pattern;
 {
 	PATTERN_TYPE comp_pattern;
@@ -228,8 +224,7 @@ valid_pattern(pattern)
 /*
  * Is a compiled pattern null?
  */
-	int
-is_null_pattern(pattern)
+int is_null_pattern(pattern)
 	PATTERN_TYPE pattern;
 {
 #if HAVE_GNU_REGEX
@@ -262,8 +257,7 @@ is_null_pattern(pattern)
  * Simple pattern matching function.
  * It supports no metacharacters like *, etc.
  */
-	static int
-match(pattern, pattern_len, buf, buf_len, pfound, pend)
+static int match(pattern, pattern_len, buf, buf_len, pfound, pend)
 	char *pattern;
 	int pattern_len;
 	char *buf;
@@ -303,8 +297,7 @@ match(pattern, pattern_len, buf, buf_len, pfound, pend)
  * Perform a pattern match with the previously compiled pattern.
  * Set sp and ep to the start and end of the matched string.
  */
-	int
-match_pattern(pattern, tpattern, line, line_len, sp, ep, notbol, search_type)
+int match_pattern(pattern, tpattern, line, line_len, sp, ep, notbol, search_type)
 	PATTERN_TYPE pattern;
 	char *tpattern;
 	char *line;
@@ -421,8 +414,7 @@ match_pattern(pattern, tpattern, line, line_len, sp, ep, notbol, search_type)
 /*
  * Return the name of the pattern matching library.
  */
-	char *
-pattern_lib_name()
+char * pattern_lib_name()
 {
 #if HAVE_GNU_REGEX
 	return ("GNU");

@@ -238,8 +238,7 @@ extern char *tgoto();
  *	   etc. are NOT disabled.
  * It doesn't matter whether an input \n is mapped to \r, or vice versa.
  */
-	void
-raw_mode(on)
+void raw_mode(on)
 	int on;
 {
 	static int curr_on = 0;
@@ -590,8 +589,7 @@ raw_mode(on)
  */
 static int hardcopy;
 
-	static char *
-ltget_env(capname)
+static char * ltget_env(capname)
 	char *capname;
 {
 	char name[64];
@@ -616,8 +614,7 @@ ltget_env(capname)
 	return (lgetenv(name));
 }
 
-	static int
-ltgetflag(capname)
+static int ltgetflag(capname)
 	char *capname;
 {
 	char *s;
@@ -629,8 +626,7 @@ ltgetflag(capname)
 	return (tgetflag(capname));
 }
 
-	static int
-ltgetnum(capname)
+static int ltgetnum(capname)
 	char *capname;
 {
 	char *s;
@@ -642,8 +638,7 @@ ltgetnum(capname)
 	return (tgetnum(capname));
 }
 
-	static char *
-ltgetstr(capname, pp)
+static char * ltgetstr(capname, pp)
 	char *capname;
 	char **pp;
 {
@@ -660,8 +655,7 @@ ltgetstr(capname, pp)
 /*
  * Get size of the output screen.
  */
-	void
-scrsize()
+void scrsize()
 {
 	char *s;
 	int sys_height;
@@ -771,8 +765,7 @@ scrsize()
 /*
  * Return the characters actually input by a "special" key.
  */
-	char *
-special_key_str(key)
+char * special_key_str(key)
 	int key;
 {
 	static char tbuf[40];
@@ -940,8 +933,7 @@ special_key_str(key)
 /*
  * Get terminal capabilities via termcap.
  */
-	void
-get_term()
+void get_term()
 {
 	termcap_debug = !isnullenv(lgetenv("LESS_TERMCAP_DEBUG"));
 #if LESS_PLATFORM
@@ -1231,16 +1223,14 @@ get_term()
 static int costcount;
 
 /*ARGSUSED*/
-	static int
-inc_costcount(c)
+static int inc_costcount(c)
 	int c;
 {
 	costcount++;
 	return (c);
 }
 
-	static int
-cost(t)
+static int cost(t)
 	char *t;
 {
 	costcount = 0;
@@ -1253,8 +1243,7 @@ cost(t)
  * The best, if both exist, is the one with the lower 
  * cost (see cost() function).
  */
-	static char *
-cheaper(t1, t2, def)
+static char * cheaper(t1, t2, def)
 	char *t1, *t2;
 	char *def;
 {
@@ -1272,8 +1261,7 @@ cheaper(t1, t2, def)
 	return (t2);
 }
 
-	static void
-tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
+static void tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
 	char *incap;
 	char *outcap;
 	char **instr;
@@ -1312,8 +1300,7 @@ tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
 #if LESS_PLATFORM
 
 #if LESS_PLATFORM==WIN32C
-	static void
-_settextposition(int row, int col)
+static void _settextposition(int row, int col)
 {
 	COORD cpos;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -1328,8 +1315,7 @@ _settextposition(int row, int col)
 /*
  * Initialize the screen to the correct color at startup.
  */
-	static void
-initcolor()
+static void initcolor()
 {
 	SETCOLORS(nm_fg_color, nm_bg_color);
 #if 0
@@ -1361,8 +1347,7 @@ initcolor()
 /*
  * Termcap-like init with a private win32 console.
  */
-	static void
-win32_init_term()
+static void win32_init_term()
 {
 	CONSOLE_SCREEN_BUFFER_INFO scr;
 	COORD size;
@@ -1404,8 +1389,7 @@ win32_init_term()
 /*
  * Restore the startup console.
  */
-	static void
-win32_deinit_term()
+static void win32_deinit_term()
 {
 	if (con_out_save == INVALID_HANDLE_VALUE)
 		return;
@@ -1421,8 +1405,7 @@ win32_deinit_term()
  * Configure the termimal so mouse clicks and wheel moves 
  * produce input to less.
  */
-	void
-init_mouse()
+void init_mouse()
 {
 	if (!mousecap)
 		return;
@@ -1439,8 +1422,7 @@ init_mouse()
  * Configure the terminal so mouse clicks and wheel moves
  * are handled by the system (so text can be selected, etc).
  */
-	void
-deinit_mouse()
+void deinit_mouse()
 {
 	if (!mousecap)
 		return;
@@ -1456,8 +1438,7 @@ deinit_mouse()
 /*
  * Initialize terminal
  */
-	void
-init()
+void init()
 {
 #if LESS_PLATFORM==UNIX
 	if (!(quit_if_one_screen && one_screen))
@@ -1496,8 +1477,7 @@ init()
 /*
  * Deinitialize terminal
  */
-	void
-deinit()
+void deinit()
 {
 	if (!init_done)
 		return;
@@ -1527,8 +1507,7 @@ deinit()
 /*
  * Home cursor (move to upper left corner of screen).
  */
-	void
-home()
+void home()
 {
 #if LESS_PLATFORM==UNIX
 	tputs(sc_home, 1, putchr);
@@ -1542,8 +1521,7 @@ home()
  * Add a blank line (called with cursor at home).
  * Should scroll the display down.
  */
-	void
-add_line()
+void add_line()
 {
 #if LESS_PLATFORM==UNIX
 	tputs(sc_addline, sc_height, putchr);
@@ -1590,8 +1568,7 @@ add_line()
  * window upward.  This is needed to stop leaking the topmost line 
  * into the scrollback buffer when we go down-one-line (in WIN32).
  */
-	void
-remove_top(n)
+void remove_top(n)
 	int n;
 {
 #if LESS_PLATFORM==WIN32C
@@ -1644,8 +1621,7 @@ remove_top(n)
 /*
  * Clear the screen.
  */
-	static void
-win32_clear()
+static void win32_clear()
 {
 	/*
 	 * This will clear only the currently visible rows of the NT
@@ -1675,8 +1651,7 @@ win32_clear()
  * Remove the n topmost lines and scroll everything below it in the 
  * window upward.
  */
-	void
-win32_scroll_up(n)
+void win32_scroll_up(n)
 	int n;
 {
 	SMALL_RECT rcSrc, rcClip;
@@ -1741,8 +1716,7 @@ win32_scroll_up(n)
 /*
  * Move cursor to lower left corner of screen.
  */
-	void
-lower_left()
+void lower_left()
 {
 	if (!init_done)
 		return;
@@ -1757,8 +1731,7 @@ lower_left()
 /*
  * Move cursor to left position of current line.
  */
-	void
-line_left()
+void line_left()
 {
 #if LESS_PLATFORM==UNIX
 	tputs(sc_return, 1, putchr);
@@ -1785,8 +1758,7 @@ line_left()
  * Check if the console size has changed and reset internals 
  * (in lieu of SIGWINCH for WIN32).
  */
-	void
-check_winch()
+void check_winch()
 {
 #if LESS_PLATFORM==WIN32C
 	CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -1815,8 +1787,7 @@ check_winch()
 /*
  * Goto a specific line on the screen.
  */
-	void
-goto_line(sindex)
+void goto_line(sindex)
 	int sindex;
 {
 #if LESS_PLATFORM==UNIX
@@ -1830,8 +1801,7 @@ goto_line(sindex)
 /*
  * Output the "visual bell", if there is one.
  */
-	void
-vbell()
+void vbell()
 {
 #if LESS_PLATFORM==UNIX
 	if (*sc_visual_bell == '\0')
@@ -1855,8 +1825,7 @@ vbell()
 /*
  * Make a noise.
  */
-	static void
-beep()
+static void beep()
 {
 #if LESS_PLATFORM==UNIX
 	putchr(CONTROL('G'));
@@ -1872,8 +1841,7 @@ beep()
 /*
  * Ring the terminal bell.
  */
-	void
-bell()
+void bell()
 {
 	if (quiet == VERY_QUIET)
 		vbell();
@@ -1884,8 +1852,7 @@ bell()
 /*
  * Clear the screen.
  */
-	void
-clear()
+void clear()
 {
 #if LESS_PLATFORM==UNIX
 	tputs(sc_clear, sc_height, putchr);
@@ -1903,8 +1870,7 @@ clear()
  * Clear from the cursor to the end of the cursor's line.
  * {{ This must not move the cursor. }}
  */
-	void
-clear_eol()
+void clear_eol()
 {
 #if LESS_PLATFORM==UNIX
 	tputs(sc_eol_clear, 1, putchr);
@@ -1932,8 +1898,7 @@ clear_eol()
  * Clear the current line.
  * Clear the screen if there's off-screen memory below the display.
  */
-	static void
-clear_eol_bot()
+static void clear_eol_bot()
 {
 #if LESS_PLATFORM
 	clear_eol();
@@ -1949,8 +1914,7 @@ clear_eol_bot()
  * Clear the bottom line of the display.
  * Leave the cursor at the beginning of the bottom line.
  */
-	void
-clear_bot()
+void clear_bot()
 {
 	/*
 	 * If we're in a non-normal attribute mode, temporarily exit
@@ -1974,8 +1938,7 @@ clear_bot()
 	}
 }
 
-	void
-at_enter(attr)
+void at_enter(attr)
 	int attr;
 {
 	attr = apply_at_specials(attr);
@@ -2013,8 +1976,7 @@ at_enter(attr)
 	attrmode = attr;
 }
 
-	void
-at_exit()
+void at_exit()
 {
 #if LESS_PLATFORM==UNIX
 	/* Undo things in the reverse order we did them.  */
@@ -2034,8 +1996,7 @@ at_exit()
 	attrmode = AT_NORMAL;
 }
 
-	void
-at_switch(attr)
+void at_switch(attr)
 	int attr;
 {
 	int new_attrmode = apply_at_specials(attr);
@@ -2048,8 +2009,7 @@ at_switch(attr)
 	}
 }
 
-	int
-is_at_equiv(attr1, attr2)
+int is_at_equiv(attr1, attr2)
 	int attr1;
 	int attr2;
 {
@@ -2059,8 +2019,7 @@ is_at_equiv(attr1, attr2)
 	return (attr1 == attr2);
 }
 
-	int
-apply_at_specials(attr)
+int apply_at_specials(attr)
 	int attr;
 {
 	if (attr & AT_BINARY)
@@ -2075,8 +2034,7 @@ apply_at_specials(attr)
 /*
  * Output a plain backspace, without erasing the previous char.
  */
-	void
-putbs()
+void putbs()
 {
 	if (termcap_debug)
 		putstr("<bs>");
@@ -2107,8 +2065,7 @@ putbs()
 /*
  * Determine whether an input character is waiting to be read.
  */
-	int
-win32_kbhit()
+int win32_kbhit()
 {
 	INPUT_RECORD ip;
 	DWORD read;
@@ -2216,8 +2173,7 @@ win32_kbhit()
 /*
  * Read a character from the keyboard.
  */
-	char
-WIN32getch()
+char WIN32getch()
 {
 	int ascii;
 
@@ -2253,8 +2209,7 @@ WIN32getch()
 #if LESS_PLATFORM
 /*
  */
-	void
-WIN32setcolors(fg, bg)
+void WIN32setcolors(fg, bg)
 	int fg;
 	int bg;
 {
@@ -2263,8 +2218,7 @@ WIN32setcolors(fg, bg)
 
 /*
  */
-	void
-WIN32textout(text, len)
+void WIN32textout(text, len)
 	char *text;
 	int len;
 {

@@ -28,8 +28,7 @@ extern int wheel_lines;
 /*
  * Open keyboard for input.
  */
-	void
-open_getchr()
+void open_getchr()
 {
 #if LESS_PLATFORM==WIN32C
 	/* Need this to let child processes inherit our console handle */
@@ -73,8 +72,7 @@ open_getchr()
 /*
  * Close the keyboard.
  */
-	void
-close_getchr()
+void close_getchr()
 {
 #if LESS_PLATFORM==WIN32C
 	SetConsoleMode(tty, console_mode);
@@ -86,8 +84,7 @@ close_getchr()
 /*
  * Close the pipe, restoring the keyboard (CMD resets it, losing the mouse).
  */
-	int
-pclose(f)
+int pclose(f)
 	FILE *f;
 {
 	int result;
@@ -101,8 +98,7 @@ pclose(f)
 /*
  * Get the number of lines to scroll when mouse wheel is moved.
  */
-	int
-default_wheel_lines()
+int default_wheel_lines()
 {
 	int lines = 1;
 #if LESS_PLATFORM==WIN32C
@@ -118,8 +114,7 @@ default_wheel_lines()
 /*
  * Get a character from the keyboard.
  */
-	int
-getchr()
+int getchr()
 {
 	char c;
 	int result;

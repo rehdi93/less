@@ -43,8 +43,7 @@ extern int have_ul;
 /*
  * Display the line which is in the line buffer.
  */
-	void
-put_line()
+void put_line()
 {
 	int c;
 	int i;
@@ -93,8 +92,7 @@ static char *ob = obuf;
  * sure these messages can be seen before they are
  * overwritten or scrolled away.
  */
-	void
-flush()
+void flush()
 {
 	int n;
 	int fd;
@@ -377,8 +375,7 @@ flush()
 /*
  * Output a character.
  */
-	int
-putchr(c)
+int putchr(c)
 	int c;
 {
 #if 0 /* fake UTF-8 output for testing */
@@ -429,8 +426,7 @@ putchr(c)
 /*
  * Output a string.
  */
-	void
-putstr(s)
+void putstr(s)
 	const char *s;
 {
 	while (*s != '\0')
@@ -486,8 +482,7 @@ STR_TO_TYPE_FUNC(lstrtoi, int)
 /*
  * Output an integer in a given radix.
  */
-	static int
-iprint_int(num)
+static int iprint_int(num)
 	int num;
 {
 	char buf[INT_STRLEN_BOUND(num)];
@@ -500,8 +495,7 @@ iprint_int(num)
 /*
  * Output a line number in a given radix.
  */
-	static int
-iprint_linenum(num)
+static int iprint_linenum(num)
 	LINENUM num;
 {
 	char buf[INT_STRLEN_BOUND(num)];
@@ -515,8 +509,7 @@ iprint_linenum(num)
  * This function implements printf-like functionality
  * using a more portable argument list mechanism than printf's.
  */
-	static int
-less_printf(fmt, parg)
+static int less_printf(fmt, parg)
 	char *fmt;
 	PARG *parg;
 {
@@ -566,8 +559,7 @@ less_printf(fmt, parg)
  * If some other non-trivial char is pressed, unget it, so it will
  * become the next command.
  */
-	void
-get_return()
+void get_return()
 {
 	int c;
 
@@ -585,8 +577,7 @@ get_return()
  * Output a message in the lower left corner of the screen
  * and wait for carriage return.
  */
-	void
-error(fmt, parg)
+void error(fmt, parg)
 	char *fmt;
 	PARG *parg;
 {
@@ -640,8 +631,7 @@ static char intr_to_abort[] = "... (interrupt to abort)";
  * Usually used to warn that we are beginning a potentially
  * time-consuming operation.
  */
-	void
-ierror(fmt, parg)
+void ierror(fmt, parg)
 	char *fmt;
 	PARG *parg;
 {
@@ -659,8 +649,7 @@ ierror(fmt, parg)
  * Output a message in the lower left corner of the screen
  * and return a single-character response.
  */
-	int
-query(fmt, parg)
+int query(fmt, parg)
 	char *fmt;
 	PARG *parg;
 {

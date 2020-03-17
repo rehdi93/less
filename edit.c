@@ -49,8 +49,7 @@ ino_t curr_ino;
  * words, returning each one as a standard null-terminated string.
  * back_textlist does the same, but runs thru the list backwards.
  */
-	void
-init_textlist(tlist, str)
+void init_textlist(tlist, str)
 	struct textlist *tlist;
 	char *str;
 {
@@ -93,8 +92,7 @@ init_textlist(tlist, str)
 	}
 }
 
-	char *
-forw_textlist(tlist, prev)
+char * forw_textlist(tlist, prev)
 	struct textlist *tlist;
 	char *prev;
 {
@@ -117,8 +115,7 @@ forw_textlist(tlist, prev)
 	return (s);
 }
 
-	char *
-back_textlist(tlist, prev)
+char * back_textlist(tlist, prev)
 	struct textlist *tlist;
 	char *prev;
 {
@@ -146,8 +143,7 @@ back_textlist(tlist, prev)
 /*
  * Close a pipe opened via popen.
  */
-	static void
-close_pipe(FILE *pipefd)
+static void close_pipe(FILE *pipefd)
 {
 	if (pipefd == NULL)
 		return;
@@ -164,8 +160,7 @@ close_pipe(FILE *pipefd)
 /*
  * Close the current input file.
  */
-	static void
-close_file()
+static void close_file()
 {
 	struct scrpos scrpos;
 	int chflags;
@@ -217,8 +212,7 @@ close_file()
  * Filename == "-" means standard input.
  * Filename == NULL means just close the current file.
  */
-	int
-edit(filename)
+int edit(filename)
 	char *filename;
 {
 	if (filename == NULL)
@@ -230,8 +224,7 @@ edit(filename)
  * Edit a new file (given its IFILE).
  * ifile == NULL means just close the current file.
  */
-	int
-edit_ifile(ifile)
+int edit_ifile(ifile)
 	IFILE ifile;
 {
 	int f;
@@ -499,8 +492,7 @@ edit_ifile(ifile)
  * For each filename in the list, enter it into the ifile list.
  * Then edit the first one.
  */
-	int
-edit_list(filelist)
+int edit_list(filelist)
 	char *filelist;
 {
 	IFILE save_ifile;
@@ -560,8 +552,7 @@ edit_list(filelist)
 /*
  * Edit the first file in the command line (ifile) list.
  */
-	int
-edit_first()
+int edit_first()
 {
 	if (nifile() == 0)
 		return (edit_stdin());
@@ -572,8 +563,7 @@ edit_first()
 /*
  * Edit the last file in the command line (ifile) list.
  */
-	int
-edit_last()
+int edit_last()
 {
 	curr_ifile = NULL_IFILE;
 	return (edit_prev(1));
@@ -583,8 +573,7 @@ edit_last()
 /*
  * Edit the n-th next or previous file in the command line (ifile) list.
  */
-	static int
-edit_istep(h, n, dir)
+static int edit_istep(h, n, dir)
 	IFILE h;
 	int n;
 	int dir;
@@ -625,31 +614,27 @@ edit_istep(h, n, dir)
 	return (0);
 }
 
-	static int
-edit_inext(h, n)
+static int edit_inext(h, n)
 	IFILE h;
 	int n;
 {
 	return (edit_istep(h, n, +1));
 }
 
-	int
-edit_next(n)
+int edit_next(n)
 	int n;
 {
 	return edit_istep(curr_ifile, n, +1);
 }
 
-	static int
-edit_iprev(h, n)
+static int edit_iprev(h, n)
 	IFILE h;
 	int n;
 {
 	return (edit_istep(h, n, -1));
 }
 
-	int
-edit_prev(n)
+int edit_prev(n)
 	int n;
 {
 	return edit_istep(curr_ifile, n, -1);
@@ -658,8 +643,7 @@ edit_prev(n)
 /*
  * Edit a specific file in the command line (ifile) list.
  */
-	int
-edit_index(n)
+int edit_index(n)
 	int n;
 {
 	IFILE h;
@@ -679,16 +663,14 @@ edit_index(n)
 	return (edit_ifile(h));
 }
 
-	IFILE
-save_curr_ifile()
+IFILE save_curr_ifile()
 {
 	if (curr_ifile != NULL_IFILE)
 		hold_ifile(curr_ifile, 1);
 	return (curr_ifile);
 }
 
-	void
-unsave_ifile(save_ifile)
+void unsave_ifile(save_ifile)
 	IFILE save_ifile;
 {
 	if (save_ifile != NULL_IFILE)
@@ -698,8 +680,7 @@ unsave_ifile(save_ifile)
 /*
  * Reedit the ifile which was previously open.
  */
-	void
-reedit_ifile(save_ifile)
+void reedit_ifile(save_ifile)
 	IFILE save_ifile;
 {
 	IFILE next;
@@ -732,8 +713,7 @@ reedit_ifile(save_ifile)
 	quit(QUIT_ERROR);
 }
 
-	void
-reopen_curr_ifile()
+void reopen_curr_ifile()
 {
 	IFILE save_ifile = save_curr_ifile();
 	close_file();
@@ -743,8 +723,7 @@ reopen_curr_ifile()
 /*
  * Edit standard input.
  */
-	int
-edit_stdin()
+int edit_stdin()
 {
 	if (isatty(fd0))
 	{
@@ -758,8 +737,7 @@ edit_stdin()
  * Copy a file directly to standard output.
  * Used if standard output is not a tty.
  */
-	void
-cat_file()
+void cat_file()
 {
 	int c;
 
@@ -775,8 +753,7 @@ cat_file()
  * is standard input, create the log file.  
  * We take care not to blindly overwrite an existing file.
  */
-	void
-use_logfile(filename)
+void use_logfile(filename)
 	char *filename;
 {
 	bool exists;

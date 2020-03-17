@@ -81,8 +81,7 @@ static struct tag *curtag;
 /*
  * Delete tag structures.
  */
-	void
-cleantags()
+void cleantags()
 {
 	struct tag *tp;
 
@@ -105,8 +104,7 @@ cleantags()
 /*
  * Create a new tag entry.
  */
-	static struct tag *
-maketagent(name, file, linenum, pattern, endline)
+static struct tag * maketagent(name, file, linenum, pattern, endline)
 	char *name;
 	char *file;
 	LINENUM linenum;
@@ -133,8 +131,7 @@ maketagent(name, file, linenum, pattern, endline)
 /*
  * Get tag mode.
  */
-	int
-gettagtype()
+int gettagtype()
 {
 	int f;
 
@@ -164,8 +161,7 @@ gettagtype()
  * and "tagpattern" to the search pattern which should be used
  * to find the tag.
  */
-	void
-findtag(tag)
+void findtag(tag)
 	char *tag;
 {
 	int type = gettagtype();
@@ -195,8 +191,7 @@ findtag(tag)
 /*
  * Search for a tag.
  */
-	POSITION
-tagsearch()
+POSITION tagsearch()
 {
 	if (curtag == NULL)
 		return (NULL_POSITION);  /* No gtags loaded! */
@@ -209,8 +204,7 @@ tagsearch()
 /*
  * Go to the next tag.
  */
-	char *
-nexttag(n)
+char * nexttag(n)
 	int n;
 {
 	char *tagfile = (char *) NULL;
@@ -223,8 +217,7 @@ nexttag(n)
 /*
  * Go to the previous tag.
  */
-	char *
-prevtag(n)
+char * prevtag(n)
 	int n;
 {
 	char *tagfile = (char *) NULL;
@@ -237,8 +230,7 @@ prevtag(n)
 /*
  * Return the total number of tags.
  */
-	int
-ntags()
+int ntags()
 {
 	return total;
 }
@@ -246,8 +238,7 @@ ntags()
 /*
  * Return the sequence number of current tag.
  */
-	int
-curr_tag()
+int curr_tag()
 {
 	return curseq;
 }
@@ -260,8 +251,7 @@ curr_tag()
  * Find tags in the "tags" file.
  * Sets curtag to the first tag entry.
  */
-	static enum tag_result
-findctag(tag)
+static enum tag_result findctag(tag)
 	char *tag;
 {
 	char *p;
@@ -372,16 +362,14 @@ findctag(tag)
 /*
  * Edit current tagged file.
  */
-	int
-edit_tagfile()
+int edit_tagfile()
 {
 	if (curtag == NULL)
 		return (1);
 	return (edit(curtag->tag_file));
 }
 
-	static int
-curtag_match(char const *line, POSITION linepos)
+static int curtag_match(char const *line, POSITION linepos)
 {
 	/*
 	 * Test the line to see if we have a match.
@@ -409,8 +397,7 @@ curtag_match(char const *line, POSITION linepos)
  *	regcmp vs. re_comp) behave differently in the presence of 
  *	parentheses (which are almost always found in a tag).
  */
-	static POSITION
-ctagsearch()
+static POSITION ctagsearch()
 {
 	POSITION pos, linepos;
 	LINENUM linenum;
@@ -488,8 +475,7 @@ ctagsearch()
  * for future use by gtagsearch().
  * Sets curtag to the first tag entry.
  */
-	static enum tag_result
-findgtag(tag, type)
+static enum tag_result findgtag(tag, type)
 	char *tag;		/* tag to load */
 	int type;		/* tags type */
 {
@@ -623,8 +609,7 @@ static int circular = 0;	/* 1: circular tag structure */
  * by findgtag().  The next call to gtagsearch() will try to position at the
  * appropriate tag.
  */
-	static char *
-nextgtag()
+static char * nextgtag()
 {
 	struct tag *tp;
 
@@ -653,8 +638,7 @@ nextgtag()
  * setup by findgtat().  The next call to gtagsearch() will try to position
  * at the appropriate tag.
  */
-	static char *
-prevgtag()
+static char * prevgtag()
 {
 	struct tag *tp;
 
@@ -683,8 +667,7 @@ prevgtag()
  * using either findtag() or one of nextgtag() and prevgtag().  Returns -1
  * if it was unable to position at the tag, 0 if successful.
  */
-	static POSITION
-gtagsearch()
+static POSITION gtagsearch()
 {
 	if (curtag == NULL)
 		return (NULL_POSITION);  /* No gtags loaded! */
@@ -719,8 +702,7 @@ gtagsearch()
  * The tag, file, and line will each be NUL-terminated pointers
  * into buf.
  */
-	static int
-getentry(buf, tag, file, line)
+static int getentry(buf, tag, file, line)
 	char *buf;	/* standard or extended ctags -x format data */
 	char **tag;	/* name of the tag we actually found */
 	char **file;	/* file in which to find this tag */

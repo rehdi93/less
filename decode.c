@@ -232,8 +232,7 @@ static struct tablelist *list_sysvar_tables = NULL;
 /*
  * Expand special key abbreviations in a command table.
  */
-	static void
-expand_special_keys(table, len)
+static void expand_special_keys(table, len)
 	char *table;
 	int len;
 {
@@ -293,8 +292,7 @@ expand_special_keys(table, len)
 /*
  * Expand special key abbreviations in a list of command tables.
  */
-	static void
-expand_cmd_table(tlist)
+static void expand_cmd_table(tlist)
 	struct tablelist *tlist;
 {
 	struct tablelist *t;
@@ -307,8 +305,7 @@ expand_cmd_table(tlist)
 /*
  * Expand special key abbreviations in all command tables.
  */
-	void
-expand_cmd_tables()
+void expand_cmd_tables()
 {
 	expand_cmd_table(list_fcmd_tables);
 	expand_cmd_table(list_ecmd_tables);
@@ -320,8 +317,7 @@ expand_cmd_tables()
 /*
  * Initialize the command lists.
  */
-	void
-init_cmds()
+void init_cmds()
 {
 	/*
 	 * Add the default command tables.
@@ -350,8 +346,7 @@ init_cmds()
 /*
  * Add a command table.
  */
-	static int
-add_cmd_table(tlist, buf, len)
+static int add_cmd_table(tlist, buf, len)
 	struct tablelist **tlist;
 	char *buf;
 	int len;
@@ -379,8 +374,7 @@ add_cmd_table(tlist, buf, len)
 /*
  * Add a command table.
  */
-	void
-add_fcmd_table(buf, len)
+void add_fcmd_table(buf, len)
 	char *buf;
 	int len;
 {
@@ -391,8 +385,7 @@ add_fcmd_table(buf, len)
 /*
  * Add an editing command table.
  */
-	void
-add_ecmd_table(buf, len)
+void add_ecmd_table(buf, len)
 	char *buf;
 	int len;
 {
@@ -403,8 +396,7 @@ add_ecmd_table(buf, len)
 /*
  * Add an environment variable table.
  */
-	static void
-add_var_table(tlist, buf, len)
+static void add_var_table(tlist, buf, len)
 	struct tablelist **tlist;
 	char *buf;
 	int len;
@@ -416,8 +408,7 @@ add_var_table(tlist, buf, len)
 /*
  * Return action for a mouse wheel down event.
  */
-	static int
-mouse_wheel_down()
+static int mouse_wheel_down()
 {
 	return ((mousecap == OPT_ONPLUS) ? A_B_MOUSE : A_F_MOUSE);
 }
@@ -425,8 +416,7 @@ mouse_wheel_down()
 /*
  * Return action for a mouse wheel up event.
  */
-	static int
-mouse_wheel_up()
+static int mouse_wheel_up()
 {
 	return ((mousecap == OPT_ONPLUS) ? A_F_MOUSE : A_B_MOUSE);
 }
@@ -434,8 +424,7 @@ mouse_wheel_up()
 /*
  * Return action for a mouse button release event.
  */
-	static int
-mouse_button_rel(x, y)
+static int mouse_button_rel(x, y)
 	int x;
 	int y;
 {
@@ -454,8 +443,7 @@ mouse_button_rel(x, y)
 /*
  * Read a decimal integer. Return the integer and set *pterm to the terminating char.
  */
-	static int
-getcc_int(pterm)
+static int getcc_int(pterm)
 	char* pterm;
 {
 	int num = 0;
@@ -479,8 +467,7 @@ getcc_int(pterm)
  * Read suffix of mouse input and return the action to take.
  * The prefix ("\e[M") has already been read.
  */
-	static int
-x11mouse_action()
+static int x11mouse_action()
 {
 	int b = getcc() - X11MOUSE_OFFSET;
 	int x = getcc() - X11MOUSE_OFFSET-1;
@@ -501,8 +488,7 @@ x11mouse_action()
  * Read suffix of mouse input and return the action to take.
  * The prefix ("\e[<") has already been read.
  */
-	static int
-x116mouse_action()
+static int x116mouse_action()
 {
 	char ch;
 	int x, y;
@@ -526,8 +512,7 @@ x116mouse_action()
 /*
  * Search a single command table for the command string in cmd.
  */
-	static int
-cmd_search(cmd, table, endtable, sp)
+static int cmd_search(cmd, table, endtable, sp)
 	char *cmd;
 	char *table;
 	char *endtable;
@@ -622,8 +607,7 @@ cmd_search(cmd, table, endtable, sp)
  * Decode a command character and return the associated action.
  * The "extra" string, if any, is returned in sp.
  */
-	static int
-cmd_decode(tlist, cmd, sp)
+static int cmd_decode(tlist, cmd, sp)
 	struct tablelist *tlist;
 	char *cmd;
 	char **sp;
@@ -649,8 +633,7 @@ cmd_decode(tlist, cmd, sp)
 /*
  * Decode a command from the cmdtables list.
  */
-	int
-fcmd_decode(cmd, sp)
+int fcmd_decode(cmd, sp)
 	char *cmd;
 	char **sp;
 {
@@ -660,8 +643,7 @@ fcmd_decode(cmd, sp)
 /*
  * Decode a command from the edittables list.
  */
-	int
-ecmd_decode(cmd, sp)
+int ecmd_decode(cmd, sp)
 	char *cmd;
 	char **sp;
 {
@@ -672,8 +654,7 @@ ecmd_decode(cmd, sp)
  * Get the value of an environment variable.
  * Looks first in the lesskey file, then in the real environment.
  */
-	char *
-lgetenv(var)
+char * lgetenv(var)
 	char *var;
 {
 	int a;
@@ -694,8 +675,7 @@ lgetenv(var)
 /*
  * Is a string null or empty? 
  */
-	int
-isnullenv(s)
+int isnullenv(s)
 	char* s;
 {
 	return (s == NULL || *s == '\0');
@@ -707,8 +687,7 @@ isnullenv(s)
  * Integers are stored in a funny format: 
  * two bytes, low order first, in radix KRADIX.
  */
-	static int
-gint(sp)
+static int gint(sp)
 	char **sp;
 {
 	int n;
@@ -721,8 +700,7 @@ gint(sp)
 /*
  * Process an old (pre-v241) lesskey file.
  */
-	static int
-old_lesskey(buf, len)
+static int old_lesskey(buf, len)
 	char *buf;
 	int len;
 {
@@ -742,8 +720,7 @@ old_lesskey(buf, len)
 /* 
  * Process a new (post-v241) lesskey file.
  */
-	static int
-new_lesskey(buf, len, sysvar)
+static int new_lesskey(buf, len, sysvar)
 	char *buf;
 	int len;
 	int sysvar;
@@ -796,8 +773,7 @@ new_lesskey(buf, len, sysvar)
 /*
  * Set up a user command table, based on a "lesskey" file.
  */
-	int
-lesskey(filename, sysvar)
+int lesskey(filename, sysvar)
 	char *filename;
 	int sysvar;
 {
@@ -864,8 +840,7 @@ lesskey(filename, sysvar)
 /*
  * Add the standard lesskey file "$HOME/.less"
  */
-	void
-add_hometable(envname, def_filename, sysvar)
+void add_hometable(envname, def_filename, sysvar)
 	char *envname;
 	char *def_filename;
 	int sysvar;
@@ -893,8 +868,7 @@ add_hometable(envname, def_filename, sysvar)
 /*
  * See if a char is a special line-editing command.
  */
-	int
-editchar(c, flags)
+int editchar(c, flags)
 	int c;
 	int flags;
 {

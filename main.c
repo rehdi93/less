@@ -288,8 +288,7 @@ main(argc, argv)
  * Copy a string to a "safe" place
  * (that is, to a buffer allocated by calloc).
  */
-	char *
-save(s)
+char * save(s)
 	const char *s;
 {
 	char *p;
@@ -303,8 +302,7 @@ save(s)
  * Allocate memory.
  * Like calloc(), but never returns an error (NULL).
  */
-	void*
-ecalloc(count, size)
+void* ecalloc(count, size)
 	int count;
 	unsigned int size;
 {
@@ -322,8 +320,7 @@ ecalloc(count, size)
 /*
  * Skip leading spaces in a string.
  */
-	char *
-skipsp(s)
+char * skipsp(s)
 	char *s;
 {
 	while (*s == ' ' || *s == '\t')	
@@ -336,8 +333,7 @@ skipsp(s)
  * If uppercase is true, the first string must begin with an uppercase
  * character; the remainder of the first string may be either case.
  */
-	int
-sprefix(ps, s, uppercase)
+int sprefix(ps, s, uppercase)
 	char *ps;
 	char *s;
 	int uppercase;
@@ -369,8 +365,7 @@ sprefix(ps, s, uppercase)
 /*
  * Exit the program.
  */
-	void
-quit(status)
+void quit(status)
 	int status;
 {
 	static int save_status;

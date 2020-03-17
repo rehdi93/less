@@ -12,8 +12,7 @@ extern int utf_mode;
 /*
  * Get the length of a buffer needed to convert a string.
  */
-	int
-cvt_length(len, ops)
+int cvt_length(len, ops)
 	int len;
 	int ops;
 {
@@ -30,8 +29,7 @@ cvt_length(len, ops)
 /*
  * Allocate a chpos array for use by cvt_text.
  */
-	int *
-cvt_alloc_chpos(len)
+int * cvt_alloc_chpos(len)
 	int len;
 {
 	int i;
@@ -47,8 +45,7 @@ cvt_alloc_chpos(len)
  * Returns converted text in odst.  The original offset of each
  * odst character (when it was in osrc) is returned in the chpos array.
  */
-	void
-cvt_text(odst, osrc, chpos, lenp, ops)
+void cvt_text(odst, osrc, chpos, lenp, ops)
 	char *odst;
 	char *osrc;
 	int *chpos;

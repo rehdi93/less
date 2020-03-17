@@ -30,15 +30,13 @@ static char meta_escape_buf[2];
 static char metachars[64] = "";
 static int num_metachars = 0;
 
-	static void
-pr_usage()
+static void pr_usage()
 {
 	fprintf(stderr,
 		"usage: lessecho [-ox] [-cx] [-pn] [-dn] [-mx] [-nn] [-ex] [-fn] [-a] file ...\n");
 }
 
-	static void
-pr_version()
+static void pr_version()
 {
 	char *p;
 	char buf[10];
@@ -53,16 +51,14 @@ pr_version()
 	printf("%s\n", buf);
 }
 
-	static void
-pr_error(s)
+static void pr_error(s)
 	char *s;
 {
 	fprintf(stderr, "%s\n", s);
 	exit(1);
 }
 
-	static long
-lstrtol(s, radix, pend)
+static long lstrtol(s, radix, pend)
 	char *s;
 	int radix;
 	char **pend;
@@ -135,8 +131,7 @@ lstrtol(s, radix, pend)
 
 
 #if !HAVE_STRCHR
-	char *
-strchr(s, c)
+char * strchr(s, c)
 	char *s;
 	int c;
 {
@@ -149,8 +144,7 @@ strchr(s, c)
 }
 #endif
 
-	int
-main(argc, argv)
+int main(argc, argv)
 	int argc;
 	char *argv[];
 {

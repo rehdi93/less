@@ -33,8 +33,7 @@ extern long jump_sline_fraction;
  */
 #if LESS_PLATFORM!=WIN32C
 	/* ARGSUSED*/
-	static RETSIGTYPE
-u_interrupt(type)
+static RETSIGTYPE u_interrupt(type)
 	int type;
 {
 	bell();
@@ -53,8 +52,7 @@ u_interrupt(type)
  * "Stop" (^Z) signal handler.
  */
 	/* ARGSUSED*/
-	static RETSIGTYPE
-stop(type)
+static RETSIGTYPE stop(type)
 	int type;
 {
 	LSIGNAL(SIGTSTP, stop);
@@ -78,8 +76,7 @@ stop(type)
  * "Window" change handler
  */
 	/* ARGSUSED*/
-	RETSIGTYPE
-winch(type)
+RETSIGTYPE winch(type)
 	int type;
 {
 	LSIGNAL(SIG_LESSWINDOW, winch);
@@ -96,8 +93,7 @@ winch(type)
 #include "os_windows_defs.h"
 #include <windows.h>
 
-	static BOOL WINAPI 
-wbreak_handler(dwCtrlType)
+static BOOL WINAPI  wbreak_handler(dwCtrlType)
 	DWORD dwCtrlType;
 {
 	switch (dwCtrlType)
@@ -113,8 +109,7 @@ wbreak_handler(dwCtrlType)
 }
 #endif
 
-	static RETSIGTYPE
-terminate(type)
+static RETSIGTYPE terminate(type)
 	int type;
 {
 	quit(15);
@@ -123,8 +118,7 @@ terminate(type)
 /*
  * Set up the signal handlers.
  */
-	void
-init_signals(on)
+void init_signals(on)
 	int on;
 {
 	if (on)
@@ -184,8 +178,7 @@ init_signals(on)
  * Process any signals we have received.
  * A received signal cause a bit to be set in "sigs".
  */
-	void
-psignals()
+void psignals()
 {
 	int tsignals;
 

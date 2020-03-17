@@ -65,8 +65,7 @@ extern int screen_trashed;
 /*
  * Initialize the line number structures.
  */
-	void
-clr_linenum()
+void clr_linenum()
 {
 	struct linenum_info *p;
 
@@ -93,8 +92,7 @@ clr_linenum()
 /*
  * Calculate the gap for an entry.
  */
-	static void
-calcgap(p)
+static void calcgap(p)
 	struct linenum_info *p;
 {
 	/*
@@ -113,8 +111,7 @@ calcgap(p)
  * The specified position (pos) should be the file position of the
  * FIRST character in the specified line.
  */
-	void
-add_lnum(linenum, pos)
+void add_lnum(linenum, pos)
 	LINENUM linenum;
 	POSITION pos;
 {
@@ -201,8 +198,7 @@ add_lnum(linenum, pos)
  * If we get stuck in a long loop trying to figure out the
  * line number, print a message to tell the user what we're doing.
  */
-	static void
-longloopmessage()
+static void longloopmessage()
 {
 	ierror("Calculating line numbers", NULL_PARG);
 }
@@ -212,8 +208,7 @@ static int loopcount;
 static time_type startime;
 #endif
 
-	static void
-longish()
+static void longish()
 {
 #if HAVE_TIME
 	if (loopcount >= 0 && ++loopcount > 100)
@@ -238,8 +233,7 @@ longish()
  * Turn off line numbers because the user has interrupted
  * a lengthy line number calculation.
  */
-	static void
-abort_long()
+static void abort_long()
 {
 	if (linenums == OPT_ONPLUS)
 		/*
@@ -254,8 +248,7 @@ abort_long()
  * Find the line number associated with a given position.
  * Return 0 if we can't figure it out.
  */
-	LINENUM
-find_linenum(pos)
+LINENUM find_linenum(pos)
 	POSITION pos;
 {
 	struct linenum_info *p;
@@ -369,8 +362,7 @@ find_linenum(pos)
  * Find the position of a given line number.
  * Return NULL_POSITION if we can't figure it out.
  */
-	POSITION
-find_pos(linenum)
+POSITION find_pos(linenum)
 	LINENUM linenum;
 {
 	struct linenum_info *p;
@@ -442,8 +434,7 @@ find_pos(linenum)
  * The argument "where" tells which line is to be considered
  * the "current" line (e.g. TOP, BOTTOM, MIDDLE, etc).
  */
-	LINENUM
-currline(where)
+LINENUM currline(where)
 	int where;
 {
 	POSITION pos;
