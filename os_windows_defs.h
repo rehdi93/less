@@ -40,3 +40,9 @@
 #define NOMCX 				// - Modem Configuration Extensions
 
 // ---------------------------------------------------------------------------
+
+// Minimun Windows version
+// https://docs.microsoft.com/en-us/cpp/porting/modifying-winver-and-win32-winnt?view=vs-2019
+
+#define WINVER 0x500
+#define _WIN32_WINNT WINVER

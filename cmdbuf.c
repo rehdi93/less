@@ -1675,19 +1675,9 @@ histfile_modified()
 
 #if LESS_PLATFORM==WIN32C
 #include "os_windows_defs.h"
-#define _WIN32_WINNT 0x500
 #include <windows.h>
 #endif
 
-// replace a file atomically
-static void replace_file(const char* oldfile, const char* newfile)
-{
-#if LESS_PLATFORM==WIN32C
-	ReplaceFileA(newfile, oldfile, 0,0,0,0);
-#else
-	rename(oldfile, newfile);
-#endif
-}
 
 /*
  * Update the .lesshst file.
@@ -1733,7 +1723,13 @@ save_cmdhist()
 		save_marks(fout, HISTFILE_MARK_SECTION);
 		fclose(fout);
 
-		replace_file(tempname, histname);
+		// replace the file
+#if LESS_PLATFORM==WIN32C
+		ReplaceFileA(newfile, oldfile, 0,0,0,0);
+#else
+		rename(oldfile, newfile);
+#endif
+
 	}
 	free(tempname);
 	free(histname);

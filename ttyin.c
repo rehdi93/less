@@ -14,7 +14,6 @@
 
 #if LESS_PLATFORM==WIN32C
 #include "os_windows_defs.h"
-#define _WIN32_WINNT 0x500
 #include <windows.h>
 static DWORD console_mode;
 HANDLE tty;
