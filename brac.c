@@ -1,6 +1,5 @@
 /*@@copyright@@*/
 
-
 /*
  * Routines to perform bracket matching functions.
  */
@@ -16,12 +15,7 @@
  * The characters which serve as "open bracket" and 
  * "close bracket" are given.
  */
-	void
-match_brac(obrac, cbrac, forwdir, n)
-	int obrac;
-	int cbrac;
-	int forwdir;
-	int n;
+void match_brac(int obrac, int cbrac, int forwdir, int n)
 {
 	int c;
 	int nest;
@@ -67,7 +61,7 @@ match_brac(obrac, cbrac, forwdir, n)
 	 * If searching backward, skip back over the open bracket.
 	 */
 	if (!forwdir)
-		(void) ch_back_get();
+		(void)ch_back_get();
 
 	/*
 	 * Search the file for the matching bracket.

@@ -621,8 +621,7 @@ lglob(filename)
 	*--p = '\0';
 	GLOB_LIST_DONE(list);
 }
-#else
-#ifdef DECL_GLOB_NAME
+#elif defined(DECL_GLOB_NAME)
 {
 	/*
 	 * The globbing function returns a single name, and
@@ -681,8 +680,7 @@ lglob(filename)
 	*--p = '\0';
 	GLOB_NAME_DONE(handle);
 }
-#else
-#if HAVE_POPEN
+#elif HAVE_POPEN
 {
 	/*
 	 * We get the shell to glob the filename for us by passing
@@ -739,8 +737,6 @@ lglob(filename)
 	 * No globbing functions at all.  Just use the fexpanded filename.
 	 */
 	gfilename = save(filename);
-#endif
-#endif
 #endif
 	free(filename);
 	return (gfilename);
