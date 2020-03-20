@@ -2,13 +2,12 @@
 # by Pedro Oliva Rodrigues
 
 cmake_minimum_required(VERSION 3.8)
-project("gwsw-less" 
-    VERSION 554 
-    LANGUAGES C 
-    HOMEPAGE_URL "http://www.greenwoodsoftware.com/less"
+project("gwsw-less"
+    VERSION 556
+    LANGUAGES C
 )
+set(PROJECT_HOMEPAGE_URL "http://www.greenwoodsoftware.com/less")
 
-# Defaults
 if(WIN32)
     set(EDIT_PGM_ "notepad")
     set(EDIT_PROTO_ "%E %g")
@@ -20,6 +19,11 @@ else()
     set(EDIT_PROTO_ "%E ?lm+%lm. %g")
 endif()
 
+if(MINGW)
+    add_compile_definitions(MINGW)
+endif()
+
+
 # User preferences
 option(SECURE_COMPILE "If enabled, disables a bunch of features in order to be safe to run by unprivileged users." OFF)
 option(CMD_HISTORY "Enable if you wish to allow keys to cycle through previous commands at prompts." ON)
@@ -27,12 +31,17 @@ option(HILITE_SEARCH "Enable if you wish to have search targets to be displayed 
 set(EDIT_PGM ${EDIT_PGM_} CACHE STRING "Name of the default to be invoked by the 'v' command if EDITOR env. var. is not set")
 set(EDIT_PROTO ${EDIT_PROTO_} CACHE STRING "The default editor prototype, if LESSEDIT is not set.")
 option(GNU_OPTIONS "Enable if you wish to support the GNU-style command line options --help and --version." ON)
-option(ONLY_RETURN "Enable if you want RETURN to be the only input which will continue past an error message. 
-                    Otherwise, any key will continue past an error message." OFF)
+option(ONLY_RETURN "Enable if you want RETURN to be the only input which will continue past an error message. Otherwise, any key will continue past an error message." OFF)
 set(LESSKEYFILE ".less" CACHE STRING "Filename of the default lesskey output file (in the HOME directory).")
 set(LESSKEYFILE_SYS "sysless" CACHE STRING "Filename of the system-wide lesskey output file.")
 set(DEF_LESSKEYINFILE ".lesskey" CACHE STRING "Filename of the default lesskey input (in the HOME directory).")
 set(LESSHISTFILE ".lesshst" CACHE STRING "Filename of the history file (in the HOME directory).")
+set(REGEX_LIBRARY regcomp-local CACHE STRING "Select what regular expression library to use ([regcomp-local],posix,pcre2,off).")
+
+set(SECURE ${SECURE_COMPILE} CACHE INTERNAL "same as SECURE_COMPILE")
+
+# needed for creating generated_files and making pkg releases
+find_package(Perl REQUIRED)
 
 # targets
 set(SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
@@ -40,9 +49,17 @@ set(SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
     ifile.c input.c jump.c line.c linenum.c
     lsystem.c mark.c optfunc.c option.c opttbl.c os.c
     output.c pattern.c position.c prompt.c search.c signal.c
-    tags.c ttyin.c regexp.c)
+    tags.c ttyin.c)
 
-add_executable(less ${SRC})
+# we need to give the full path, else it fails to find help.c when building less
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/help.c
+    COMMAND ${PERL_EXECUTABLE} mkhelp.pl < "less.hlp" > help.c
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Generating help.c ..."
+    USES_TERMINAL
+)
+
+add_executable(less ${SRC} help.c)
 add_executable(lesskey lesskey.c)
 add_executable(lessecho lessecho.c)
 
@@ -55,81 +72,77 @@ target_link_libraries(less PRIVATE common)
 target_link_libraries(lesskey PRIVATE common)
 target_link_libraries(lessecho PRIVATE common)
 
-# we may need to generate help.c
-set(generated_files help.c)
-find_file(help_c_found  help.c  PATHS ${CMAKE_SOURCE_DIR} NO_DEFAULT_PATH)
-
-if(NOT help_c_found)
-    message(CHECK_START " " "Generating files (${generated_files})")
-
-    find_package(Perl REQUIRED)
-
-    if(NOT help_c_found)
-        message(CHECK_START "  " "Generating help.c")
-        execute_process(
-            COMMAND ${PERL_EXECUTABLE} mkhelp.pl
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            INPUT_FILE less.hlp
-            OUTPUT_FILE help.c
-            RESULT_VARIABLE gen
-        )
-        if(gen EQUAL 0)
-            message(CHECK_PASS "  " "ok")
-        else()
-            message(CHECK_FAIL "  " "fail")
-        endif()
-    endif()
-
-    if(EXISTS help.c)
-        message(CHECK_PASS "  " "ok")
-    else()
-        message(CHECK_FAIL "  " "fail")
-    endif()
-    
-endif()
-
-# help.c exists at this point
-target_sources(less PRIVATE help.c)
-
-
-# find terminal libraries
-find_package(Curses) # curses or ncurses
-find_library(TINFO_LIB NAMES tinfo libtinfo)
-find_library(TERMCAP_LIB names termcap libtermcap)
-
-if(WIN32)
-    set(TERMINAL_API WindowsConsole)
-elseif(TINFO_LIB)
-    set(TERMINAL_API tinfo)
-    target_link_libraries(less PRIVATE ${TINFO_LIB})
-elseif(CURSES_FOUND)
-    target_include_directories(less PRIVATE ${CURSES_INCLUDE_DIRS})
-    set(TERMINAL_API curses)
-    target_link_libraries(less PRIVATE ${CURSES_LIBRARIES})
-elseif(TERMCAP_LIB)
-    set(TERMINAL_API termcap)
-    target_link_libraries(less PRIVATE ${TERMCAP_LIB})
-else()
-    set(TERMINAL_API NOTFOUND)
-endif()
-
-if(NOT TERMINAL_API)
-    message(SEND_ERROR "Cannot find terminal libraries")
-else()
-    message(STATUS "using ${TERMINAL_API}")
-endif()
 
 # dependency detection
 include(CheckIncludeFiles)
 include(CheckTypeSize)
 include(CheckSymbolExists)
+
+# find terminal libraries
+find_package(Curses) # curses or ncurses
+find_library(TINFO_LIB NAMES tinfo libtinfo.so libtinfo.so.5)
+find_library(TERMCAP_LIB NAMES termcap libtermcap.so)
+
+if(WIN32)
+    set(TERMINAL_LIBRARY WindowsConsole)
+elseif(TINFO_LIB)
+    set(TERMINAL_LIBRARY tinfo)
+    target_link_libraries(less PRIVATE ${TINFO_LIB})
+elseif(CURSES_FOUND)
+    target_include_directories(less PRIVATE ${CURSES_INCLUDE_DIRS})
+    set(TERMINAL_LIBRARY curses)
+    target_link_libraries(less PRIVATE ${CURSES_LIBRARIES})
+elseif(TERMCAP_LIB)
+    set(TERMINAL_LIBRARY termcap)
+    target_link_libraries(less PRIVATE ${TERMCAP_LIB})
+else()
+    set(TERMINAL_LIBRARY NOTFOUND)
+endif()
+
+check_include_files("termios.h" HAVE_TERMIOS_H)
+check_include_files("termio.h"  HAVE_TERMIO_H)
+check_include_files("termcap.h" HAVE_TERMCAP_H)
+
+message(STATUS "terminal lib: ${TERMINAL_LIBRARY}")
+
+if(NOT TERMINAL_LIBRARY)
+    message(SEND_ERROR "Cannot find terminal libraries")
+endif()
+
+
+# find regex library
+if(REGEX_LIBRARY MATCHES regcomp-local)
+    target_sources(less PRIVATE ${CMAKE_SOURCE_DIR}/regexp.c)
+    set(HAVE_V8_REGCOMP true)
+    set(HAVE_REGEXEC2 true)
+    set(found yes)
+elseif(REGEX_LIBRARY MATCHES posix)
+    check_include_files("regex.h" HAVE_POSIX_REGCOMP)
+    set(found HAVE_POSIX_REGCOMP)
+elseif(REGEX_LIBRARY MATCHES pcre2)
+    find_library(pcre2_lib NAMES pcre2 libpcre2-8.so libpcre2-8.so.0)
+    if(pcre2_lib)
+        set(HAVE_PCRE2 true)
+        target_link_libraries(less PRIVATE ${pcre2_lib})
+        set(found yes)
+    endif()
+elseif(NOT REGEX_LIBRARY)
+    set(NO_REGEX true)
+    set(found yes)
+endif()
+
+if(NOT found)
+    message("Cannot find regex lib '${REGEX_LIBRARY}'")
+    set(REGEX_LIBRARY NOTFOUND)
+endif()
+
+message(STATUS "regex lib: ${REGEX_LIBRARY}")
+
+
 check_include_files("langinfo.h"   HAVE_LANGINFO)
 check_include_files("sys/ioctl.h"  HAVE_SYS_IOCTL_H)
 check_include_files("sys/ptem.h"   HAVE_SYS_PTEM_H)
 check_include_files("sys/stream.h" HAVE_SYS_STREAM_H)
-check_include_files("termios.h" HAVE_TERMIOS_H)
-check_include_files("termio.h"  HAVE_TERMIO_H)
-check_include_files("termcap.h" HAVE_TERMCAP_H)
 
 list(APPEND CMAKE_EXTRA_INCLUDE_FILES "signal.h")
 check_type_size("(sigset_t*)0" SIGSET_T)

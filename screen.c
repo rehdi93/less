@@ -12,7 +12,7 @@
 #if LESS_PLATFORM
 #include "pckeys.h"
 #if LESS_PLATFORM==WIN32C
-#include "os_windows_defs.h"
+#include "os_defs.h"
 #include <windows.h>
 #endif
 

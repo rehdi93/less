@@ -1612,10 +1612,9 @@ static int histfile_modified()
 }
 
 #if LESS_PLATFORM==WIN32C
-#include "os_windows_defs.h"
+#include "os_defs.h"
 #include <windows.h>
 #endif
-
 
 /*
  * Update the .lesshst file.
@@ -1666,7 +1665,6 @@ void save_cmdhist()
 #else
 		rename(tempname, histname);
 #endif
-
 	}
 	free(tempname);
 	free(histname);

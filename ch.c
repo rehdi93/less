@@ -10,7 +10,7 @@
 
 #if LESS_PLATFORM == WIN32C
 #include <errno.h>
-#include "os_windows_defs.h"
+#include "os_defs.h"
 #include <windows.h>
 #endif
 

@@ -1,6 +1,6 @@
-// os_windows_defs.h - defines to trim windows.h down as much as possible
-// ---------------------------------------------------------------------------
+// os_defs.h - OS specific defines
 
+#if LESS_PLATFORM==WIN32C
 // If defined, the following flags inhibit definition of the indicated items.
 
 #define WIN32_LEAN_AND_MEAN	// - Excludes less common APIs like Cryptography DDE, RPC, Shell and Windows Sockets
@@ -39,10 +39,9 @@
 #define NODEFERWINDOWPOS 	// - DeferWindowPos routines
 #define NOMCX 				// - Modem Configuration Extensions
 
-// ---------------------------------------------------------------------------
-
-// Minimun Windows version
+// minimum OS version
 // https://docs.microsoft.com/en-us/cpp/porting/modifying-winver-and-win32-winnt?view=vs-2019
+#define _WIN32_WINNT 0x500
 
-#define WINVER 0x500
-#define _WIN32_WINNT WINVER
+
+#endif

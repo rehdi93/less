@@ -17,8 +17,8 @@
 
 #include "charset.h"
 
-#if LESS_PLATFORM==WIN32C
-#include "os_windows_defs.h"
+#if MSDOS_COMPILER==WIN32C
+#include "os_defs.h"
 #include <windows.h>
 #endif
 
@@ -327,15 +327,13 @@ static void set_charset()
 		return;
 	}
 
-#if HAVE_LOCALE
-#ifdef CODESET
+#if HAVE_LANGINFO && defined(CODESET)
 	/*
 	 * Try using the codeset name as the charset name.
 	 */
 	s = nl_langinfo(CODESET);
 	if (icharset(s, 1))
 		return;
-#endif
 #endif
 
 #if HAVE_STRSTR
