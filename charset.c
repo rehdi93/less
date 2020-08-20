@@ -17,7 +17,7 @@
 
 #include "charset.h"
 
-#if MSDOS_COMPILER==WIN32C
+#if LESS_PLATFORM==WIN32C
 #include "os_defs.h"
 #include <windows.h>
 #endif
