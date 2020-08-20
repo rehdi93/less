@@ -2,10 +2,7 @@
 # by Pedro Oliva Rodrigues
 
 cmake_minimum_required(VERSION 3.8)
-project("gwsw-less"
-    VERSION 556
-    LANGUAGES C
-)
+project("gwsw-less" VERSION 556)
 set(PROJECT_HOMEPAGE_URL "http://www.greenwoodsoftware.com/less")
 
 if(WIN32)
@@ -44,7 +41,7 @@ set(SECURE ${SECURE_COMPILE} CACHE INTERNAL "same as SECURE_COMPILE")
 find_package(Perl REQUIRED)
 
 # targets
-set(SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
+set(LESS_SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
     command.c cvt.c decode.c edit.c filename.c forwback.c
     ifile.c input.c jump.c line.c linenum.c
     lsystem.c mark.c optfunc.c option.c opttbl.c os.c
@@ -59,7 +56,7 @@ add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/help.c
     USES_TERMINAL
 )
 
-add_executable(less ${SRC} help.c)
+add_executable(less ${LESS_SRC} help.c)
 add_executable(lesskey lesskey.c)
 add_executable(lessecho lessecho.c)
 

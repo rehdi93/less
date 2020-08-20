@@ -1,3 +1,9 @@
+/*
+    functions.h
+
+    This replaces the old perl-generated funcs.h
+*/
+
 char * save (const char *s);
 void* ecalloc (int count, unsigned int size);
 char * skipsp (char *s);

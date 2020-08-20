@@ -32,15 +32,15 @@
 #endif
 
 #if HAVE_RE_COMP
-char *re_comp LESSPARAMS ((char*));
-int re_exec LESSPARAMS ((char*));
+char *re_comp (char*);
+int re_exec (char*);
 #define PATTERN_TYPE          int
 #define CLEAR_PATTERN(name)   name = 0
 #endif
 
 #if HAVE_REGCMP
-char *regcmp LESSPARAMS ((char*));
-char *regex LESSPARAMS ((char**, char*));
+char *regcmp (char*);
+char *regex (char**, char*);
 extern char *__loc1;
 #define PATTERN_TYPE          char **
 #define CLEAR_PATTERN(name)   name = NULL
