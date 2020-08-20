@@ -49,9 +49,7 @@ ino_t curr_ino;
  * words, returning each one as a standard null-terminated string.
  * back_textlist does the same, but runs thru the list backwards.
  */
-void init_textlist(tlist, str)
-	struct textlist *tlist;
-	char *str;
+void init_textlist (struct textlist *tlist, char *str)
 {
 	char *s;
 #if SPACES_IN_FILENAMES
@@ -92,9 +90,7 @@ void init_textlist(tlist, str)
 	}
 }
 
-char * forw_textlist(tlist, prev)
-	struct textlist *tlist;
-	char *prev;
+char * forw_textlist (struct textlist *tlist, char *prev)
 {
 	char *s;
 	
@@ -115,9 +111,7 @@ char * forw_textlist(tlist, prev)
 	return (s);
 }
 
-char * back_textlist(tlist, prev)
-	struct textlist *tlist;
-	char *prev;
+char * back_textlist (struct textlist *tlist, char *prev)
 {
 	char *s;
 	
@@ -224,8 +218,7 @@ int edit(filename)
  * Edit a new file (given its IFILE).
  * ifile == NULL means just close the current file.
  */
-int edit_ifile(ifile)
-	IFILE ifile;
+int edit_ifile(IFILE ifile)
 {
 	int f;
 	int answer;
@@ -492,8 +485,7 @@ int edit_ifile(ifile)
  * For each filename in the list, enter it into the ifile list.
  * Then edit the first one.
  */
-int edit_list(filelist)
-	char *filelist;
+int edit_list(char *filelist)
 {
 	IFILE save_ifile;
 	char *good_filename;
@@ -573,10 +565,7 @@ int edit_last()
 /*
  * Edit the n-th next or previous file in the command line (ifile) list.
  */
-static int edit_istep(h, n, dir)
-	IFILE h;
-	int n;
-	int dir;
+static int edit_istep(IFILE h, int n, int dir)
 {
 	IFILE next;
 
@@ -614,28 +603,22 @@ static int edit_istep(h, n, dir)
 	return (0);
 }
 
-static int edit_inext(h, n)
-	IFILE h;
-	int n;
+static int edit_inext(IFILE h, int n)
 {
 	return (edit_istep(h, n, +1));
 }
 
-int edit_next(n)
-	int n;
+int edit_next(int n)
 {
 	return edit_istep(curr_ifile, n, +1);
 }
 
-static int edit_iprev(h, n)
-	IFILE h;
-	int n;
+static int edit_iprev(IFILE h, int n)
 {
 	return (edit_istep(h, n, -1));
 }
 
-int edit_prev(n)
-	int n;
+int edit_prev(int n)
 {
 	return edit_istep(curr_ifile, n, -1);
 }
@@ -643,8 +626,7 @@ int edit_prev(n)
 /*
  * Edit a specific file in the command line (ifile) list.
  */
-int edit_index(n)
-	int n;
+int edit_index(int n)
 {
 	IFILE h;
 
@@ -680,8 +662,7 @@ void unsave_ifile(save_ifile)
 /*
  * Reedit the ifile which was previously open.
  */
-void reedit_ifile(save_ifile)
-	IFILE save_ifile;
+void reedit_ifile(IFILE save_ifile)
 {
 	IFILE next;
 	IFILE prev;
@@ -753,8 +734,7 @@ void cat_file()
  * is standard input, create the log file.  
  * We take care not to blindly overwrite an existing file.
  */
-void use_logfile(filename)
-	char *filename;
+void use_logfile(char *filename)
 {
 	bool exists;
 	int answer;

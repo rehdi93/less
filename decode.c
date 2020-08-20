@@ -232,9 +232,7 @@ static struct tablelist *list_sysvar_tables = NULL;
 /*
  * Expand special key abbreviations in a command table.
  */
-static void expand_special_keys(table, len)
-	char *table;
-	int len;
+static void expand_special_keys(char *table, int len)
 {
 	char *fm;
 	char *to;
@@ -292,8 +290,7 @@ static void expand_special_keys(table, len)
 /*
  * Expand special key abbreviations in a list of command tables.
  */
-static void expand_cmd_table(tlist)
-	struct tablelist *tlist;
+static void expand_cmd_table(struct tablelist *tlist)
 {
 	struct tablelist *t;
 	for (t = tlist;  t != NULL;  t = t->t_next)
@@ -346,10 +343,7 @@ void init_cmds()
 /*
  * Add a command table.
  */
-static int add_cmd_table(tlist, buf, len)
-	struct tablelist **tlist;
-	char *buf;
-	int len;
+static int add_cmd_table(struct tablelist **tlist, char *buf, int len)
 {
 	struct tablelist *t;
 
@@ -374,9 +368,7 @@ static int add_cmd_table(tlist, buf, len)
 /*
  * Add a command table.
  */
-void add_fcmd_table(buf, len)
-	char *buf;
-	int len;
+void add_fcmd_table (char *buf, int len)
 {
 	if (add_cmd_table(&list_fcmd_tables, buf, len) < 0)
 		error("Warning: some commands disabled", NULL_PARG);
@@ -385,9 +377,7 @@ void add_fcmd_table(buf, len)
 /*
  * Add an editing command table.
  */
-void add_ecmd_table(buf, len)
-	char *buf;
-	int len;
+void add_ecmd_table (char *buf, int len)
 {
 	if (add_cmd_table(&list_ecmd_tables, buf, len) < 0)
 		error("Warning: some edit commands disabled", NULL_PARG);
@@ -396,10 +386,7 @@ void add_ecmd_table(buf, len)
 /*
  * Add an environment variable table.
  */
-static void add_var_table(tlist, buf, len)
-	struct tablelist **tlist;
-	char *buf;
-	int len;
+static void add_var_table(struct tablelist **tlist, char *buf, int len)
 {
 	if (add_cmd_table(tlist, buf, len) < 0)
 		error("Warning: environment variables from lesskey file unavailable", NULL_PARG);
@@ -424,9 +411,7 @@ static int mouse_wheel_up()
 /*
  * Return action for a mouse button release event.
  */
-static int mouse_button_rel(x, y)
-	int x;
-	int y;
+static int mouse_button_rel(int x, int y)
 {
 	/*
 	 * {{ It would be better to return an action and then do this 
@@ -443,8 +428,7 @@ static int mouse_button_rel(x, y)
 /*
  * Read a decimal integer. Return the integer and set *pterm to the terminating char.
  */
-static int getcc_int(pterm)
-	char* pterm;
+static int getcc_int(char* pterm)
 {
 	int num = 0;
 	int digits = 0;
@@ -512,11 +496,7 @@ static int x116mouse_action()
 /*
  * Search a single command table for the command string in cmd.
  */
-static int cmd_search(cmd, table, endtable, sp)
-	char *cmd;
-	char *table;
-	char *endtable;
-	char **sp;
+static int cmd_search(char *cmd, char *table, char *endtable, char **sp)
 {
 	char *p;
 	char *q;
@@ -607,10 +587,7 @@ static int cmd_search(cmd, table, endtable, sp)
  * Decode a command character and return the associated action.
  * The "extra" string, if any, is returned in sp.
  */
-static int cmd_decode(tlist, cmd, sp)
-	struct tablelist *tlist;
-	char *cmd;
-	char **sp;
+static int cmd_decode(struct tablelist *tlist, char *cmd, char **sp)
 {
 	struct tablelist *t;
 	int action = A_INVALID;
@@ -633,9 +610,7 @@ static int cmd_decode(tlist, cmd, sp)
 /*
  * Decode a command from the cmdtables list.
  */
-int fcmd_decode(cmd, sp)
-	char *cmd;
-	char **sp;
+int fcmd_decode(char *cmd, char **sp)
 {
 	return (cmd_decode(list_fcmd_tables, cmd, sp));
 }
@@ -643,9 +618,7 @@ int fcmd_decode(cmd, sp)
 /*
  * Decode a command from the edittables list.
  */
-int ecmd_decode(cmd, sp)
-	char *cmd;
-	char **sp;
+int ecmd_decode(char *cmd, char **sp)
 {
 	return (cmd_decode(list_ecmd_tables, cmd, sp));
 }
@@ -654,8 +627,7 @@ int ecmd_decode(cmd, sp)
  * Get the value of an environment variable.
  * Looks first in the lesskey file, then in the real environment.
  */
-char * lgetenv(var)
-	char *var;
+char * lgetenv(char *var)
 {
 	int a;
 	char *s;
@@ -675,8 +647,7 @@ char * lgetenv(var)
 /*
  * Is a string null or empty? 
  */
-int isnullenv(s)
-	char* s;
+int isnullenv(char *s)
 {
 	return (s == NULL || *s == '\0');
 }
@@ -687,8 +658,7 @@ int isnullenv(s)
  * Integers are stored in a funny format: 
  * two bytes, low order first, in radix KRADIX.
  */
-static int gint(sp)
-	char **sp;
+static int gint(char **sp)
 {
 	int n;
 
@@ -700,9 +670,7 @@ static int gint(sp)
 /*
  * Process an old (pre-v241) lesskey file.
  */
-static int old_lesskey(buf, len)
-	char *buf;
-	int len;
+static int old_lesskey(char *buf, int len)
 {
 	/*
 	 * Old-style lesskey file.
@@ -720,10 +688,7 @@ static int old_lesskey(buf, len)
 /* 
  * Process a new (post-v241) lesskey file.
  */
-static int new_lesskey(buf, len, sysvar)
-	char *buf;
-	int len;
-	int sysvar;
+static int new_lesskey(char *buf, int len, int sysvar)
 {
 	char *p;
 	int c;
@@ -773,9 +738,7 @@ static int new_lesskey(buf, len, sysvar)
 /*
  * Set up a user command table, based on a "lesskey" file.
  */
-int lesskey(filename, sysvar)
-	char *filename;
-	int sysvar;
+int lesskey(char *filename, int sysvar)
 {
 	char *buf;
 	POSITION len;
@@ -840,10 +803,7 @@ int lesskey(filename, sysvar)
 /*
  * Add the standard lesskey file "$HOME/.less"
  */
-void add_hometable(envname, def_filename, sysvar)
-	char *envname;
-	char *def_filename;
-	int sysvar;
+void add_hometable (char *envname, char *def_filename, int sysvar)
 {
 	char *filename;
 	PARG parg;
@@ -868,9 +828,7 @@ void add_hometable(envname, def_filename, sysvar)
 /*
  * See if a char is a special line-editing command.
  */
-int editchar(c, flags)
-	int c;
-	int flags;
+int editchar (int c, int flags)
 {
 	int action;
 	int nch;
