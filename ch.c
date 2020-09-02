@@ -401,6 +401,7 @@ void end_logfile()
 	}
 	close(logfile);
 	logfile = -1;
+	free(namelogfile);
 	namelogfile = NULL;
 }
 
@@ -814,7 +815,8 @@ int seekable(f) int f;
  */
 void ch_set_eof()
 {
-	ch_fsize = ch_fpos;
+	if (ch_fsize != NULL_POSITION && ch_fsize < ch_fpos)
+		ch_fsize = ch_fpos;
 }
 
 /*

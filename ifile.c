@@ -20,6 +20,7 @@ struct ifile {
 	struct ifile *h_next;           /* Links for command line list */
 	struct ifile *h_prev;
 	char *h_filename;               /* Name of the file */
+	char *h_rfilename;              /* Canonical name of the file */
 	void *h_filestate;              /* File state (used in ch.c) */
 	int h_index;                    /* Index within command line list */
 	int h_hold;                     /* Hold count */
@@ -39,7 +40,7 @@ struct ifile {
 /*
  * Anchor for linked list.
  */
-static struct ifile anchor = { &anchor, &anchor, NULL, NULL, 0, 0, '\0',
+static struct ifile anchor = { &anchor, &anchor, NULL, NULL, NULL, 0, 0, '\0',
 				{ NULL_POSITION, 0 } };
 static int ifiles = 0;
 
@@ -105,6 +106,7 @@ static struct ifile * new_ifile(filename, prev)
 	 */
 	p = (struct ifile *) ecalloc(1, sizeof(struct ifile));
 	p->h_filename = save(filename);
+	p->h_rfilename = lrealpath(filename);
 	p->h_scrpos.pos = NULL_POSITION;
 	p->h_opened = 0;
 	p->h_hold = 0;
@@ -138,6 +140,7 @@ void del_ifile(h)
 		curr_ifile = getoff_ifile(curr_ifile);
 	p = int_ifile(h);
 	unlink_ifile(p);
+	free(p->h_rfilename);
 	free(p->h_filename);
 	free(p);
 }
@@ -204,15 +207,17 @@ static struct ifile * find_ifile(filename)
 
 	for (p = anchor.h_next;  p != &anchor;  p = p->h_next)
 	{
-		if (strcmp(filename, p->h_filename) == 0 ||
-		    strcmp(rfilename, p->h_filename) == 0)
+		if (strcmp(rfilename, p->h_rfilename) == 0)
 		{
 			/*
 			 * If given name is shorter than the name we were
 			 * previously using for this file, adopt shorter name.
 			 */
 			if (strlen(filename) < strlen(p->h_filename))
-				strcpy(p->h_filename, filename);
+			{
+				free(p->h_filename);
+				p->h_filename = save(filename);
+			}
 			break;
 		}
 	}
@@ -239,7 +244,7 @@ IFILE get_ifile(filename, prev)
 }
 
 /*
- * Get the filename associated with a ifile.
+ * Get the display filename associated with a ifile.
  */
 char * get_filename(ifile)
 	IFILE ifile;
@@ -247,6 +252,17 @@ char * get_filename(ifile)
 	if (ifile == NULL)
 		return (NULL);
 	return (int_ifile(ifile)->h_filename);
+}
+
+/*
+ * Get the canonical filename associated with a ifile.
+ */
+char *get_real_filename(ifile)
+	IFILE ifile;
+{
+	if (ifile == NULL)
+		return (NULL);
+	return (int_ifile(ifile)->h_rfilename);
 }
 
 /*

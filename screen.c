@@ -219,6 +219,11 @@ extern int hilite_search;
 #endif
 #if LESS_PLATFORM==WIN32C
 extern HANDLE tty;
+extern DWORD console_mode;
+#ifndef ENABLE_EXTENDED_FLAGS
+#define ENABLE_EXTENDED_FLAGS 0x80
+#define ENABLE_QUICK_EDIT_MODE 0x40
+#endif
 #else
 extern int tty;
 #endif
@@ -985,8 +990,11 @@ void get_term()
 	char *sp;
 	char *t1, *t2;
 	char *term;
-	char termbuf[TERMBUF_SIZE];
-
+	/*
+	 * Some termcap libraries assume termbuf is static
+	 * (accessible after tgetent returns).
+	 */
+	static char termbuf[TERMBUF_SIZE];
 	static char sbuf[TERMSBUF_SIZE];
 
 #if OS2
@@ -1009,12 +1017,13 @@ void get_term()
 	/*
 	 * Find out what kind of terminal this is.
 	 */
- 	if ((term = lgetenv("TERM")) == NULL)
- 		term = DEFAULT_TERM;
+	if ((term = lgetenv("TERM")) == NULL)
+		term = DEFAULT_TERM;
 	hardcopy = 0;
- 	if (tgetent(termbuf, term) != TGETENT_OK)
- 		hardcopy = 1;
- 	if (ltgetflag("hc"))
+	/* {{ Should probably just pass NULL instead of termbuf. }} */
+	if (tgetent(termbuf, term) != TGETENT_OK)
+		hardcopy = 1;
+	if (ltgetflag("hc"))
 		hardcopy = 1;
 
 	/*
@@ -1413,7 +1422,8 @@ void init_mouse()
 	tputs(sc_s_mousecap, sc_height, putchr);
 #else
 #if LESS_PLATFORM==WIN32C
-	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
+	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT
+			    | ENABLE_EXTENDED_FLAGS /* disable quick edit */);
 #endif
 #endif
 }
@@ -1430,7 +1440,8 @@ void deinit_mouse()
 	tputs(sc_e_mousecap, sc_height, putchr);
 #else
 #if LESS_PLATFORM==WIN32C
-	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT);
+	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_EXTENDED_FLAGS
+			    | (console_mode & ENABLE_QUICK_EDIT_MODE));
 #endif
 #endif
 }
@@ -1465,8 +1476,13 @@ void init()
 		line_left();
 #else
 #if LESS_PLATFORM==WIN32C
-	if (!no_init)
-		win32_init_term();
+	if (!(quit_if_one_screen && one_screen))
+	{
+		if (!no_init)
+			win32_init_term();
+		init_mouse();
+
+	}
 #endif
 	initcolor();
 	flush();
@@ -1494,8 +1510,12 @@ void deinit()
 	/* Restore system colors. */
 	SETCOLORS(sy_fg_color, sy_bg_color);
 #if LESS_PLATFORM==WIN32C
-	if (!no_init)
-		win32_deinit_term();
+	if (!(quit_if_one_screen && one_screen))
+	{
+		deinit_mouse();
+		if (!no_init)
+			win32_deinit_term();
+	}
 #else
 	/* Need clreol to make SETCOLORS take effect. */
 	clreol();

@@ -13,7 +13,6 @@ int screen_trashed;
 int squished;
 int no_back_scroll = 0;
 int forw_prompt;
-int same_pos_bell = 1;
 
 extern int sigs;
 extern int top_scroll;
@@ -273,7 +272,7 @@ void forw(n, pos, force, only_last, nblank)
 		forw_prompt = 1;
 	}
 
-	if (nlines == 0 && !ignore_eoi && same_pos_bell)
+	if (nlines == 0 && !ignore_eoi)
 		eof_bell();
 	else if (do_repaint)
 		repaint();
@@ -332,7 +331,7 @@ void back(n, pos, force, only_last)
 		}
 	}
 
-	if (nlines == 0 && same_pos_bell)
+	if (nlines == 0)
 		eof_bell();
 	else if (do_repaint)
 		repaint();

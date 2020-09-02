@@ -4,7 +4,7 @@ EMAIL = bug-less@gnu.org
 HOMEPAGE = http://www.greenwoodsoftware.com/less
 SHELL = /bin/sh
 GIT = git
-NROFF = nroff -man
+NROFF = nroff -t -man
 
 srcdir = .
 
@@ -74,7 +74,6 @@ REPLACE_VERSION = \
 	sed \
 		-e "s;@@VERSION@@;$$REL;" \
 		-e "s;@@DATE@@;$$DT;" \
-		-e "s;@@EMAIL@@;${EMAIL};" \
 		-e "s;@@HOMEPAGE@@;${HOMEPAGE};" >$@
 
 ${srcdir}/README: ${srcdir}/README.VER ${srcdir}/version.c

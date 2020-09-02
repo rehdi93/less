@@ -879,6 +879,16 @@ v553  10/17/19  Support tinfow; handle zero-width Hangul chars.
 v554  1/19/20   Remove erroneous free().
 v555  3/15/20   Display error msg immediately when toggle -o without stdin.
 v556  3/15/20   Update copyright.
+v557  3/21/20   Fix memory corruption with libtermcap.
+v558  4/17/20   Don't init terminal if -F and file fits on one screen (WIN32).
+v559  4/19/20   Handle deinit correctly on WIN32.
+v560  5/3/20    Fix regression when command results in no movement;
+                fix some less.nro issues (thanks to Bjarni I. Gislason).
+v561  5/11/20   Fix erroneous EOF calculation when F command is interrupted.
+v562  5/19/20   Update Unicode tables; minor doc formatting.
+v563  6/13/20   Fix crash due to realpath() incompatibility.
+v564  8/25/20   Handle realpath consistently; update docs.
+v565
 */
 
-char version[] = "556";
+char version[] = "565x";
