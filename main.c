@@ -56,13 +56,12 @@ extern int	quit_if_one_screen;
 extern int	no_init;
 
 
+static bool isoptstring(const char* s);
+
 /*
  * Entry point.
  */
-int
-main(argc, argv)
-	int argc;
-	char *argv[];
+int main(int argc, char *argv[])
 {
 	IFILE ifile;
 	char *s;
@@ -101,7 +100,7 @@ main(argc, argv)
 			}
 		}
 	}
-	GetConsoleTitle(consoleTitle, sizeof(consoleTitle)/sizeof(char));
+	GetConsoleTitleA(consoleTitle, sizeof(consoleTitle)/sizeof(char));
 #endif /* WIN32 */
 
 	/*
@@ -132,7 +131,6 @@ main(argc, argv)
 	if (s != NULL)
 		scan_option(save(s));
 
-#define	isoptstring(s)	(((s)[0] == '-' || (s)[0] == '+') && (s)[1] != '\0')
 	while (argc > 0 && (isoptstring(*argv) || isoptpending()))
 	{
 		s = *argv++;
@@ -141,7 +139,6 @@ main(argc, argv)
 			break;
 		scan_option(s);
 	}
-#undef isoptstring
 
 	if (isoptpending())
 	{
@@ -396,8 +393,13 @@ void quit(status)
 	close(2);
 #endif
 #ifdef WIN32
-	SetConsoleTitle(consoleTitle);
+	SetConsoleTitleA(consoleTitle);
 #endif
 	close_getchr();
 	exit(status);
+}
+
+bool isoptstring(const char* s)
+{
+	return (*s == '-' || *s == '+') && s[1] != '\0';
 }

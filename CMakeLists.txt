@@ -2,7 +2,7 @@
 # by Pedro Oliva Rodrigues
 
 cmake_minimum_required(VERSION 3.8)
-project("gwsw-less" VERSION 556)
+project("gwsw-less")
 set(PROJECT_HOMEPAGE_URL "http://www.greenwoodsoftware.com/less")
 
 if(WIN32)
@@ -146,3 +146,5 @@ check_type_size("(sigset_t*)0" SIGSET_T)
 check_symbol_exists(sigemptyset "signal.h" HAVE_SIGEMPTYSET)
 
 configure_file(defines.cmake.in defines.h)
+
+install(TARGETS "less" lesskey lessecho)
