@@ -9,6 +9,9 @@
 #if LESS_PLATFORM==WIN32C
 #include "os_defs.h"
 #include <windows.h>
+
+char* win32_get_home(void*(*allocfn)(size_t,size_t));
+
 #endif
 
 char *	every_first_cmd = NULL;
@@ -82,23 +85,8 @@ int main(int argc, char *argv[])
 #ifdef WIN32
 	if (getenv("HOME") == NULL)
 	{
-		/*
-		 * If there is no HOME environment variable, try USERPROFILE.
-		 */
-		char* userprofile = getenv("USERPROFILE");
-		if (userprofile != NULL) {
-			_putenv_s("HOME", userprofile);
-		} else {
-			// try the concatenation of HOMEDRIVE + HOMEPATH.
-			char *drive = getenv("HOMEDRIVE");
-			char *path  = getenv("HOMEPATH");
-			if (drive != NULL && path != NULL) {
-				userprofile = (char*) ecalloc(strlen(drive) + strlen(path) + 1, sizeof(char));
-				strcpy(userprofile, drive);
-				strcat(userprofile, path);
-				_putenv_s("HOME", userprofile);
-			}
-		}
+		char* home = win32_get_home(calloc);
+		_putenv_s("HOME", home);
 	}
 	GetConsoleTitleA(consoleTitle, sizeof(consoleTitle)/sizeof(char));
 #endif /* WIN32 */
@@ -299,9 +287,7 @@ char * save(s)
  * Allocate memory.
  * Like calloc(), but never returns an error (NULL).
  */
-void* ecalloc(count, size)
-	int count;
-	unsigned int size;
+void* ecalloc(size_t count, size_t size)
 {
 	void* p;
 

@@ -744,6 +744,11 @@ void parse_line(line)
 		parse_cmdline(p);
 }
 
+#ifdef WIN32
+char* win32_get_home(void*(*allocfn)(size_t,size_t));
+#endif
+
+
 int main(argc, argv)
 	int argc;
 	char *argv[];
@@ -755,21 +760,8 @@ int main(argc, argv)
 #ifdef WIN32
 	if (getenv("HOME") == NULL)
 	{
-		/* If there is no HOME environment variable, try USERPROFILE. */
-		char* userprofile = getenv("USERPROFILE");
-		if (userprofile != NULL) {
-			_putenv_s("HOME", userprofile);
-		} else {
-			// try the concatenation of HOMEDRIVE + HOMEPATH.
-			char *drive = getenv("HOMEDRIVE");
-			char *path  = getenv("HOMEPATH");
-			if (drive != NULL && path != NULL) {
-				userprofile = (char*) calloc(strlen(drive) + strlen(path) + 1, sizeof(char));
-				strcpy(userprofile, drive);
-				strcat(userprofile, path);
-				_putenv_s("HOME", userprofile);
-			}
-		}
+		char* home = win32_get_home(calloc);
+		_putenv_s("HOME", home);
 	}
 #endif /* WIN32 */
 
