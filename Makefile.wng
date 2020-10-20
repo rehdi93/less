@@ -81,10 +81,12 @@ LESS_SRC = brac.c ch.c charset.c cmdbuf.c command.c		\
            lsystem.c main.c mark.c optfunc.c option.c 		\
 	   opttbl.c os.c output.c pattern.c position.c 		\
 	   prompt.c          screen.c scrsize.c search.c 	\
-	   signal.c tags.c ttyin.c version.c
+	   signal.c tags.c ttyin.c version.c shared.c
 ifeq  (${REGEX_PACKAGE},regcomp-local)
 LESS_SRC += regexp.c
 endif
+
+SHARED_OBJ = version.o shared.o
 
 OBJ = \
 	main.o screen.o brac.o ch.o charset.o cmdbuf.o \
@@ -92,7 +94,7 @@ OBJ = \
 	help.o ifile.o input.o jump.o line.o linenum.o \
 	lsystem.o mark.o optfunc.o option.o opttbl.o os.o \
 	output.o pattern.o position.o prompt.o search.o signal.o \
-	tags.o ttyin.o version.o
+	tags.o ttyin.o ${SHARED_OBJ}
 ifeq  (${REGEX_PACKAGE},regcomp-local)
 OBJ += regexp.o
 endif
@@ -100,14 +102,16 @@ endif
 
 all: clean less lesskey lessecho
 
+shared: ${SHARED_OBJ}
+
 less: ${OBJ}
 	${CC} ${LDFLAGS} -o $@ ${OBJ} ${LIBS}
 
-lesskey: lesskey.o version.o
-	${CC} ${LDFLAGS} -o $@ lesskey.o version.o
+lesskey: lesskey.o shared
+	${CC} ${LDFLAGS} -o $@ lesskey.o ${SHARED_OBJ}
 
-lessecho: lessecho.o version.o
-	${CC} ${LDFLAGS} -o $@ lessecho.o version.o
+lessecho: lessecho.o shared
+	${CC} ${LDFLAGS} -o $@ lessecho.o ${SHARED_OBJ}
 
 defines.h: defines.wn
 	copy $< $@
@@ -115,7 +119,7 @@ defines.h: defines.wn
 help.c: less.hlp
 	perl mkhelp.pl  < $<  > $@
 
-${OBJ}: less.h defines.h functions.h
+${OBJ}: less.h defines.h functions.h shared
 
 TAGS:
 	etags *.c *.h
