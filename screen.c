@@ -437,8 +437,7 @@ void raw_mode(on)
 	}
 #endif
     }
-#else
-#ifdef TCGETA
+#elif defined(TCGETA)
     {
 	struct termio s;
 	static struct termio save_term;
@@ -487,8 +486,7 @@ void raw_mode(on)
 	}
 	ioctl(tty, TCSETAW, &s);
     }
-#else
-#ifdef TIOCGETP
+#elif defined(TIOCGETP)
     {
 	struct sgttyb s;
 	static struct sgttyb save_term;
@@ -530,8 +528,7 @@ void raw_mode(on)
 	}
 	ioctl(tty, TIOCSETN, &s);
     }
-#else
-#ifdef _OSK
+#elif defined(_OSK)
     {
 	struct sgbuf s;
 	static struct sgbuf save_term;
@@ -581,9 +578,6 @@ void raw_mode(on)
 	erase_char = '\b';
 	kill_char = ESC;
 	werase_char = CONTROL('W');
-#endif
-#endif
-#endif
 #endif
 	curr_on = on;
 }
@@ -686,8 +680,7 @@ void scrsize()
 		sys_height = scr.srWindow.Bottom - scr.srWindow.Top + 1;
 		sys_width = scr.srWindow.Right - scr.srWindow.Left + 1;
 	}
-#else
-#if OS2
+#elif OS2
 	{
 		int s[2];
 		_scrsize(s);
@@ -715,8 +708,7 @@ void scrsize()
 			}
 		}
 	}
-#else
-#ifdef TIOCGWINSZ
+#elif defined(TIOCGWINSZ)
 	{
 		struct winsize w;
 		if (ioctl(2, TIOCGWINSZ, &w) == 0)
@@ -727,8 +719,7 @@ void scrsize()
 				sys_width = w.ws_col;
 		}
 	}
-#else
-#ifdef WIOCGETD
+#elif defined(WIOCGETD)
 	{
 		struct uwdata w;
 		if (ioctl(2, WIOCGETD, &w) == 0)
@@ -739,9 +730,6 @@ void scrsize()
 				sys_width = w.uw_width / w.uw_hs;
 		}
 	}
-#endif
-#endif
-#endif
 #endif
 
 	if (sys_height > 0)

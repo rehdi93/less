@@ -7,11 +7,12 @@
  */
 
 /*
- * Defines for LESS_PLATFORM.
+ * Possible values for LESS_PLATFORM.
+ * When targeting UNIX, LESS_PLATFORM must be 0
  */
 #define UNIX 0
 #define DOS_LEGACY 1
-#define	WIN32C 3	/* Windows (MSVC) */
+#define	WIN32C 100	/* Windows (MSVC) */
 
 
 /*
