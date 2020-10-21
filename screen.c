@@ -1837,12 +1837,10 @@ static void beep()
 {
 #if LESS_PLATFORM==UNIX
 	putchr(CONTROL('G'));
-#else
-#if LESS_PLATFORM==WIN32C
+#elif LESS_PLATFORM==WIN32C
 	MessageBeep(0);
 #else
 	write(1, "\7", 1);
-#endif
 #endif
 }
 
@@ -2243,7 +2241,7 @@ void WIN32textout(text, len)
 					  sizeof(wtext)/sizeof(*wtext));
 		WriteConsoleW(con_out, wtext, len, &written, NULL);
 	} else
-		WriteConsole(con_out, text, len, &written, NULL);
+		WriteConsoleA(con_out, text, len, &written, NULL);
 #else
 	char c = text[len];
 	text[len] = '\0';
