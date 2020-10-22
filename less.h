@@ -106,8 +106,7 @@ void free();
 #define	IS_LOWER(c)	iswlower(c)
 #define	TO_UPPER(c)	towupper(c)
 #define	TO_LOWER(c)	towlower(c)
-#else
-#if HAVE_UPPER_LOWER
+#elif HAVE_UPPER_LOWER
 #define	IS_UPPER(c)	isupper((unsigned char) (c))
 #define	IS_LOWER(c)	islower((unsigned char) (c))
 #define	TO_UPPER(c)	toupper((unsigned char) (c))
@@ -118,17 +117,12 @@ void free();
 #define	TO_UPPER(c)	ASCII_TO_UPPER(c)
 #define	TO_LOWER(c)	ASCII_TO_LOWER(c)
 #endif
-#endif
 
-#ifdef isspace
+#if HAVE_CTYPE_H
 #define IS_SPACE(c)	isspace((unsigned char)(c))
-#else
-#define IS_SPACE(c)	((c) == ' ' || (c) == '\t' || (c) == '\n' || (c) == '\r' || (c) == '\f')
-#endif
-
-#ifdef isdigit
 #define IS_DIGIT(c)	isdigit((unsigned char)(c))
 #else
+#define IS_SPACE(c)	((c) == ' ' || (c) == '\t' || (c) == '\n' || (c) == '\r' || (c) == '\f')
 #define IS_DIGIT(c)	((c) >= '0' && (c) <= '9')
 #endif
 
@@ -187,26 +181,20 @@ typedef off_t		LINENUM;
  */
 #if LESS_PLATFORM || OS2
 #define	OPEN_READ	(O_RDONLY|O_BINARY)
-#else
-#ifdef _OSK
+#elif defined(_OSK)
 #define	OPEN_READ	(S_IREAD)
-#else
-#ifdef O_RDONLY
+#elif defined(O_RDONLY)
 #define	OPEN_READ	(O_RDONLY)
 #else
 #define	OPEN_READ	(0)
 #endif
-#endif
-#endif
 
 #if defined(O_WRONLY) && defined(O_APPEND)
 #define	OPEN_APPEND	(O_APPEND|O_WRONLY)
-#else
-#ifdef _OSK
+#elif defined(_OSK)
 #define OPEN_APPEND	(S_IWRITE)
 #else
 #define	OPEN_APPEND	(1)
-#endif
 #endif
 
 /*
@@ -418,18 +406,13 @@ struct wchar_range_table
 #define	LSIGNAL(sig,func)	signal(sig,func)
 #endif
 
-#if HAVE_SIGPROCMASK
-#if HAVE_SIGSET_T
-#else
+#if HAVE_SIGPROCMASK && !HAVE_SIGSET_T
 #undef HAVE_SIGPROCMASK
 #endif
-#endif
-#if HAVE_SIGPROCMASK
-#if HAVE_SIGEMPTYSET
-#else
+
+#if HAVE_SIGPROCMASK && !HAVE_SIGEMPTYSET
 #undef  sigemptyset
 #define sigemptyset(mp) *(mp) = 0
-#endif
 #endif
 
 #define	S_INTERRUPT	01
