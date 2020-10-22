@@ -488,15 +488,8 @@ struct hilite_tree;
 void postoa (POSITION, char*);
 void linenumtoa (LINENUM, char*);
 void inttoa (int, char*);
-
-inline int lstrtoi (char* str, char** end_ptr)
-{
-	return (int)strtol(str, end_ptr, 10);
-}
-inline POSITION lstrtopos (char* str, char** end_ptr)
-{
-	return (POSITION)strtol(str, end_ptr, 10);
-}
+int lstrtoi (char* str, char** end_ptr);
+POSITION lstrtopos (char* str, char** end_ptr);
 
 #if LESS_PLATFORM==LP_WINDOWS
 int pclose(FILE*);

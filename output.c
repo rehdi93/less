@@ -437,10 +437,16 @@ void putstr(s)
 /*
  * Convert an integral type to a string.
  */
-static void integral_to_a(long num, char *buf)
+#define TBUF_SIZE INT_STRLEN_BOUND(num)+2
+static void integral_to_string(long num, char *buf)
 {
-	bool neg = (num < 0);
 	char tbuf[INT_STRLEN_BOUND(num)+2];
+
+#if HAVE_STDIO_H
+	snprintf(tbuf, TBUF_SIZE, "%ld", num);
+	char *s = tbuf;
+#else
+	bool neg = (num < 0);
 	char *s = tbuf + sizeof(tbuf);
 	if (neg)
 		num = -num;
@@ -451,20 +457,22 @@ static void integral_to_a(long num, char *buf)
 	} while ((num /= 10) != 0);
 	if (neg)
 		*--s = '-';
+#endif
 	strcpy(buf, s);
 }
+#undef TBUF_SIZE
 
 void postoa (POSITION pos, char* buf)
 {
-	integral_to_a((long)pos, buf);
+	integral_to_string((long)pos, buf);
 }
 void linenumtoa (LINENUM ln, char* buf)
 {
-	integral_to_a((long)ln, buf);
+	integral_to_string((long)ln, buf);
 }
 void inttoa (int num, char* buf)
 {
-	integral_to_a((long)num, buf);
+	integral_to_string((long)num, buf);
 }
 
 /*
@@ -472,6 +480,9 @@ void inttoa (int num, char* buf)
  */
 static long string_to_integral(char *buf, char **ebuf)
 {
+#if HAVE_STDLIB_H
+	return strtol(buf, ebuf, 10);
+#else
 	long val = 0;
 	for (;;) {
 		char c = *buf++;
@@ -480,10 +491,17 @@ static long string_to_integral(char *buf, char **ebuf)
 	}
 	if (ebuf != NULL) *ebuf = buf;
 	return val;
+#endif
 }
 
-extern int lstrtoi (char*, char**);
-extern POSITION lstrtopos (char*, char**);
+int lstrtoi (char* str, char** strend)
+{
+	return (int)string_to_integral(str,strend);
+}
+POSITION lstrtopos (char* str, char** strend)
+{
+	return (POSITION)string_to_integral(str,strend);
+}
 
 
 /*
