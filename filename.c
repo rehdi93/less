@@ -552,11 +552,16 @@ static FILE * shellcmd(cmd)
 #endif /* HAVE_POPEN */
 
 
+// inline declarations, as per C99
+extern struct lglob_s lglob_new();
+extern bool lglob_failed(struct lglob_s* gb);
+extern void lglob_done(struct lglob_s* gb);
+extern bool lglob_next(struct lglob_s* gb);
+
 /*
  * Expand a filename, doing any system-specific metacharacter substitutions.
  */
-char * lglob(filename)
-	char *filename;
+char* lglob(char* filename)
 {
 	char *gfilename;
 
@@ -564,7 +569,7 @@ char * lglob(filename)
 	if (secure)
 		return (filename);
 
-#ifdef DECL_GLOB_LIST
+#ifdef GLOB_LIST
 {
 	/*
 	 * The globbing function returns a list of names.
@@ -572,17 +577,16 @@ char * lglob(filename)
 	int length;
 	char *p;
 	char *qfilename;
-	DECL_GLOB_LIST(list)
+	struct lglob_s g = lglob_new(filename);
 
-	GLOB_LIST(filename, list);
-	if (GLOB_LIST_FAILED(list))
+	if (lglob_failed(&g))
 	{
-		return (filename);
+		return filename;
 	}
 	length = 1; /* Room for trailing null byte */
-	for (SCAN_GLOB_LIST(list, p))
+	while (lglob_next(&g))
 	{
-		INIT_GLOB_LIST(list, p);
+		p = g.current;
 		qfilename = shell_quote(p);
 		if (qfilename != NULL)
 		{
@@ -591,9 +595,9 @@ char * lglob(filename)
 		}
 	}
 	gfilename = (char *) ecalloc(length, sizeof(char));
-	for (SCAN_GLOB_LIST(list, p))
+	while (lglob_next(&g))
 	{
-		INIT_GLOB_LIST(list, p);
+		p = g.current;
 		qfilename = shell_quote(p);
 		if (qfilename != NULL)
 		{
@@ -605,9 +609,9 @@ char * lglob(filename)
 	 * Overwrite the final trailing space with a null terminator.
 	 */
 	*--p = '\0';
-	GLOB_LIST_DONE(list);
+	lglob_done(&g);
 }
-#elif defined(DECL_GLOB_NAME)
+#elif defined(GLOB_NAME)
 {
 	/*
 	 * The globbing function returns a single name, and
@@ -618,22 +622,22 @@ char * lglob(filename)
 	int n;
 	char *pfilename;
 	char *qfilename;
-	DECL_GLOB_NAME(fnd,drive,dir,fname,ext,handle)
 	
-	GLOB_FIRST_NAME(filename, &fnd, handle);
-	if (GLOB_FIRST_FAILED(handle))
+	struct lglob_s g = lglob_new(filename);
+	
+	if (lglob_failed(&g))
 	{
-		return (filename);
+		return filename;
 	}
 
-	_splitpath(filename, drive, dir, fname, ext);
+	_splitpath(filename, g.drive, g.dir, g.fname, g.ext);
 	len = 100;
 	gfilename = (char *) ecalloc(len, sizeof(char));
 	p = gfilename;
 	do {
-		n = (int) (strlen(drive) + strlen(dir) + strlen(fnd.GLOB_NAME) + 1);
+		n = (int) (strlen(g.drive) + strlen(g.dir) + strlen(g.find_data.name) + 1);
 		pfilename = (char *) ecalloc(n, sizeof(char));
-		snprintf(pfilename, n, "%s%s%s", drive, dir, fnd.GLOB_NAME);
+		snprintf(pfilename, n, "%s%s%s", g.drive, g.dir, g.find_data.name);
 		qfilename = shell_quote(pfilename);
 		free(pfilename);
 		if (qfilename != NULL)
@@ -658,13 +662,13 @@ char * lglob(filename)
 			p += n;
 			*p++ = ' ';
 		}
-	} while (GLOB_NEXT_NAME(handle, &fnd) == 0);
+	} while (lglob_next(&g));
 
 	/*
 	 * Overwrite the final trailing space with a null terminator.
 	 */
 	*--p = '\0';
-	GLOB_NAME_DONE(handle);
+	lglob_done(&g);
 }
 #elif HAVE_POPEN
 {
