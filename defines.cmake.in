@@ -12,8 +12,9 @@
 /* Global settings.  */
 
 /* 
-    Legacy checks that if you're using Cmake and a compiler from this decade you don't need to worry about it,
-    these are defined in standard C. 
+    Legacy checks you don't need to worry about.
+    
+    If you're using Cmake at all, your compiler's most likely C99+ compliant.
 */
 #define HAVE_ANSI_PROTOS 1
 #define HAVE_MEMCPY 1
