@@ -10,13 +10,13 @@
  * Possible values for LESS_PLATFORM.
  * When targeting UNIX, LESS_PLATFORM must be 0
  */
-#define UNIX 0
+#define LP_UNIX 0
 #define LP_DOS_DJGPPC 1
 #define LP_DOS_MSC 2
 #define LP_DOS_BORLAND 2
 #define LP_WINDOWS_BORLAND 4
 
-#define	WIN32C 100	/* Windows (MSVC) */
+#define	LP_WINDOWS 100	/* Windows (MSVC) */
 
 
 /*
@@ -74,7 +74,7 @@
 #include <floss.h>
 #endif
 
-#if LESS_PLATFORM==WIN32C || OS2
+#if LESS_PLATFORM==LP_WINDOWS || OS2
 #include <io.h>
 #endif
 
@@ -491,6 +491,6 @@ void inttoa (int, char*);
 int lstrtoi (char*, char**);
 POSITION lstrtopos (char*, char**);
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 int pclose(FILE*);
 #endif

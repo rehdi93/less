@@ -22,7 +22,7 @@
  */
 
 
-#if LESS_PLATFORM==WIN32C && (defined(_MSC_VER) || defined(MINGW))
+#if LESS_PLATFORM==LP_WINDOWS && (defined(_MSC_VER) || defined(MINGW))
 #define GLOB_NAME
 
 struct lglob_s

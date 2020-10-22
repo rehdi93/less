@@ -17,7 +17,7 @@
 
 #include "charset.h"
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 #include "os_defs.h"
 #include <windows.h>
 #endif
@@ -213,7 +213,7 @@ static int icharset(name, no_error) char *name; int no_error;
 			ichardef(p->desc);
 			if (p->p_flag != NULL)
 			{
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 				*(p->p_flag) = 1 + (GetConsoleOutputCP() != CP_UTF8);
 #else
 				*(p->p_flag) = 1;
@@ -302,7 +302,7 @@ static void set_charset()
 {
 	char *s;
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	/*
 	 * If the Windows console is using UTF-8, we'll use it too.
 	 */
@@ -745,7 +745,7 @@ int is_ubin_char (LWCHAR ch)
 {
 	int ubin = is_in_table(ch, &ubin_table) ||
 	           (bs_mode == BS_CONTROL && is_in_table(ch, &fmt_table));
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	if (!ubin && utf_mode == 2 && ch < 0x10000)
 	{
 		/*

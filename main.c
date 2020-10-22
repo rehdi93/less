@@ -6,7 +6,7 @@
  */
 
 #include "less.h"
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 #include "os_defs.h"
 #include <windows.h>
 

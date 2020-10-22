@@ -846,7 +846,7 @@ int editchar (int c, int flags)
 		return (EC_BACKSPACE);
 	if (c == kill_char)
 	{
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 		if (!win32_kbhit())
 #endif
 

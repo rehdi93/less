@@ -60,7 +60,7 @@ int iread(fd, buf, len)
 	int n;
 
 start:
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	if (ABORT_SIGS())
 		return (READ_INTR);
 #elif LESS_PLATFORM

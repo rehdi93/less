@@ -58,7 +58,7 @@ char *tagoption = NULL;
 extern char *tags;
 extern char ztags[];
 #endif
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
 extern int ul_fg_color, ul_bg_color;
@@ -514,7 +514,7 @@ colordesc(s, fg_color, bg_color)
 {
 	int fg, bg;
 	int err;
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	int ul = 0;
  	
 	if (*s == 'u')
@@ -526,7 +526,7 @@ colordesc(s, fg_color, bg_color)
 	fg = getnum(&s, "D", &err);
 	if (err)
 	{
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 		if (ul)
 			fg = nm_fg_color;
 		else
@@ -548,7 +548,7 @@ colordesc(s, fg_color, bg_color)
 			return;
 		}
 	}
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	if (*s == 'u')
 	{
 		ul = COMMON_LVB_UNDERSCORE;

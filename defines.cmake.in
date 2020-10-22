@@ -63,7 +63,7 @@
 
 #ifdef WIN32
     #define	PATHNAME_SEP	"\\"
-    #define LESS_PLATFORM	WIN32C
+    #define LESS_PLATFORM	LP_WINDOWS
 
     #define popen _popen
     #if _MSC_VER < 1900
@@ -100,7 +100,7 @@
         #pragma warning(disable:4996)
     #endif
 #else
-    #define	LESS_PLATFORM	UNIX
+    #define	LESS_PLATFORM	LP_UNIX
     #define	PATHNAME_SEP	"/"
     #define TGETENT_OK  1
     #define	HAVE_SHELL	1

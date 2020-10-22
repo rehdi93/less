@@ -7,7 +7,7 @@
 
 #include "less.h"
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 #include "windows.h"
 
 #ifndef COMMON_LVB_UNDERSCORE
@@ -29,7 +29,7 @@ extern bool any_display;
 extern int is_tty;
 extern int oldbot;
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 extern int ctldisp;
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
@@ -101,7 +101,7 @@ void flush()
 	if (n == 0)
 		return;
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
@@ -248,7 +248,7 @@ void flush()
 							at |= 2;
 							break;
 						case 4: /* underline on */
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 							if (have_ul)
 								bgi = COMMON_LVB_UNDERSCORE >> 4;
 							else
@@ -349,7 +349,7 @@ void flush()
 					if (at & 16)
 						f = b ^ 8;
 					f &= 0xf;
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 					b &= 0xf | (COMMON_LVB_UNDERSCORE >> 4);
 #else
  					b &= 0xf;

@@ -1608,7 +1608,7 @@ static int histfile_modified()
 	return 0;
 }
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 #include "os_defs.h"
 #include <windows.h>
 #endif
@@ -1657,7 +1657,7 @@ void save_cmdhist()
 		fclose(fout);
 
 		// replace the file
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 		ReplaceFileA(histname, tempname, 0,0,0,0);
 #else
 		rename(tempname, histname);

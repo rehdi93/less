@@ -11,7 +11,7 @@
 
 #if LESS_PLATFORM
 #include "pckeys.h"
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 #include "os_defs.h"
 #include <windows.h>
 #endif
@@ -75,7 +75,7 @@ static char *windowid;
 #endif
 
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 struct keyRecord
 {
 	int ascii;
@@ -123,7 +123,7 @@ int bl_bg_color;
 static int sy_fg_color;		/* Color of system text (before less) */
 static int sy_bg_color;
 int sgr_mode;		/* Honor ANSI sequences rather than using above */
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 int have_ul;		/* Is underline available? */
 #endif
 #else
@@ -183,7 +183,7 @@ static int termcap_debug = -1;
 extern int binattr;
 extern int one_screen;
 
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 static char *cheaper (char *t1, char *t2, char *def);
 static void tmodes (char *incap, char *outcap, char **instr,
     char **outstr, char *def_instr, char *def_outstr, char **spp);
@@ -217,7 +217,7 @@ extern int mousecap;
 #if HILITE_SEARCH
 extern int hilite_search;
 #endif
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 extern HANDLE tty;
 extern DWORD console_mode;
 #ifndef ENABLE_EXTENDED_FLAGS
@@ -582,7 +582,7 @@ void raw_mode(on)
 	curr_on = on;
 }
 
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 /*
  * Some glue to prevent calling termcap functions if tgetent() failed.
  */
@@ -659,7 +659,7 @@ void scrsize()
 	char *s;
 	int sys_height;
 	int sys_width;
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	int n;
 #endif
 
@@ -673,7 +673,7 @@ void scrsize()
 
 	sys_width = sys_height = 0;
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	{
 		CONSOLE_SCREEN_BUFFER_INFO scr;
 		GetConsoleScreenBufferInfo(con_out, &scr);
@@ -736,7 +736,7 @@ void scrsize()
 		sc_height = sys_height;
 	else if ((s = lgetenv("LINES")) != NULL)
 		sc_height = atoi(s);
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	else if ((n = ltgetnum("li")) > 0)
  		sc_height = n;
 #endif
@@ -747,7 +747,7 @@ void scrsize()
 		sc_width = sys_width;
 	else if ((s = lgetenv("COLUMNS")) != NULL)
 		sc_width = atoi(s);
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	else if ((n = ltgetnum("co")) > 0)
  		sc_width = n;
 #endif
@@ -781,7 +781,7 @@ char * special_key_str(key)
 	static char k_pageup[]		= { '\340', PCK_PAGEUP, 0 };
 	static char k_f1[]		= { '\340', PCK_F1, 0 };
 #endif
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	char *sp = tbuf;
 #endif
 
@@ -938,7 +938,7 @@ void get_term()
 	 * Set up default colors.
 	 * The xx_s_width and xx_e_width vars are already initialized to 0.
 	 */
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
     {
 	CONSOLE_SCREEN_BUFFER_INFO scr;
 
@@ -1209,7 +1209,7 @@ void get_term()
 #endif /* LESS_PLATFORM */
 }
 
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 /*
  * Return the cost of displaying a termcap string.
  * We use the trick of calling tputs, but as a char printing function
@@ -1296,7 +1296,7 @@ static void tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
 
 #if LESS_PLATFORM
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 static void _settextposition(int row, int col)
 {
 	COORD cpos;
@@ -1339,7 +1339,7 @@ static void initcolor()
 }
 #endif
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 
 /*
  * Termcap-like init with a private win32 console.
@@ -1406,10 +1406,10 @@ void init_mouse()
 {
 	if (!mousecap)
 		return;
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_s_mousecap, sc_height, putchr);
 #else
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT
 			    | ENABLE_EXTENDED_FLAGS /* disable quick edit */);
 #endif
@@ -1424,10 +1424,10 @@ void deinit_mouse()
 {
 	if (!mousecap)
 		return;
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_e_mousecap, sc_height, putchr);
 #else
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_EXTENDED_FLAGS
 			    | (console_mode & ENABLE_QUICK_EDIT_MODE));
 #endif
@@ -1439,7 +1439,7 @@ void deinit_mouse()
  */
 void init()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	if (!(quit_if_one_screen && one_screen))
 	{
 		if (!no_init)
@@ -1463,7 +1463,7 @@ void init()
 	} else
 		line_left();
 #else
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	if (!(quit_if_one_screen && one_screen))
 	{
 		if (!no_init)
@@ -1485,7 +1485,7 @@ void deinit()
 {
 	if (!init_done)
 		return;
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	if (!(quit_if_one_screen && one_screen))
 	{
 		deinit_mouse();
@@ -1497,7 +1497,7 @@ void deinit()
 #else
 	/* Restore system colors. */
 	SETCOLORS(sy_fg_color, sy_bg_color);
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	if (!(quit_if_one_screen && one_screen))
 	{
 		deinit_mouse();
@@ -1517,7 +1517,7 @@ void deinit()
  */
 void home()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_home, 1, putchr);
 #else
 	flush();
@@ -1531,12 +1531,12 @@ void home()
  */
 void add_line()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_addline, sc_height, putchr);
 #else
 	flush();
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
     {
 	CHAR_INFO fillchar;
 	SMALL_RECT rcSrc, rcClip;
@@ -1579,7 +1579,7 @@ void add_line()
 void remove_top(n)
 	int n;
 {
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	SMALL_RECT rcSrc, rcClip;
 	CHAR_INFO fillchar;
 	COORD new_org;
@@ -1625,7 +1625,7 @@ void remove_top(n)
 }
 #endif
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 /*
  * Clear the screen.
  */
@@ -1728,7 +1728,7 @@ void lower_left()
 {
 	if (!init_done)
 		return;
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_lower_left, 1, putchr);
 #else
 	flush();
@@ -1741,12 +1741,12 @@ void lower_left()
  */
 void line_left()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_return, 1, putchr);
 #else
 	int row;
 	flush();
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	{
 		CONSOLE_SCREEN_BUFFER_INFO scr;
 		GetConsoleScreenBufferInfo(con_out, &scr);
@@ -1768,7 +1768,7 @@ void line_left()
  */
 void check_winch()
 {
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	CONSOLE_SCREEN_BUFFER_INFO scr;
 	COORD size;
 
@@ -1798,7 +1798,7 @@ void check_winch()
 void goto_line(sindex)
 	int sindex;
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(tgoto(sc_move, 0, sindex), 1, putchr);
 #else
 	flush();
@@ -1811,13 +1811,13 @@ void goto_line(sindex)
  */
 void vbell()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	if (*sc_visual_bell == '\0')
 		return;
 	tputs(sc_visual_bell, sc_height, putchr);
 #else
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	/* paint screen with an inverse color */
 	clear();
 
@@ -1835,9 +1835,9 @@ void vbell()
  */
 static void beep()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	putchr(CONTROL('G'));
-#elif LESS_PLATFORM==WIN32C
+#elif LESS_PLATFORM==LP_WINDOWS
 	MessageBeep(0);
 #else
 	write(1, "\7", 1);
@@ -1860,11 +1860,11 @@ void bell()
  */
 void clear()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_clear, sc_height, putchr);
 #else
 	flush();
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	win32_clear();
 #else
 	_clearscreen(_GCLEARSCREEN);
@@ -1878,10 +1878,10 @@ void clear()
  */
 void clear_eol()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_eol_clear, 1, putchr);
 #else
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	DWORD           nchars;
 	COORD           cpos;
 	CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -1949,7 +1949,7 @@ void at_enter(attr)
 {
 	attr = apply_at_specials(attr);
 
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	/* The one with the most priority is last.  */
 	if (attr & AT_UNDERLINE)
 		tputs(sc_u_in, 1, putchr);
@@ -1984,7 +1984,7 @@ void at_enter(attr)
 
 void at_exit()
 {
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	/* Undo things in the reverse order we did them.  */
 	if (attrmode & AT_STANDOUT)
 		tputs(sc_s_out, 1, putchr);
@@ -2046,14 +2046,14 @@ void putbs()
 		putstr("<bs>");
 	else
 	{
-#if LESS_PLATFORM==UNIX
+#if LESS_PLATFORM==LP_UNIX
 	tputs(sc_backspace, 1, putchr);
 #else
 	int row, col;
 
 	flush();
 	{
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 		CONSOLE_SCREEN_BUFFER_INFO scr;
 		GetConsoleScreenBufferInfo(con_out, &scr);
 		row = scr.dwCursorPosition.Y - scr.srWindow.Top + 1;
@@ -2067,7 +2067,7 @@ void putbs()
 	}
 }
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 /*
  * Determine whether an input character is waiting to be read.
  */
@@ -2228,7 +2228,7 @@ void WIN32textout(text, len)
 	char *text;
 	int len;
 {
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	DWORD written;
 	if (utf_mode == 2)
 	{

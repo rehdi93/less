@@ -12,7 +12,7 @@
 
 #if LESS_PLATFORM
 #include <dos.h>
-#if LESS_PLATFORM==WIN32C && defined(MINGW)
+#if LESS_PLATFORM==LP_WINDOWS && defined(MINGW)
 #include <direct.h>
 #define setdisk(n) _chdrive((n)+1)
 #else
@@ -45,7 +45,7 @@ void lsystem(cmd, donemsg)
 	char *p;
 #endif
 	IFILE save_ifile;
-#if LESS_PLATFORM!=WIN32C
+#if LESS_PLATFORM!=LP_WINDOWS
 	char cwd[FILENAME_MAX+1];
 #endif
 
@@ -63,7 +63,7 @@ void lsystem(cmd, donemsg)
 		putstr("\n");
 	}
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	if (*cmd == '\0')
 		cmd = getenv("COMSPEC");
 #endif
@@ -80,7 +80,7 @@ void lsystem(cmd, donemsg)
 	deinit();
 	flush();	/* Make sure the deinit chars get out */
 	raw_mode(0);
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	close_getchr();
 #endif
 
@@ -152,7 +152,7 @@ void lsystem(cmd, donemsg)
 	close(inp);
 #endif
 
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	open_getchr();
 #endif
 	init_signals(1);
@@ -267,7 +267,7 @@ int pipe_data(cmd, spos, epos)
 	flush();
 	raw_mode(0);
 	init_signals(0);
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	close_getchr();
 #endif
 #ifdef SIGPIPE
@@ -304,7 +304,7 @@ int pipe_data(cmd, spos, epos)
 #ifdef SIGPIPE
 	LSIGNAL(SIGPIPE, SIG_DFL);
 #endif
-#if LESS_PLATFORM==WIN32C
+#if LESS_PLATFORM==LP_WINDOWS
 	open_getchr();
 #endif
 	init_signals(1);
