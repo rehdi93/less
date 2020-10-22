@@ -12,8 +12,9 @@
 #include "pckeys.h"
 #endif
 
-#if LESS_PLATFORM==LP_WINDOWS
 #include "os_defs.h"
+
+#if LESS_PLATFORM==LP_WINDOWS
 #include <windows.h>
 DWORD console_mode;
 HANDLE tty;

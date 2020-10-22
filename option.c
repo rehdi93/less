@@ -516,8 +516,7 @@ char * opt_prompt(o)
  * If the specified option can be toggled, return NULL.
  * Otherwise return an appropriate error message.
  */
-char * opt_toggle_disallowed(c)
-	int c;
+char * opt_toggle_disallowed(int c)
 {
 	switch (c)
 	{

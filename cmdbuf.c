@@ -9,6 +9,8 @@
 #include "less.h"
 #include "cmd.h"
 #include "charset.h"
+#include "os_defs.h"
+
 #if HAVE_STAT
 #include <sys/stat.h>
 #endif
@@ -1609,7 +1611,6 @@ static int histfile_modified()
 }
 
 #if LESS_PLATFORM==LP_WINDOWS
-#include "os_defs.h"
 #include <windows.h>
 #endif
 

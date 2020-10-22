@@ -8,11 +8,11 @@
 
 #include "less.h"
 #include "cmd.h"
+#include "os_defs.h"
 
 #if LESS_PLATFORM
 #include "pckeys.h"
 #if LESS_PLATFORM==LP_WINDOWS
-#include "os_defs.h"
 #include <windows.h>
 #endif
 

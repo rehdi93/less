@@ -7,10 +7,10 @@
  */
 
 #include "less.h"
+#include "os_defs.h"
 
 #if LESS_PLATFORM == LP_WINDOWS
 #include <errno.h>
-#include "os_defs.h"
 #include <windows.h>
 #endif
 

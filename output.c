@@ -6,6 +6,7 @@
  */
 
 #include "less.h"
+#include "os_defs.h"
 
 #if LESS_PLATFORM==LP_WINDOWS
 #include "windows.h"
@@ -433,51 +434,57 @@ void putstr(s)
 		putchr(*s++);
 }
 
-
 /*
  * Convert an integral type to a string.
  */
-#define TYPE_TO_A_FUNC(funcname, type) \
-void funcname(num, buf) \
-	type num; \
-	char *buf; \
-{ \
-	bool neg = (num < 0); \
-	char tbuf[INT_STRLEN_BOUND(num)+2]; \
-	char *s = tbuf + sizeof(tbuf); \
-	if (neg) num = -num; \
-	*--s = '\0'; \
-	do { \
-		*--s = (num % 10) + '0'; \
-	} while ((num /= 10) != 0); \
-	if (neg) *--s = '-'; \
-	strcpy(buf, s); \
+static void integral_to_a(long num, char *buf)
+{
+	bool neg = (num < 0);
+	char tbuf[INT_STRLEN_BOUND(num)+2];
+	char *s = tbuf + sizeof(tbuf);
+	if (neg)
+		num = -num;
+	*--s = '\0';
+	do
+	{
+		*--s = (num % 10) + '0';
+	} while ((num /= 10) != 0);
+	if (neg)
+		*--s = '-';
+	strcpy(buf, s);
 }
 
-TYPE_TO_A_FUNC(postoa, POSITION)
-TYPE_TO_A_FUNC(linenumtoa, LINENUM)
-TYPE_TO_A_FUNC(inttoa, int)
+void postoa (POSITION pos, char* buf)
+{
+	integral_to_a((long)pos, buf);
+}
+void linenumtoa (LINENUM ln, char* buf)
+{
+	integral_to_a((long)ln, buf);
+}
+void inttoa (int num, char* buf)
+{
+	integral_to_a((long)num, buf);
+}
 
 /*
  * Convert an string to an integral type.
  */
-#define STR_TO_TYPE_FUNC(funcname, type) \
-type funcname(buf, ebuf) \
-	char *buf; \
-	char **ebuf; \
-{ \
-	type val = 0; \
-	for (;;) { \
-		char c = *buf++; \
-		if (c < '0' || c > '9') break; \
-		val = 10 * val + c - '0'; \
-	} \
-	if (ebuf != NULL) *ebuf = buf; \
-	return val; \
+static long string_to_integral(char *buf, char **ebuf)
+{
+	long val = 0;
+	for (;;) {
+		char c = *buf++;
+		if (c < '0' || c > '9') break;
+		val = 10 * val + c - '0';
+	}
+	if (ebuf != NULL) *ebuf = buf;
+	return val;
 }
 
-STR_TO_TYPE_FUNC(lstrtopos, POSITION)
-STR_TO_TYPE_FUNC(lstrtoi, int)
+extern int lstrtoi (char*, char**);
+extern POSITION lstrtopos (char*, char**);
+
 
 /*
  * Output an integer in a given radix.

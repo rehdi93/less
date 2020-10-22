@@ -12,6 +12,7 @@
  */
 
 #include "less.h"
+#include "os_defs.h"
 #include <signal.h>
 
 /*
@@ -90,7 +91,6 @@ RETSIGTYPE winch(type)
 /*
  * Handle CTRL-C and CTRL-BREAK keys.
  */
-#include "os_defs.h"
 #include <windows.h>
 
 static BOOL WINAPI  wbreak_handler(dwCtrlType)

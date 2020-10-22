@@ -257,8 +257,7 @@ char * get_filename(ifile)
 /*
  * Get the canonical filename associated with a ifile.
  */
-char *get_real_filename(ifile)
-	IFILE ifile;
+char *get_real_filename(IFILE ifile)
 {
 	if (ifile == NULL)
 		return (NULL);

@@ -6,8 +6,8 @@
  */
 
 #include "less.h"
-#if LESS_PLATFORM==LP_WINDOWS
 #include "os_defs.h"
+#if LESS_PLATFORM==LP_WINDOWS
 #include <windows.h>
 
 char* win32_get_home(void*(*allocfn)(size_t,size_t));

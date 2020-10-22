@@ -3,6 +3,8 @@
 
 #include "less.h"
 #include "position.h"
+#include "os_defs.h"
+
 #if HAVE_STAT
 #include <sys/stat.h>
 #endif

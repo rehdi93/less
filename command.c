@@ -6,8 +6,8 @@
  */
 
 #include "less.h"
-#if LESS_PLATFORM==LP_WINDOWS
 #include "os_defs.h"
+#if LESS_PLATFORM==LP_WINDOWS
 #include <windows.h>
 #endif
 #include "position.h"
