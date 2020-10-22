@@ -114,7 +114,7 @@
 
 /* Settings always true for Windows systems.  */
 
-#define LESS_PLATFORM	WIN32C
+#define LESS_PLATFORM	LP_WINDOWS
 
 /*
  * Pathname separator character.

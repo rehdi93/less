@@ -93,8 +93,7 @@ RETSIGTYPE winch(type)
  */
 #include <windows.h>
 
-static BOOL WINAPI  wbreak_handler(dwCtrlType)
-	DWORD dwCtrlType;
+static BOOL WINAPI  wbreak_handler(DWORD dwCtrlType)
 {
 	switch (dwCtrlType)
 	{
@@ -109,8 +108,7 @@ static BOOL WINAPI  wbreak_handler(dwCtrlType)
 }
 #endif
 
-static RETSIGTYPE terminate(type)
-	int type;
+static RETSIGTYPE terminate(int type)
 {
 	quit(15);
 }
