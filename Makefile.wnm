@@ -33,15 +33,16 @@ OBJ = \
 	output.obj pattern.obj position.obj prompt.obj search.obj signal.obj \
 	tags.obj ttyin.obj regexp.obj
 
-all: less.exe lesskey.exe
+all: less.exe lesskey.exe lessecho.exe
 
-shared: ${SHARED_OBJ}
-
-less.exe: $(OBJ) shared
+less.exe: $(OBJ) $(SHARED_OBJ)
 	$(LD) $(LDFLAGS) $** $(LIBS) /out:$@
 
-lesskey.exe: lesskey.obj shared
-	$(LD) $(LDFLAGS) lesskey.obj ${SHARED_OBJ} $(LIBS) /out:$@
+lesskey.exe: lesskey.obj $(SHARED_OBJ)
+	$(LD) $(LDFLAGS) lesskey.obj $(SHARED_OBJ) $(LIBS) /out:$@
+
+lessecho.exe: lessecho.obj $(SHARED_OBJ)
+	$(LD) $(LDFLAGS) lessecho.obj $(SHARED_OBJ) $(LIBS) /out:$@
 
 defines.h: defines.wn
 	-del defines.h

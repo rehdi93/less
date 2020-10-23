@@ -37,10 +37,14 @@ set(REGEX_LIBRARY regcomp-local CACHE STRING "Select what regular expression lib
 
 set(SECURE ${SECURE_COMPILE} CACHE INTERNAL "same as SECURE_COMPILE")
 
-# needed for creating generated_files and making pkg releases
-find_package(Perl REQUIRED)
+# needed for generating files and making pkg releases
+find_package(Perl)
+set(perl_generated_files help.c)
 
-# targets
+if(NOT PERL_FOUND)
+    message(AUTHOR_WARNING "Perl is required to generate these files: ${perl_generated_files}")
+endif()
+
 set(LESS_SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
     command.c cvt.c decode.c edit.c filename.c forwback.c
     ifile.c input.c jump.c line.c linenum.c
@@ -48,7 +52,7 @@ set(LESS_SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
     output.c pattern.c position.c prompt.c search.c signal.c
     tags.c ttyin.c)
 
-# we need to give the full path, else it fails to find help.c when building less
+# full path is required here
 add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/help.c
     COMMAND ${PERL_EXECUTABLE} mkhelp.pl < "less.hlp" > help.c
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -72,11 +76,23 @@ target_link_libraries(less PRIVATE common)
 target_link_libraries(lesskey PRIVATE common)
 target_link_libraries(lessecho PRIVATE common)
 
-
 # dependency detection
 include(CheckIncludeFiles)
 include(CheckTypeSize)
 include(CheckSymbolExists)
+
+# checks
+check_include_files("termios.h" HAVE_TERMIOS_H)
+check_include_files("termio.h"  HAVE_TERMIO_H)
+check_include_files("termcap.h" HAVE_TERMCAP_H)
+check_include_files("langinfo.h"   HAVE_LANGINFO)
+check_include_files("sys/ioctl.h"  HAVE_SYS_IOCTL_H)
+check_include_files("sys/ptem.h"   HAVE_SYS_PTEM_H)
+check_include_files("sys/stream.h" HAVE_SYS_STREAM_H)
+list(APPEND CMAKE_EXTRA_INCLUDE_FILES "signal.h")
+check_type_size("(sigset_t*)0" SIGSET_T)
+check_symbol_exists(sigemptyset "signal.h" HAVE_SIGEMPTYSET)
+check_include_files("regex.h" HAVE_POSIX_REGCOMP)
 
 # find terminal libraries
 find_package(Curses) # curses or ncurses
@@ -99,16 +115,11 @@ else()
     set(TERMINAL_LIBRARY NOTFOUND)
 endif()
 
-check_include_files("termios.h" HAVE_TERMIOS_H)
-check_include_files("termio.h"  HAVE_TERMIO_H)
-check_include_files("termcap.h" HAVE_TERMCAP_H)
-
 message(STATUS "terminal lib: ${TERMINAL_LIBRARY}")
 
 if(NOT TERMINAL_LIBRARY)
     message(SEND_ERROR "Cannot find terminal libraries")
 endif()
-
 
 # find regex library
 if(REGEX_LIBRARY MATCHES regcomp-local)
@@ -117,7 +128,6 @@ if(REGEX_LIBRARY MATCHES regcomp-local)
     set(HAVE_REGEXEC2 true)
     set(found yes)
 elseif(REGEX_LIBRARY MATCHES posix)
-    check_include_files("regex.h" HAVE_POSIX_REGCOMP)
     set(found HAVE_POSIX_REGCOMP)
 elseif(REGEX_LIBRARY MATCHES pcre2)
     find_library(pcre2_lib NAMES pcre2 libpcre2-8.so libpcre2-8.so.0)
@@ -131,22 +141,12 @@ elseif(NOT REGEX_LIBRARY)
     set(found yes)
 endif()
 
+message(STATUS "regex lib: ${REGEX_LIBRARY}")
+
 if(NOT found)
     message("Cannot find regex lib '${REGEX_LIBRARY}'")
     set(REGEX_LIBRARY NOTFOUND)
 endif()
-
-message(STATUS "regex lib: ${REGEX_LIBRARY}")
-
-
-check_include_files("langinfo.h"   HAVE_LANGINFO)
-check_include_files("sys/ioctl.h"  HAVE_SYS_IOCTL_H)
-check_include_files("sys/ptem.h"   HAVE_SYS_PTEM_H)
-check_include_files("sys/stream.h" HAVE_SYS_STREAM_H)
-
-list(APPEND CMAKE_EXTRA_INCLUDE_FILES "signal.h")
-check_type_size("(sigset_t*)0" SIGSET_T)
-check_symbol_exists(sigemptyset "signal.h" HAVE_SIGEMPTYSET)
 
 configure_file(defines.cmake.in defines.h)
 
