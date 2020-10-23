@@ -9,14 +9,19 @@
 #include "less.h"
 #include "cmd.h"
 #include "os_defs.h"
+#include "pckeys.h"
 
 #if LESS_PLATFORM
-#include "pckeys.h"
+
 #if LESS_PLATFORM==LP_WINDOWS
 #include <windows.h>
+#elif LESS_PLATFORM==LP_DOS_DJGPPC || LESS_PLATFORM==LP_DOS_BORLAND
+#include <conio.h>
+#if LESS_PLATFORM==LP_DOS_DJGPPC
+#include <pc.h>
+extern int fd0;
 #endif
-
-#include <time.h>
+#endif
 
 #else
 
@@ -74,6 +79,25 @@ static char *windowid;
 #define	DEFAULT_TERM		"unknown"
 #endif
 
+#if LESS_PLATFORM==LP_DOS_MSC
+static int videopages;
+static long msec_loops;
+static int flash_created = 0;
+#define	SETCOLORS(fg,bg)	{ _settextcolor(fg); _setbkcolor(bg); }
+#endif
+
+#if LESS_PLATFORM==LP_DOS_BORLAND
+static unsigned short *whitescreen;
+static int flash_created = 0;
+#endif
+#if LESS_PLATFORM==LP_DOS_DJGPPC || LESS_PLATFORM==LP_DOS_BORLAND
+#define _settextposition(y,x)   gotoxy(x,y)
+#define _clearscreen(m)         clrscr()
+#define _outtext(s)             cputs(s)
+#define	SETCOLORS(fg,bg)	{ textcolor(fg); textbackground(bg); }
+extern int sc_height;
+#endif
+
 
 #if LESS_PLATFORM==LP_WINDOWS
 struct keyRecord
@@ -104,9 +128,10 @@ static void win32_deinit_term();
 #define FG_COLORS       (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY)
 #define BG_COLORS       (BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY)
 #define	MAKEATTR(fg,bg)		((WORD)((fg)|((bg)<<4)))
-#define	SETCOLORS(fg,bg)	{ curr_attr = MAKEATTR(fg,bg); \
-				if (SetConsoleTextAttribute(con_out, curr_attr) == 0) \
-				error("SETCOLORS failed", NULL_PARG); }
+#define SETCOLORS(fg,bg) { \
+	curr_attr = MAKEATTR(fg,bg); \
+	if (SetConsoleTextAttribute(con_out, curr_attr) == 0) \
+			error("SETCOLORS failed", NULL_PARG); }
 #endif
 
 #if LESS_PLATFORM
@@ -577,7 +602,20 @@ void raw_mode(on)
 	LSIGNAL(SIGINT, SIG_IGN);
 #endif
 	erase_char = '\b';
+#if LESS_PLATFORM==LP_DOS_DJGPPC
+	kill_char = CONTROL('U');
+	/*
+	 * So that when we shell out or run another program, its
+	 * stdin is in cooked mode.  We do not switch stdin to binary 
+	 * mode if fd0 is zero, since that means we were called before
+	 * tty was reopened in open_getchr, in which case we would be
+	 * changing the original stdin device outside less.
+	 */
+	if (fd0 != 0)
+		setmode(0, on ? O_BINARY : O_TEXT);
+#else
 	kill_char = ESC;
+#endif
 	werase_char = CONTROL('W');
 #endif
 	curr_on = on;
@@ -650,7 +688,7 @@ static char * ltgetstr(capname, pp)
 		return (NULL);
 	return (tgetstr(capname, pp));
 }
-#endif /* LESS_PLATFORM */
+#endif /* !LESS_PLATFORM */
 
 /*
  * Get size of the output screen.
@@ -680,6 +718,20 @@ void scrsize()
 		GetConsoleScreenBufferInfo(con_out, &scr);
 		sys_height = scr.srWindow.Bottom - scr.srWindow.Top + 1;
 		sys_width = scr.srWindow.Right - scr.srWindow.Left + 1;
+	}
+#elif LESS_PLATFORM==LP_DOS_MSC
+	{
+		struct videoconfig w;
+		_getvideoconfig(&w);
+		sys_height = w.numtextrows;
+		sys_width = w.numtextcols;
+	}
+#elif LESS_PLATFORM_DOS
+	{
+		struct text_info w;
+		gettextinfo(&w);
+		sys_height = w.screenheight;
+		sys_width = w.screenwidth;
 	}
 #elif OS2
 	{
@@ -755,6 +807,49 @@ void scrsize()
 	if (sc_width <= 0)
 		sc_width = DEF_SC_WIDTH;
 }
+
+#if LESS_PLATFORM==LP_DOS_MSC
+/*
+ * Figure out how many empty loops it takes to delay a millisecond.
+ */
+static void get_clock()
+{
+	clock_t start;
+	
+	/*
+	 * Get synchronized at the start of a tick.
+	 */
+	start = clock();
+	while (clock() == start)
+		;
+	/*
+	 * Now count loops till the next tick.
+	 */
+	start = clock();
+	msec_loops = 0;
+	while (clock() == start)
+		msec_loops++;
+	/*
+	 * Convert from (loops per clock) to (loops per millisecond).
+	 */
+	msec_loops *= CLOCKS_PER_SEC;
+	msec_loops /= 1000;
+}
+
+/*
+ * Delay for a specified number of milliseconds.
+ */
+static void delay(int msec)
+{
+	long i;
+	
+	while (msec-- > 0)
+	{
+		for (i = 0;  i < msec_loops;  i++)
+			(void) clock();
+	}
+}
+#endif
 
 /*
  * Return the characters actually input by a "special" key.
@@ -940,7 +1035,7 @@ void get_term()
 	 * The xx_s_width and xx_e_width vars are already initialized to 0.
 	 */
 #if LESS_PLATFORM==LP_WINDOWS
-    {
+{
 	CONSOLE_SCREEN_BUFFER_INFO scr;
 
 	con_out_save = con_out = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -953,7 +1048,20 @@ void get_term()
 	curr_attr = scr.wAttributes;
 	sy_bg_color = (curr_attr & BG_COLORS) >> 4; /* normalize */
 	sy_fg_color = curr_attr & FG_COLORS;
-    }
+}
+#elif LESS_PLATFORM==LP_DOS_MSC
+{
+	sy_bg_color = _getbkcolor();
+	sy_fg_color = _gettextcolor();
+	get_clock();
+}
+#elif LESS_PLATFORM_DOS
+{
+	struct text_info w;
+	gettextinfo(&w);
+	sy_bg_color = (w.attribute >> 4) & 0x0F;
+	sy_fg_color = (w.attribute >> 0) & 0x0F;
+}
 #endif
 	nm_fg_color = sy_fg_color;
 	nm_bg_color = sy_bg_color;
@@ -1286,7 +1394,7 @@ static void tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
 		*outstr = "";
 }
 
-#endif /* LESS_PLATFORM */
+#endif /* !LESS_PLATFORM */
 
 
 /*
@@ -1315,28 +1423,10 @@ static void _settextposition(int row, int col)
  */
 static void initcolor()
 {
-	SETCOLORS(nm_fg_color, nm_bg_color);
-#if 0
-	/*
-	 * This clears the screen at startup.  This is different from
-	 * the behavior of other versions of less.  Disable it for now.
-	 */
-	char *blanks;
-	int row;
-	int col;
-	
-	/*
-	 * Create a complete, blank screen using "normal" colors.
-	 */
-	SETCOLORS(nm_fg_color, nm_bg_color);
-	blanks = (char *) ecalloc(width+1, sizeof(char));
-	for (col = 0;  col < sc_width;  col++)
-		blanks[col] = ' ';
-	blanks[sc_width] = '\0';
-	for (row = 0;  row < sc_height;  row++)
-		_outtext(blanks);
-	free(blanks);
+#if LESS_PLATFORM==LP_DOS_DJGPPC || LESS_PLATFORM==LP_DOS_BORLAND
+	intensevideo();
 #endif
+	SETCOLORS(nm_fg_color, nm_bg_color);
 }
 #endif
 
@@ -1409,11 +1499,9 @@ void init_mouse()
 		return;
 #if LESS_PLATFORM==LP_UNIX
 	tputs(sc_s_mousecap, sc_height, putchr);
-#else
-#if LESS_PLATFORM==LP_WINDOWS
+#elif LESS_PLATFORM==LP_WINDOWS
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT
 			    | ENABLE_EXTENDED_FLAGS /* disable quick edit */);
-#endif
 #endif
 }
 
@@ -1427,11 +1515,9 @@ void deinit_mouse()
 		return;
 #if LESS_PLATFORM==LP_UNIX
 	tputs(sc_e_mousecap, sc_height, putchr);
-#else
-#if LESS_PLATFORM==LP_WINDOWS
+#elif LESS_PLATFORM==LP_WINDOWS
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_EXTENDED_FLAGS
 			    | (console_mode & ENABLE_QUICK_EDIT_MODE));
-#endif
 #endif
 }
 
@@ -1577,64 +1663,17 @@ void add_line()
 	ScrollConsoleScreenBuffer(con_out, &rcSrc, &rcClip, new_org, &fillchar);
 	_settextposition(1,1);
     }
+#elif LESS_PLATFORM==LP_DOS_MSC
+	_scrolltextwindow(_GSCROLLDOWN);
+	_settextposition(1,1);
+#elif LESS_PLATFORM_DOS
+	movetext(1,1, sc_width,sc_height-1, 1,2);
+	gotoxy(1,1);
+	clreol();
 #endif
 #endif
 }
 
-#if 0
-/*
- * Remove the n topmost lines and scroll everything below it in the 
- * window upward.  This is needed to stop leaking the topmost line 
- * into the scrollback buffer when we go down-one-line (in WIN32).
- */
-void remove_top(n)
-	int n;
-{
-#if LESS_PLATFORM==LP_WINDOWS
-	SMALL_RECT rcSrc, rcClip;
-	CHAR_INFO fillchar;
-	COORD new_org;
-	CONSOLE_SCREEN_BUFFER_INFO csbi; /* to get buffer info */
-
-	if (n >= sc_height - 1)
-	{
-		clear();
-		home();
-		return;
-	}
-
-	flush();
-
-	GetConsoleScreenBufferInfo(con_out, &csbi);
-
-	/* Get the extent of all-visible-rows-but-the-last. */
-	rcSrc.Left    = csbi.srWindow.Left;
-	rcSrc.Top     = csbi.srWindow.Top + n;
-	rcSrc.Right   = csbi.srWindow.Right;
-	rcSrc.Bottom  = csbi.srWindow.Bottom;
-
-	/* Get the clip rectangle. */
-	rcClip.Left   = rcSrc.Left;
-	rcClip.Top    = csbi.srWindow.Top;
-	rcClip.Right  = rcSrc.Right;
-	rcClip.Bottom = rcSrc.Bottom ;
-
-	/* Move the source window up n rows. */
-	new_org.X = rcSrc.Left;
-	new_org.Y = rcSrc.Top - n;
-
-	/* Fill the right character and attributes. */
-	fillchar.Char.AsciiChar = ' ';
-	curr_attr = MAKEATTR(nm_fg_color, nm_bg_color);
-	fillchar.Attributes = curr_attr;
-
-	ScrollConsoleScreenBuffer(con_out, &rcSrc, &rcClip, new_org, &fillchar);
-
-	/* Position cursor on first blank line. */
-	goto_line(sc_height - n - 1);
-#endif
-}
-#endif
 
 #if LESS_PLATFORM==LP_WINDOWS
 /*
@@ -1764,6 +1803,9 @@ void line_left()
 		row = scr.dwCursorPosition.Y - scr.srWindow.Top + 1;
 	}
 #else
+#if LESS_PLATFORM==LP_DOS_BORLAND || LESS_PLATFORM==LP_DOS_DJGPPC
+		row = wherey();
+#else
 	{
 		struct rccoord tpos = _gettextposition();
 		row = tpos.row;
@@ -1771,6 +1813,7 @@ void line_left()
 #endif
 #endif
 	_settextposition(row, 1);
+#endif
 }
 
 /*
@@ -1817,6 +1860,52 @@ void goto_line(sindex)
 #endif
 }
 
+#if LESS_PLATFORM_DOS && LESS_PLATFORM != LP_DOS_DJGPPC
+/*
+ * Create an alternate screen which is all white.
+ * This screen is used to create a "flash" effect, by displaying it
+ * briefly and then switching back to the normal screen.
+ * {{ Yuck!  There must be a better way to get a visual bell. }}
+ */
+static void create_flash() {
+#if LESS_PLATFORM==LP_DOS_MSC
+	struct videoconfig w;
+	char *blanks;
+	int row, col;
+	
+	_getvideoconfig(&w);
+	videopages = w.numvideopages;
+	if (videopages < 2)
+	{
+		at_enter(AT_STANDOUT);
+		at_exit();
+	} else
+	{
+		_setactivepage(1);
+		at_enter(AT_STANDOUT);
+		blanks = (char *) ecalloc(w.numtextcols, sizeof(char));
+		for (col = 0;  col < w.numtextcols;  col++)
+			blanks[col] = ' ';
+		for (row = w.numtextrows;  row > 0;  row--)
+			_outmem(blanks, w.numtextcols);
+		_setactivepage(0);
+		_setvisualpage(0);
+		free(blanks);
+		at_exit();
+	}
+#else	/*BORLANDC*/
+	int n;
+
+	whitescreen = (unsigned short *) malloc(sc_width * sc_height * sizeof(short));
+	if (whitescreen == NULL)
+		return;
+	for (n = 0;  n < sc_width * sc_height;  n++)
+		whitescreen[n] = 0x7020;
+#endif
+	flash_created = 1;
+}
+#endif
+
 /*
  * Output the "visual bell", if there is one.
  */
@@ -1826,9 +1915,7 @@ void vbell()
 	if (*sc_visual_bell == '\0')
 		return;
 	tputs(sc_visual_bell, sc_height, putchr);
-#else
-
-#if LESS_PLATFORM==LP_WINDOWS
+#elif LESS_PLATFORM==LP_WINDOWS
 	/* paint screen with an inverse color */
 	clear();
 
@@ -1837,7 +1924,40 @@ void vbell()
 
 	/* restore with a redraw */
 	repaint();
-#endif
+#elif LESS_PLATFORM==LP_DOS_MSC
+	/*
+	 * Create a flash screen on the second video page.
+	 * Switch to that page, then switch back.
+	 */
+	if (!flash_created)
+		create_flash();
+	if (videopages < 2)
+		return;
+	_setvisualpage(1);
+	delay(100);
+	_setvisualpage(0);
+#elif LESS_PLATFORM==LP_DOS_DJGPPC
+	ScreenVisualBell();
+#elif LESS_PLATFORM==LP_DOS_BORLAND
+	unsigned short *currscreen;
+
+	/*
+	 * Get a copy of the current screen.
+	 * Display the flash screen.
+	 * Then restore the old screen.
+	 */
+	if (!flash_created)
+		create_flash();
+	if (whitescreen == NULL)
+		return;
+	currscreen = (unsigned short *) 
+		malloc(sc_width * sc_height * sizeof(short));
+	if (currscreen == NULL) return;
+	gettext(1, 1, sc_width, sc_height, currscreen);
+	puttext(1, 1, sc_width, sc_height, whitescreen);
+	delay(100);
+	puttext(1, 1, sc_width, sc_height, currscreen);
+	free(currscreen);
 #endif
 }
 
@@ -1891,8 +2011,7 @@ void clear_eol()
 {
 #if LESS_PLATFORM==LP_UNIX
 	tputs(sc_eol_clear, 1, putchr);
-#else
-#if LESS_PLATFORM==LP_WINDOWS
+#elif LESS_PLATFORM==LP_WINDOWS
 	DWORD           nchars;
 	COORD           cpos;
 	CONSOLE_SCREEN_BUFFER_INFO scr;
@@ -1903,11 +2022,34 @@ void clear_eol()
 	cpos.X = scr.dwCursorPosition.X;
 	cpos.Y = scr.dwCursorPosition.Y;
 	curr_attr = MAKEATTR(nm_fg_color, nm_bg_color);
-	FillConsoleOutputAttribute(con_out, curr_attr,
-		scr.dwSize.X - cpos.X, cpos, &nchars);
-	FillConsoleOutputCharacter(con_out, ' ',
-		scr.dwSize.X - cpos.X, cpos, &nchars);
-#endif
+	FillConsoleOutputAttribute(con_out, curr_attr, scr.dwSize.X - cpos.X, cpos, &nchars);
+	FillConsoleOutputCharacter(con_out, ' ', scr.dwSize.X - cpos.X, cpos, &nchars);
+#elif LESS_PLATFORM==LP_DOS_MSC
+	short top, left;
+	short bot, right;
+	struct rccoord tpos;
+	
+	flush();
+	/*
+	 * Save current state.
+	 */
+	tpos = _gettextposition();
+	_gettextwindow(&top, &left, &bot, &right);
+	/*
+	 * Set a temporary window to the current line,
+	 * from the cursor's position to the right edge of the screen.
+	 * Then clear that window.
+	 */
+	_settextwindow(tpos.row, tpos.col, tpos.row, sc_width);
+	_clearscreen(_GWINDOW);
+	/*
+	 * Restore state.
+	 */
+	_settextwindow(top, left, bot, right);
+	_settextposition(tpos.row, tpos.col);
+#elif LESS_PLATFORM_DOS
+	flush();
+	clreol();
 #endif
 }
 
@@ -2069,6 +2211,14 @@ void putbs()
 		GetConsoleScreenBufferInfo(con_out, &scr);
 		row = scr.dwCursorPosition.Y - scr.srWindow.Top + 1;
 		col = scr.dwCursorPosition.X - scr.srWindow.Left + 1;
+#elif LESS_PLATFORM==LP_DOS_MSC
+		struct rccoord tpos;
+		tpos = _gettextposition();
+		row = tpos.row;
+		col = tpos.col;
+#elif LESS_PLATFORM_DOS
+		row = wherey();
+		col = wherex();
 #endif
 #endif
 	}

@@ -43,6 +43,15 @@ static RETSIGTYPE u_interrupt(type)
 #endif
 	LSIGNAL(SIGINT, u_interrupt);
 	sigs |= S_INTERRUPT;
+#if LESS_PLATFORM==LP_DOS_DJGPPC
+	/*
+	 * If a keyboard has been hit, it must be Ctrl-C
+	 * (as opposed to Ctrl-Break), so consume it.
+	 * (Otherwise, Less will beep when it sees Ctrl-C from keyboard.)
+	 */
+	if (kbhit())
+		getkey();
+#endif
 	if (reading)
 		intread(); /* May longjmp */
 }

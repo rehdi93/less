@@ -63,7 +63,7 @@ start:
 #if LESS_PLATFORM==LP_WINDOWS
 	if (ABORT_SIGS())
 		return (READ_INTR);
-#elif LESS_PLATFORM
+#elif LESS_PLATFORM_OLD && LESS_PLATFORM!=LP_DOS_DJGPPC
 	if (kbhit())
 	{
 		int c;
@@ -86,21 +86,36 @@ start:
 		  sigemptyset(&mask);
 		  sigprocmask(SIG_SETMASK, &mask, NULL);
 		}
-#else
-#if HAVE_SIGSETMASK
+#elif HAVE_SIGSETMASK
 		sigsetmask(0);
-#else
-#ifdef _OSK
+#elif defined(_OSK)
 		sigmask(~0);
-#endif
-#endif
 #endif
 		return (READ_INTR);
 	}
 
 	flush();
 	reading = 1;
+#if LESS_PLATFORM==LP_DOS_DJGPPC
+	if (isatty(fd))
+	{
+		/*
+		 * Don't try reading from a TTY until a character is
+		 * available, because that makes some background programs
+		 * believe DOS is busy in a way that prevents those
+		 * programs from working while "less" waits.
+		 */
+		fd_set readfds;
+
+		FD_ZERO(&readfds);
+		FD_SET(fd, &readfds);
+		if (select(fd+1, &readfds, 0, 0, 0) == -1)
+			return (-1);
+	}
+#endif
+
 	n = read(fd, buf, len);
+
 #if 1
 	/*
 	 * This is a kludge to workaround a problem on some systems
@@ -121,7 +136,9 @@ start:
 		}
 	}
 #endif
+
 	reading = 0;
+	
 	if (n < 0)
 	{
 #if HAVE_ERRNO

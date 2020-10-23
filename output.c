@@ -31,7 +31,7 @@ extern bool any_display;
 extern int is_tty;
 extern int oldbot;
 
-#if LESS_PLATFORM==LP_WINDOWS
+#if LESS_PLATFORM==LP_WINDOWS || (LESS_PLATFORM_DOS && LESS_PLATFORM!=LP_DOS_MSC)
 extern int ctldisp;
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
@@ -39,7 +39,9 @@ extern int ul_fg_color, ul_bg_color;
 extern int so_fg_color, so_bg_color;
 extern int bl_fg_color, bl_bg_color;
 extern int sgr_mode;
+#if LESS_PLATFORM==LP_WINDOWS
 extern bool vt_enabled;
+#endif
 #endif
 
 /*
@@ -102,8 +104,15 @@ void flush()
 	n = (int) (ob - obuf);
 	if (n == 0)
 		return;
-
-#if LESS_PLATFORM==LP_WINDOWS
+#if LESS_PLATFORM==LP_DOS_MSC
+	if (is_tty && any_display)
+	{
+		*ob = '\0';
+		_outtext(obuf);
+		ob = obuf;
+		return;
+	}
+#elif LESS_PLATFORM==LP_WINDOWS || LESS_PLATFORM_DOS
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
@@ -122,6 +131,7 @@ void flush()
 			static int at;
 			int f, b;
 			/* Screen colors used by 3x and 4x SGR commands. */
+#if LESS_PLATFORM==LP_WINDOWS
 			static unsigned char screen_color[] = {
 				0, /* BLACK */
 				FOREGROUND_RED,
@@ -363,6 +373,8 @@ void flush()
 		ob = obuf;
 		return;
 	}
+#endif
+
 	fd = (any_display) ? 1 : 2;
 	if (write(fd, obuf, n) != n)
 		screen_trashed = 1;
@@ -436,7 +448,7 @@ void putstr(s)
 #define TBUF_SIZE INT_STRLEN_BOUND(num)+2
 static void integral_to_string(long num, char *buf)
 {
-	char tbuf[INT_STRLEN_BOUND(num)+2];
+	char tbuf[TBUF_SIZE];
 
 #if HAVE_STDIO_H
 	snprintf(tbuf, TBUF_SIZE, "%ld", num);

@@ -12,17 +12,21 @@
 
 #if LESS_PLATFORM
 #include <dos.h>
-#if LESS_PLATFORM==LP_WINDOWS && defined(MINGW)
-#include <direct.h>
-#define setdisk(n) _chdrive((n)+1)
-#else
-#ifdef _MSC_VER
-#include <direct.h>
-#define setdisk(n) _chdrive((n)+1)
-#else
-#include <dir.h>
+
+#if (LESS_PLATFORM==LP_WINDOWS && defined(MINGW)) || defined(_MSC_VER)
+#  include <direct.h>
+#  define setdisk(n) _chdrive((n)+1)
 #endif
+
+#ifndef _MSC_VER
+#  include <dir.h>
 #endif
+
+#if LESS_PLATFORM==LP_OS2
+/* The __open() system call translates "/dev/tty" to "con". */
+#  define open __open
+#endif
+
 #endif
 
 extern int screen_trashed;
@@ -45,7 +49,7 @@ void lsystem(cmd, donemsg)
 	char *p;
 #endif
 	IFILE save_ifile;
-#if LESS_PLATFORM!=LP_WINDOWS
+#if LESS_PLATFORM_OLD
 	char cwd[FILENAME_MAX+1];
 #endif
 
@@ -66,6 +70,15 @@ void lsystem(cmd, donemsg)
 #if LESS_PLATFORM==LP_WINDOWS
 	if (*cmd == '\0')
 		cmd = getenv("COMSPEC");
+#else
+	/*
+	 * Working directory is global on MSDOS.
+	 * The child might change the working directory, so we
+	 * must save and restore CWD across calls to "system",
+	 * or else we won't find our file when we return and
+	 * try to "reedit_ifile" it.
+	 */
+	getcwd(cwd, FILENAME_MAX);
 #endif
 
 	/*
@@ -97,12 +110,7 @@ void lsystem(cmd, donemsg)
 	 */
 	inp = dup(0);
 	close(0);
-#if OS2
-	/* The __open() system call translates "/dev/tty" to "con". */
-	if (__open("/dev/tty", OPEN_READ) < 0)
-#else
 	if (open("/dev/tty", OPEN_READ) < 0)
-#endif
 		dup(inp);
 #endif
 
@@ -139,6 +147,18 @@ void lsystem(cmd, donemsg)
 	}
 	system(p);
 	free(p);
+#elif LESS_PLATFORM==LP_DOS_DJGPPC
+	/*
+	 * Make stdin of the child be in cooked mode.
+	 */
+	setmode(0, O_TEXT);
+	/*
+	 * We don't need to catch signals of the child (it
+	 * also makes trouble with some DPMI servers).
+	 */
+	__djgpp_exception_toggle();
+  	system(cmd);
+	__djgpp_exception_toggle();
 #else
 	system(cmd);
 #endif
@@ -167,6 +187,27 @@ void lsystem(cmd, donemsg)
 	}
 	init();
 	screen_trashed = 1;
+
+#if LESS_PLATFORM_OLD
+	/*
+	 * Restore the previous directory (possibly
+	 * changed by the child program we just ran).
+	 */
+	chdir(cwd);
+#if LESS_PLATFORM != LP_DOS_DJGPPC
+	/*
+	 * Some versions of chdir() don't change to the drive
+	 * which is part of CWD.  (DJGPP does this in chdir.)
+	 */
+	if (cwd[1] == ':')
+	{
+		if (cwd[0] >= 'a' && cwd[0] <= 'z')
+			setdisk(cwd[0] - 'a');
+		else if (cwd[0] >= 'A' && cwd[0] <= 'Z')
+			setdisk(cwd[0] - 'A');
+	}
+#endif
+#endif
 
 	/*
 	 * Reopen the current input file.

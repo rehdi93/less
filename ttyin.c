@@ -22,6 +22,11 @@ HANDLE tty;
 int tty;
 #endif
 
+#if OS2
+/* The __open() system call translates "/dev/tty" to "con". */
+#define open __open
+#endif
+
 extern int sigs;
 extern int utf_mode;
 extern int wheel_lines;
@@ -43,7 +48,7 @@ void open_getchr()
 	GetConsoleMode(tty, &console_mode);
 	/* Make sure we get Ctrl+C events. */
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
-#elif LESS_PLATFORM
+#elif LESS_PLATFORM_DOS
 	extern int fd0;
 	/*
 	 * Open a new handle to CON: in binary mode 
@@ -59,12 +64,7 @@ void open_getchr()
 	 * which in Unix is usually attached to the screen,
 	 * but also usually lets you read from the keyboard.
 	 */
-#if OS2
-	/* The __open() system call translates "/dev/tty" to "con". */
-	tty = __open("/dev/tty", OPEN_READ);
-#else
 	tty = open("/dev/tty", OPEN_READ);
-#endif
 	if (tty < 0)
 		tty = 2;
 #endif
@@ -85,8 +85,7 @@ void close_getchr()
 /*
  * Close the pipe, restoring the keyboard (CMD resets it, losing the mouse).
  */
-int pclose(f)
-	FILE *f;
+int pclose(FILE* f)
 {
 	int result;
 
@@ -122,7 +121,7 @@ int getchr()
 
 	do
 	{
-#if LESS_PLATFORM
+#if LESS_PLATFORM && LESS_PLATFORM != LP_DOS_DJGPPC
 		/*
 		 * In raw read, we don't see ^C so look here for it.
 		 */

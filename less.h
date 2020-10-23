@@ -8,15 +8,20 @@
 
 /*
  * Possible values for LESS_PLATFORM.
- * When targeting UNIX, LESS_PLATFORM must be 0
+ * When targeting UNIX, LESS_PLATFORM is 0 (falsy)
  */
 #define LP_UNIX 0
 #define LP_DOS_DJGPPC 1
 #define LP_DOS_MSC 2
 #define LP_DOS_BORLAND 2
-#define LP_WINDOWS_BORLAND 4
+#define LP_WINDOWS_BORLAND 4 /* Borland C for Windows */
+// #define LP_OS2 5
+// #define LP_OS9 6
+#define	LP_WINDOWS 100	/* Modern Windows */
 
-#define	LP_WINDOWS 100	/* Windows (MSVC) */
+/* LESS_PLATFORM helpers */
+#define LESS_PLATFORM_DOS (LESS_PLATFORM > LP_UNIX && LESS_PLATFORM < LP_WINDOWS_BORLAND)
+#define LESS_PLATFORM_OLD LESS_PLATFORM_DOS || (LESS_PLATFORM >= LP_WINDOWS_BORLAND && LESS_PLATFORM < LP_WINDOWS)
 
 
 /*

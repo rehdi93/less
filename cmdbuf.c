@@ -1659,12 +1659,13 @@ void save_cmdhist()
 
 		// replace the file
 #if LESS_PLATFORM==LP_WINDOWS
-		ReplaceFileA(histname, tempname, 0,0,0,0);
-#else
-		rename(tempname, histname);
+#define rename(temp,hist) ReplaceFileA(hist, temp, 0,0,0,0)
 #endif
+		rename(tempname, histname);
 	}
 	free(tempname);
 	free(histname);
 #endif /* CMD_HISTORY */
 }
+
+#undef rename

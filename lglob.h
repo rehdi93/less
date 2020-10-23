@@ -85,34 +85,6 @@ inline void lglob_done(struct lglob_s* glob)
 	_fnexplodefree(glob->list);
 }
 
-#elif LESS_PLATFORM==LP_DOS_MSC || LESS_PLATFORM==LP_DOS_BORLAND
-#define GLOB_NAME
-
-struct lglob_s
-{
-	struct find_t find_data;
-	unsigned handle;
-
-	char drive[_MAX_DRIVE]; char dir[_MAX_DIR];
-	char fname[_MAX_FNAME]; char ext[_MAX_EXT];
-};
-
-inline struct lglob_s lglob_new(const char* filename)
-{
-	struct lglob_s gd;
-	gd.handle = _dos_findfirst(filename, ~_A_VOLID, &gd.find_data);
-	return gd;
-}
-
-inline bool lglob_failed(struct lglob_s* glob) { return glob->handle != 0; }
-inline void lglob_done(struct lglob_s*) {}
-
-inline bool lglob_next(struct lglob_s* glob)
-{
-	glob->handle = _dos_findnext(glob->find_data);
-	return glob->handle == 0;
-}
-
 #elif LESS_PLATFORM==LP_DOS_DJGPPC
 #define GLOB_LIST
 
@@ -146,5 +118,56 @@ inline void lglob_done(struct lglob_s* glob)
 {
 	globfree(&glob->list);
 }
+#elif LESS_PLATFORM_DOS
+#define GLOB_NAME
+
+struct lglob_s
+{
+	struct find_t find_data;
+	unsigned handle;
+
+	char drive[_MAX_DRIVE]; char dir[_MAX_DIR];
+	char fname[_MAX_FNAME]; char ext[_MAX_EXT];
+};
+
+inline struct lglob_s lglob_new(const char* filename)
+{
+	struct lglob_s gd;
+	gd.handle = _dos_findfirst(filename, ~_A_VOLID, &gd.find_data);
+	return gd;
+}
+
+inline bool lglob_failed(struct lglob_s* glob) { return glob->handle != 0; }
+inline void lglob_done(struct lglob_s*) {}
+
+inline bool lglob_next(struct lglob_s* glob)
+{
+	glob->handle = _dos_findnext(glob->find_data);
+	return glob->handle == 0;
+}
+#elif LESS_PLATFORM==LP_WINDOWS_BORLAND
+#define GLOB_NAME
+
+struct lglob_s
+{
+	struct ffblk find_data;
+	int handle;
+
+	char drive[MAXDRIVE]; char dir[MAXDIR];
+	char fname[MAXFILE]; char ext[MAXEXT];
+};
+
+inline struct lglob_s lglob_new(const char* filename)
+{
+	struct lglob_s gd;
+	gd.handle = findfirst(filename, &gd.find_data);
+	return gd;
+}
+inline bool lglob_failed(struct lglob_s* glob) { return glob->handle != 0; }
+inline bool lglob_next(struct lglob_s* glob)
+{
+	return findnext(glob->handle, &glob->find_data) == 0;
+}
+inline void lglob_done(struct lglob_s*) {}
 
 #endif

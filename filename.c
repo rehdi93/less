@@ -9,9 +9,17 @@
 #include "less.h"
 #include "lglob.h"
 #include "pckeys.h"
+
 #if LESS_PLATFORM
 #include <dos.h>
+#if LESS_PLATFORM==LP_WINDOWS_BORLAND
+#include <dir.h>
+#elif LESS_PLATFORM==LP_DOS_DJGPPC
+#include <glob.h>
+#include <dir.h>
 #endif
+#endif
+
 #ifdef _OSK
 #include <rbf.h>
 #ifndef _OSK_MWC32
@@ -257,10 +265,22 @@ char * homefile(filename)
 	 * Look for the file anywhere on search path.
 	 */
 	pathname = (char *) calloc(_MAX_PATH, sizeof(char));
+#if LESS_PLATFORM==LP_DOS_DJGPPC
+	{
+		char *res = searchpath(filename);
+		if (res == 0)
+			*pathname = '\0';
+		else
+			strcpy(pathname, res);
+	}
+#else
 	_searchenv(filename, "PATH", pathname);
+#endif
+
 	if (*pathname != '\0')
 		return (pathname);
 	free(pathname);
+
 #endif
 	return (NULL);
 }
@@ -363,12 +383,13 @@ char * fexpand(s)
 
 #if TAB_COMPLETE_FILENAME
 
+#define LESS_PLATFORM LP_DOS_MSC
+
 /*
  * Return a blank-separated list of filenames which "complete"
  * the given string.
  */
-char * fcomplete(s)
-	char *s;
+char * fcomplete(char *s)
 {
 	char *fpat;
 	char *qs;
@@ -378,11 +399,33 @@ char * fcomplete(s)
 	/*
 	 * Complete the filename "s" by globbing "s*".
 	 */
+#if LESS_PLATFORM == LP_DOS_MSC || LESS_PLATFORM == LP_DOS_BORLAND
+	/*
+	 * But in DOS, we have to glob "s*.*".
+	 * But if the final component of the filename already has
+	 * a dot in it, just do "s*".  
+	 * (Thus, "FILE" is globbed as "FILE*.*", 
+	 *  but "FILE.A" is globbed as "FILE.A*").
+	 */
+	{
+		char *slash = strrchr(s, *PATHNAME_SEP);
+		if (!slash)
+			slash = strrchr(s, '/');
+		int len = (int) strlen(s) + 4;
+		fpat = (char *) ecalloc(len, sizeof(char));
+		if (strchr(slash, '.') == NULL)
+			snprintf(fpat, len, "%s*.*", s);
+		else
+			snprintf(fpat, len, "%s*", s);
+	}
+#else
 	{
 		int len = (int) strlen(s) + 2;
 		fpat = (char *) ecalloc(len, sizeof(char));
 		snprintf(fpat, len, "%s*", s);
 	}
+#endif
+
 	qs = lglob(fpat);
 	s = shell_unquote(qs);
 	if (strcmp(s,fpat) == 0)
