@@ -8,6 +8,7 @@
 
 #include "less.h"
 #include "lglob.h"
+#include "pckeys.h"
 #if LESS_PLATFORM
 #include <dos.h>
 #endif

@@ -6,6 +6,7 @@
 
 #include "less.h"
 #include "charset.h"
+#include "pckeys.h"
 
 extern int utf_mode;
 

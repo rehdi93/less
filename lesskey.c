@@ -206,12 +206,14 @@ char varsection[1] =	{ VAR_SECTION };
 char endsection[1] =	{ END_SECTION };
 
 char *infile = NULL;
-char *outfile = NULL ;
+char *outfile = NULL;
 
 int linenum;
 int errors;
 
 extern char version[];
+
+static void error(const char* msg);
 
 void usage()
 {
@@ -413,7 +415,7 @@ char * tstr(pp, xlate)
 				case 'e': ch = SK_END; break;
 				case 'x': ch = SK_DELETE; break;
 				default:
-					error("illegal char after \\k", NULL_PARG);
+					error("illegal char after \\k");
 					*pp = p+1;
 					return ("");
 				}
@@ -506,7 +508,7 @@ void add_cmd_char(c)
 {
 	if (currtable->pbuffer >= currtable->buffer + MAX_USERCMD)
 	{
-		error("too many commands", NULL_PARG);
+		error("too many commands");
 		exit(1);
 	}
 	*(currtable->pbuffer)++ = c;
@@ -601,17 +603,14 @@ int findaction(actname)
 	for (i = 0;  currtable->names[i].cn_name != NULL;  i++)
 		if (strcmp(currtable->names[i].cn_name, actname) == 0)
 			return (currtable->names[i].cn_action);
-	error("unknown action", NULL_PARG);
+	error("unknown action");
 	return (A_INVALID);
 }
 
-void error(s, parg)
-	char *s;
-	PARG *parg;
+void error(const char *s)
 {
 	fprintf(stderr, "line %d: %s\n", linenum, s);
 	errors++;
-	(void) parg;
 }
 
 
@@ -633,7 +632,7 @@ void parse_cmdline(p)
 		s = tstr(&p, 1);
 		cmdlen += (int) strlen(s);
 		if (cmdlen > MAX_CMDLEN)
-			error("command too long", NULL_PARG);
+			error("command too long");
 		else
 			add_cmd_str(s);
 	} while (*p != ' ' && *p != '\t' && *p != '\0');
@@ -650,7 +649,7 @@ void parse_cmdline(p)
 	p = skipsp(p);
 	if (*p == '\0')
 	{
-		error("missing action", NULL_PARG);
+		error("missing action");
 		return;
 	}
 	actname = p;
@@ -702,7 +701,7 @@ void parse_varline(p)
 	p = skipsp(p);
 	if (*p++ != '=')
 	{
-		error("missing =", NULL_PARG);
+		error("missing =");
 		return;
 	}
 

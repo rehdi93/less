@@ -49,9 +49,9 @@
 #   define	OPEN_APPEND	(1)
 #endif
 
-#define IS_CSI_START(c)	(((LWCHAR)(c)) == ESC || (((LWCHAR)(c)) == CSI))
 #define	CSI		((unsigned char)'\233')
 #define	CHAR_END_COMMAND 0x40000000
+#define IS_CSI_START(c)	(((LWCHAR)(c)) == ESC || (((LWCHAR)(c)) == CSI))
 
 /*
  * Set a file descriptor to binary mode.
