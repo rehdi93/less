@@ -13,6 +13,7 @@
 #include "position.h"
 #include "option.h"
 #include "cmd.h"
+#include "pckeys.h"
 
 extern int erase_char, erase2_char, kill_char;
 extern int sigs;

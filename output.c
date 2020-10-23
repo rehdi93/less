@@ -7,6 +7,7 @@
 
 #include "less.h"
 #include "os_defs.h"
+#include "pckeys.h"
 
 #if LESS_PLATFORM==LP_WINDOWS
 #include "windows.h"

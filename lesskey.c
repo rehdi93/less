@@ -76,6 +76,7 @@
 #include "less.h"
 #include "lesskey.h"
 #include "cmd.h"
+#include "pckeys.h"
 
 struct cmdname
 {

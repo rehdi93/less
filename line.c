@@ -9,8 +9,9 @@
 #include "less.h"
 #include "charset.h"
 #include "position.h"
-
+#include "pckeys.h"
 #include "os_defs.h"
+
 #if LESS_PLATFORM==LP_WINDOWS
 #include <windows.h>
 #endif

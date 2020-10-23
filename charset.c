@@ -16,7 +16,7 @@
 #endif
 
 #include "charset.h"
-
+#include "pckeys.h"
 #include "os_defs.h"
 
 #if LESS_PLATFORM==LP_WINDOWS
