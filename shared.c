@@ -2,18 +2,25 @@
 
 // Shared routines bettween the tools
 
-#define _CRT_SECURE_NO_WARNINGS
+#include "lesslib.h"
 
-#include <stdlib.h>
-#include <string.h>
+/*
+ * Skip leading spaces in a string.
+ */
+char* skipsp(char *s)
+{
+	while (*s == ' ' || *s == '\t')	
+		s++;
+	return s;
+}
+
 
 #ifdef WIN32
-
 /*
   If there is no HOME environment variable, use USERPROFILE.
   If somehow USERPROFILE not set, use the concatenation of HOMEDRIVE + HOMEPATH.
 */
-char* win32_get_home(void*(*alloc)(size_t,size_t))
+char* win32_get_home()
 {
    char* home = getenv("USERPROFILE");
    if (home != NULL) {
@@ -23,7 +30,7 @@ char* win32_get_home(void*(*alloc)(size_t,size_t))
         char *drive = getenv("HOMEDRIVE");
         char *path  = getenv("HOMEPATH");
         if (drive != NULL && path != NULL) {
-            home = (char*) alloc(strlen(drive) + strlen(path) + 1, sizeof(char));
+            home = (char*) calloc(strlen(drive) + strlen(path) + 1, sizeof(char));
             strcpy(home, drive);
             strcat(home, path);
         }

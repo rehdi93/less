@@ -10,7 +10,7 @@
 #if LESS_PLATFORM==LP_WINDOWS
 #include <windows.h>
 
-char* win32_get_home(void*(*allocfn)(size_t,size_t));
+char* win32_get_home();
 
 #endif
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 #ifdef WIN32
 	if (getenv("HOME") == NULL)
 	{
-		char* home = win32_get_home(calloc);
+		char* home = win32_get_home();
 		_putenv_s("HOME", home);
 	}
 	GetConsoleTitleA(consoleTitle, sizeof(consoleTitle)/sizeof(char));
@@ -300,16 +300,6 @@ void* ecalloc(size_t count, size_t size)
 	return (NULL);
 }
 
-/*
- * Skip leading spaces in a string.
- */
-char * skipsp(s)
-	char *s;
-{
-	while (*s == ' ' || *s == '\t')	
-		s++;
-	return (s);
-}
 
 /*
  * See how many characters of two strings are identical.

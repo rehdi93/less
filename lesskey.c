@@ -462,21 +462,9 @@ char * tstr(pp, xlate)
 }
 
 /*
- * Skip leading spaces in a string.
- */
-char * skipsp(s)
-	char *s;
-{
-	while (*s == ' ' || *s == '\t')	
-		s++;
-	return (s);
-}
-
-/*
  * Skip non-space characters in a string.
  */
-char * skipnsp(s)
-	char *s;
+char * skipnsp(char *s)
 {
 	while (*s != '\0' && *s != ' ' && *s != '\t')
 		s++;
