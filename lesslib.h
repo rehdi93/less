@@ -3,7 +3,6 @@
 /*
  * Includes std. library and OS functions.
  * Defines types used by less
- * Include file for std. library and OS functions.
  */
 
 #ifndef SECURE
@@ -42,7 +41,6 @@
 #if HAVE_STRING_H
 #include <string.h>
 #endif
-
 #if HAVE_STDBOOL_H
 #include <stdbool.h>
 #endif

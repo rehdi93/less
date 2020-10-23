@@ -73,7 +73,7 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
  */
 
-#include "less.h"
+#include "lesslib.h"
 #include "lesskey.h"
 #include "cmd.h"
 #include "pckeys.h"
