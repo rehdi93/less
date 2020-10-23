@@ -112,6 +112,4 @@ int os9_signal (int type, RETSIGTYPE (*handler)());
 #define CHAR_BIT 8
 #endif
 
-
-
-#endif
+#endif // LESSPOLY_H

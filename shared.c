@@ -9,9 +9,8 @@
  */
 char* skipsp(char *s)
 {
-	while (*s == ' ' || *s == '\t')	
-		s++;
-	return s;
+  while (IS_SPACE(*s)) s++;
+  return s;
 }
 
 

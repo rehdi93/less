@@ -113,3 +113,8 @@ struct hilite_tree;
 #define	NULL_IFILE	((IFILE)NULL)
 
 #endif // LESSLIB_H
+
+/*
+ * Polyfill.
+ */
+#include "lesspoly.h"
