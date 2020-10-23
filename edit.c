@@ -11,7 +11,6 @@
 #if OS2
 #include <signal.h>
 #endif
-#include <stdbool.h>
 
 int fd0 = 0;
 

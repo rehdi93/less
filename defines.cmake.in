@@ -27,6 +27,7 @@
 #define HAVE_MEMCPY 1
 #define HAVE_PERROR 1
 #define HAVE_SNPRINTF 1
+#define HAVE_STDBOOL_H 1
 #define HAVE_STDIO_H 1
 #define HAVE_STDLIB_H 1
 #define HAVE_STRCHR 1

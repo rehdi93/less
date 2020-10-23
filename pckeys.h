@@ -100,4 +100,3 @@
 
 #define	ESC		CONTROL('[')
 #define	ESCS		"\33"
-#define	CSI		((unsigned char)'\233')

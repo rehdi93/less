@@ -50,6 +50,7 @@
 #endif
 
 #define IS_CSI_START(c)	(((LWCHAR)(c)) == ESC || (((LWCHAR)(c)) == CSI))
+#define	CSI		((unsigned char)'\233')
 #define	CHAR_END_COMMAND 0x40000000
 
 /*
