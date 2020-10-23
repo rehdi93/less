@@ -461,6 +461,8 @@ char * tstr(pp, xlate)
 	return (buf);
 }
 
+char* skipsp(char *s);
+
 /*
  * Skip non-space characters in a string.
  */
