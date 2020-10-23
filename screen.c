@@ -124,7 +124,8 @@ static int sy_fg_color;		/* Color of system text (before less) */
 static int sy_bg_color;
 int sgr_mode;		/* Honor ANSI sequences rather than using above */
 #if LESS_PLATFORM==LP_WINDOWS
-int have_ul;		/* Is underline available? */
+DWORD init_output_mode;		/* The initial console output mode */
+bool vt_enabled;		/* Is virtual terminal processing available? */
 #endif
 #else
 
@@ -1369,11 +1370,11 @@ static void win32_init_term()
 			CONSOLE_TEXTMODE_BUFFER,
 			(LPVOID) NULL);
 		/*
-		 * Enable underline, if available.
+		 * Enable virtual terminal processing, if available.
 		 */
 		GetConsoleMode(con_out_ours, &output_mode);
-		have_ul = SetConsoleMode(con_out_ours,
-			    output_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+		vt_enabled = SetConsoleMode(con_out_ours,
+			       output_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 	}
 
 	size.X = scr.srWindow.Right - scr.srWindow.Left + 1;
@@ -1464,12 +1465,19 @@ void init()
 		line_left();
 #else
 #if LESS_PLATFORM==LP_WINDOWS
+	GetConsoleMode(con_out, &init_output_mode);
 	if (!(quit_if_one_screen && one_screen))
 	{
 		if (!no_init)
 			win32_init_term();
-		init_mouse();
 
+		init_mouse();
+	}
+	else {
+		/*
+		 * Enable virtual terminal processing, if available.
+		 */
+		vt_enabled = SetConsoleMode(con_out, init_output_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 	}
 #endif
 	initcolor();
@@ -1501,8 +1509,11 @@ void deinit()
 	if (!(quit_if_one_screen && one_screen))
 	{
 		deinit_mouse();
-		if (!no_init)
+		SetConsoleMode(con_out, init_output_mode);
+		if (!no_init) {
 			win32_deinit_term();
+
+		}
 	}
 #else
 	/* Need clreol to make SETCOLORS take effect. */

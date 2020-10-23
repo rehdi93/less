@@ -39,7 +39,7 @@ extern int ul_fg_color, ul_bg_color;
 extern int so_fg_color, so_bg_color;
 extern int bl_fg_color, bl_bg_color;
 extern int sgr_mode;
-extern int have_ul;
+extern bool vt_enabled;
 #endif
 
 /*
@@ -107,7 +107,7 @@ void flush()
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
-		if (ctldisp != OPT_ONPLUS)
+		if (ctldisp != OPT_ONPLUS || vt_enabled)
 			WIN32textout(obuf, ob - obuf);
 		else
 		{
@@ -250,12 +250,7 @@ void flush()
 							at |= 2;
 							break;
 						case 4: /* underline on */
-#if LESS_PLATFORM==LP_WINDOWS
-							if (have_ul)
-								bgi = COMMON_LVB_UNDERSCORE >> 4;
-							else
-#endif
-								bgi = 8;
+							bgi = 8;
 							at |= 4;
 							break;
 						case 5: /* slow blink on */
