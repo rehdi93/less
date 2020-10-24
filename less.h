@@ -94,3 +94,5 @@ POSITION lstrtopos (char* str, char** end_ptr);
 #if LESS_PLATFORM==LP_WINDOWS
 int pclose(FILE*);
 #endif
+
+void error_(const char* msg);

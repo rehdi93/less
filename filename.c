@@ -693,12 +693,13 @@ char* lglob(char* filename)
 				 * Allocate a bigger one.
 				 */
 				len *= 2;
-				*p = '\0';
-				p = (char *) ecalloc(len, sizeof(char));
-				strcpy(p, gfilename);
-				free(gfilename);
+				p = (char*) realloc(gfilename, len*sizeof(char));
+				if (p == NULL) {
+					error_("Cannot allocate memory");
+					quit(QUIT_ERROR);
+				}
+
 				gfilename = p;
-				p = gfilename + strlen(gfilename);
 			}
 			strcpy(p, qfilename);
 			free(qfilename);

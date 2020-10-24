@@ -656,6 +656,11 @@ void error(fmt, parg)
 	flush();
 }
 
+void error_(const char* msg)
+{
+	error(msg, NULL_PARG);
+}
+
 static char intr_to_abort[] = "... (interrupt to abort)";
 
 /*

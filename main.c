@@ -60,6 +60,7 @@ extern int	no_init;
 
 
 static bool isoptstring(const char* s);
+static void cleanup();
 
 /*
  * Entry point.
@@ -265,8 +266,6 @@ int main(int argc, char *argv[])
 	init();
 	commands();
 	quit(QUIT_OK);
-	/*NOTREACHED*/
-	return (0);
 }
 
 /*
@@ -294,7 +293,7 @@ void* ecalloc(size_t count, size_t size)
 	p = (void*) calloc(count, size);
 	if (p != NULL)
 		return (p);
-	error("Cannot allocate memory", NULL_PARG);
+	error_("Cannot allocate memory");
 	quit(QUIT_ERROR);
 	/*NOTREACHED*/
 	return (NULL);
@@ -338,27 +337,42 @@ int sprefix(ps, s, uppercase)
 /*
  * Exit the program.
  */
-void quit(status)
-	int status;
+void quit(int status)
 {
 	static int save_status;
 
-	/*
-	 * Put cursor at bottom left corner, clear the line,
-	 * reset the terminal modes, and exit.
-	 */
 	if (status < 0)
 		status = save_status;
 	else
 		save_status = status;
-	quitting = 1;
+	
+	cleanup();	
+	exit(status);
+}
+
+bool isoptstring(const char* s)
+{
+	return (*s == '-' || *s == '+') && s[1] != '\0';
+}
+
+/*
+* Put cursor at bottom left corner, clear the line,
+* reset the terminal modes.
+*/
+void cleanup()
+{
+	quitting = true;
 	edit((char*)NULL);
 	save_cmdhist();
 	if (any_display && is_tty)
 		clear_bot();
 	deinit();
 	flush();
-	raw_mode(0);
+	raw_mode(false);
+
+#ifdef WIN32
+	SetConsoleTitleA(consoleTitle);
+#endif
 #if LESS_PLATFORM
 	/* 
 	 * If we don't close 2, we get some garbage from
@@ -368,14 +382,6 @@ void quit(status)
 	 */
 	close(2);
 #endif
-#ifdef WIN32
-	SetConsoleTitleA(consoleTitle);
-#endif
-	close_getchr();
-	exit(status);
-}
 
-bool isoptstring(const char* s)
-{
-	return (*s == '-' || *s == '+') && s[1] != '\0';
+	close_getchr();
 }
