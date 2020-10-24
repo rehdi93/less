@@ -35,7 +35,7 @@ set(DEF_LESSKEYINFILE ".lesskey" CACHE STRING "Filename of the default lesskey i
 set(LESSHISTFILE ".lesshst" CACHE STRING "Filename of the history file (in the HOME directory).")
 set(REGEX_LIBRARY regcomp-local CACHE STRING "Select what regular expression library to use ([regcomp-local],posix,pcre2,off).")
 
-set(SECURE ${SECURE_COMPILE} CACHE INTERNAL "same as SECURE_COMPILE")
+set(SECURE ${SECURE_COMPILE})
 
 # needed for generating files and making pkg releases
 find_package(Perl)
