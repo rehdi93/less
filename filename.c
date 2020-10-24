@@ -383,7 +383,6 @@ char * fexpand(s)
 
 #if TAB_COMPLETE_FILENAME
 
-#define LESS_PLATFORM LP_DOS_MSC
 
 /*
  * Return a blank-separated list of filenames which "complete"
