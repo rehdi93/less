@@ -51,82 +51,10 @@ static void pr_version()
 	printf("%s\n", buf);
 }
 
-static void pr_error(s)
-	char *s;
+static void pr_error(char* s)
 {
 	fprintf(stderr, "%s\n", s);
 	exit(1);
-}
-
-static long lstrtol(s, radix, pend)
-	char *s;
-	int radix;
-	char **pend;
-{
-	int v;
-	bool neg = 0;
-	long n = 0;
-
-	/* Skip leading white space. */
-	while (*s == ' ' || *s == '\t')
-		s++;
-
-	/* Check for a leading + or -. */
-	if (*s == '-')
-	{
-		neg = 1;
-		s++;
-	} else if (*s == '+')
-	{
-		s++;
-	}
-
-	/* Determine radix if caller does not specify. */
-	if (radix == 0)
-	{
-		radix = 10;
-		if (*s == '0')
-		{
-			switch (*++s)
-			{
-			case 'x':
-				radix = 16;
-				s++;
-				break;
-			default:
-				radix = 8;
-				break;
-			}
-		}
-	}
-
-	/* Parse the digits of the number. */
-	for (;;)
-	{
-		if (*s >= '0' && *s <= '9')
-			v = *s - '0';
-		else if (*s >= 'a' && *s <= 'f')
-			v = *s - 'a' + 10;
-		else if (*s >= 'A' && *s <= 'F')
-			v = *s - 'A' + 10;
-		else
-			break;
-		if (v >= radix)
-			break;
-		n = n * radix + v;
-		s++;
-	}
-
-	if (pend != NULL)
-	{
-		/* Skip trailing white space. */
-		while (*s == ' ' || *s == '\t')
-			s++;
-		*pend = s;
-	}
-	if (neg)
-		return (-n);
-	return (n);
 }
 
 
@@ -144,9 +72,7 @@ char * strchr(s, c)
 }
 #endif
 
-int main(argc, argv)
-	int argc;
-	char *argv[];
+int main(int argc, char* argv[])
 {
 	char *arg;
 	char *s;
@@ -167,7 +93,7 @@ int main(argc, argv)
 			closequote = *++arg;
 			break;
 		case 'd':
-			closequote = (char)lstrtol(++arg, 0, &s);
+			closequote = (char)strtol(++arg, &s, 10);
 			if (s == arg)
 				pr_error("Missing number after -d");
 			break;
