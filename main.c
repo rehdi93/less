@@ -265,7 +265,8 @@ int main(int argc, char *argv[])
 
 	init();
 	commands();
-	quit(QUIT_OK);
+	cleanup();
+	return 0;
 }
 
 /*
@@ -347,7 +348,7 @@ void quit(int status)
 		save_status = status;
 	
 	cleanup();	
-	exit(status);
+	_Exit(status);
 }
 
 bool isoptstring(const char* s)
