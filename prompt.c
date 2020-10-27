@@ -71,8 +71,7 @@ void init_prompt()
 /*
  * Append a string to the end of the message.
  */
-static void ap_str(s)
-	char *s;
+static void ap_str(char *s)
 {
 	int len;
 
@@ -87,8 +86,7 @@ static void ap_str(s)
 /*
  * Append a character to the end of the message.
  */
-static void ap_char(c)
-	char c;
+static void ap_char(char c)
 {
 	char buf[2];
 
@@ -100,8 +98,7 @@ static void ap_char(c)
 /*
  * Append a POSITION (as a decimal integer) to the end of the message.
  */
-static void ap_pos(pos)
-	POSITION pos;
+static void ap_pos(POSITION pos)
 {
 	char buf[INT_STRLEN_BOUND(pos) + 2];
 
@@ -112,9 +109,7 @@ static void ap_pos(pos)
 /*
  * Append a line number to the end of the message.
  */
- 	static void
-ap_linenum(linenum)
-	LINENUM linenum;
+static void ap_linenum(LINENUM linenum)
 {
 	char buf[INT_STRLEN_BOUND(linenum) + 2];
 
@@ -125,8 +120,7 @@ ap_linenum(linenum)
 /*
  * Append an integer to the end of the message.
  */
-static void ap_int(num)
-	int num;
+static void ap_int(int num)
 {
 	char buf[INT_STRLEN_BOUND(num) + 2];
 
@@ -145,8 +139,7 @@ static void ap_quest()
 /*
  * Return the "current" byte offset in the file.
  */
-static POSITION curr_byte(where)
-	int where;
+static POSITION curr_byte(int where)
 {
 	POSITION pos;
 
@@ -164,9 +157,7 @@ static POSITION curr_byte(where)
  * question mark followed by a single letter.
  * Here we decode that letter and return the appropriate boolean value.
  */
-static int cond(c, where)
-	char c;
-	int where;
+static int cond(char c, int where)
 {
 	POSITION len;
 
@@ -230,10 +221,7 @@ static int cond(c, where)
  * Here we decode that letter and take the appropriate action,
  * usually by appending something to the message being built.
  */
-static void protochar(c, where, iseditproto)
-	int c;
-	int where;
-	int iseditproto;
+static void protochar(int c, int where, int iseditproto)
 {
 	POSITION pos;
 	POSITION len;
@@ -385,8 +373,7 @@ static void protochar(c, where, iseditproto)
  * where to resume parsing the string.
  * We must keep track of nested IFs and skip them properly.
  */
-static const char * skipcond(p)
-	const char *p;
+static const char * skipcond(const char *p)
 {
 	int iflevel;
 
@@ -442,9 +429,7 @@ static const char * skipcond(p)
 /*
  * Decode a char that represents a position on the screen.
  */
-static const char * wherechar(p, wp)
-	char const *p;
-	int *wp;
+static const char * wherechar(char const *p, int *wp)
 {
 	switch (*p)
 	{
@@ -465,9 +450,7 @@ static const char * wherechar(p, wp)
 /*
  * Construct a message based on a prototype string.
  */
-char * pr_expand(proto, maxwidth)
-	const char *proto;
-	int maxwidth;
+char * pr_expand(const char *proto, int maxwidth)
 {
 	const char *p;
 	int c;

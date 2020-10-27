@@ -269,8 +269,7 @@ extern char *tgoto();
  *	   etc. are NOT disabled.
  * It doesn't matter whether an input \n is mapped to \r, or vice versa.
  */
-void raw_mode(on)
-	int on;
+void raw_mode(int on)
 {
 	static int curr_on = 0;
 
@@ -854,8 +853,7 @@ static void delay(int msec)
 /*
  * Return the characters actually input by a "special" key.
  */
-char * special_key_str(key)
-	int key;
+char * special_key_str(int key)
 {
 	static char tbuf[40];
 	char *s;
@@ -2096,8 +2094,7 @@ void clear_bot()
 	}
 }
 
-void at_enter(attr)
-	int attr;
+void at_enter(int attr)
 {
 	attr = apply_at_specials(attr);
 
@@ -2154,8 +2151,7 @@ void at_exit()
 	attrmode = AT_NORMAL;
 }
 
-void at_switch(attr)
-	int attr;
+void at_switch(int attr)
 {
 	int new_attrmode = apply_at_specials(attr);
 	int ignore_modes = AT_ANSI;
@@ -2167,9 +2163,7 @@ void at_switch(attr)
 	}
 }
 
-int is_at_equiv(attr1, attr2)
-	int attr1;
-	int attr2;
+int is_at_equiv(int attr1, int attr2)
 {
 	attr1 = apply_at_specials(attr1);
 	attr2 = apply_at_specials(attr2);
@@ -2177,8 +2171,7 @@ int is_at_equiv(attr1, attr2)
 	return (attr1 == attr2);
 }
 
-int apply_at_specials(attr)
-	int attr;
+int apply_at_specials(int attr)
 {
 	if (attr & AT_BINARY)
 		attr |= binattr;
@@ -2375,18 +2368,14 @@ char WIN32getch()
 #if !UNIX
 /*
  */
-void WIN32setcolors(fg, bg)
-	int fg;
-	int bg;
+void WIN32setcolors(int fg, int bg)
 {
 	SETCOLORS(fg, bg);
 }
 
 /*
  */
-void WIN32textout(text, len)
-	char *text;
-	int len;
+void WIN32textout(char *text, int len)
 {
 #if defined(WIN32)
 	DWORD written;
