@@ -114,8 +114,6 @@
 
 /* Settings always true for Windows systems.  */
 
-//#define LESS_PLATFORM	LP_WINDOWS
-
 /*
  * Pathname separator character.
  */
@@ -369,4 +367,8 @@
 
 #ifndef MINGW
 #pragma warning(disable:4996)
+#endif
+
+#ifdef __BORLANDC__
+#define WINDOWS_BORLAND
 #endif
