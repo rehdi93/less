@@ -52,8 +52,7 @@ extern char closequote;
 /*
  * Remove quotes around a filename.
  */
-char * shell_unquote(str)
-	char *str;
+char * shell_unquote(char *str)
 {
 	char *name;
 	char *p;
@@ -128,8 +127,7 @@ static int metachar(c)
 /*
  * Insert a backslash before each metacharacter in a string.
  */
-char * shell_quote(s)
-	char *s;
+char * shell_quote(char *s)
 {
 	char *p;
 	char *newstr;
@@ -205,9 +203,7 @@ char * shell_quote(s)
  * Return a pathname that points to a specified file in a specified directory.
  * Return NULL if the file does not exist in the directory.
  */
-static char * dirfile(dirname, filename)
-	char *dirname;
-	char *filename;
+static char * dirfile(char *dirname, char *filename)
 {
 	char *pathname;
 	int len;
@@ -241,8 +237,7 @@ static char * dirfile(dirname, filename)
 /*
  * Return the full pathname of the given file in the "home directory".
  */
-char * homefile(filename)
-	char *filename;
+char * homefile(char *filename)
 {
 	char *pathname;
 
@@ -292,8 +287,7 @@ char * homefile(filename)
  * Likewise for a string of N "#"s.
  * {{ This is a lot of work just to support % and #. }}
  */
-char * fexpand(s)
-	char *s;
+char * fexpand(char *s)
 {
 	char *fr, *to;
 	int n;
@@ -502,8 +496,7 @@ static POSITION seek_filesize(f)
  * Read a string from a file.
  * Return a pointer to the string in memory.
  */
-static char * readfd(fd)
-	FILE *fd;
+static char * readfd(FILE *fd)
 {
 	int len;
 	int ch;
@@ -548,8 +541,7 @@ static char * readfd(fd)
  * Execute a shell command.
  * Return a pointer to a pipe connected to the shell command's standard output.
  */
-static FILE * shellcmd(cmd)
-	char *cmd;
+static FILE * shellcmd(char *cmd)
 {
 	FILE *fd;
 
@@ -819,10 +811,7 @@ static int num_pct_s(lessopen)
  * See if we should open a "replacement file" 
  * instead of the file we're about to open.
  */
-char * open_altfile(filename, pf, pfd)
-	char *filename;
-	int *pf;
-	void **pfd;
+char * open_altfile(char *filename, int *pf, void **pfd)
 {
 #if !HAVE_POPEN
 	return (NULL);
@@ -973,8 +962,7 @@ void close_altfile(altfilename, filename)
 /*
  * Is the specified file a directory?
  */
-int is_dir(filename)
-	char *filename;
+int is_dir(char* filename)
 {
 	int isdir = 0;
 
@@ -986,8 +974,7 @@ int is_dir(filename)
 	r = stat(filename, &statbuf);
 	isdir = (r >= 0 && S_ISDIR(statbuf.st_mode));
 }
-#else
-#ifdef _OSK
+#elif defined(_OSK)
 {
 	int f;
 
@@ -996,7 +983,6 @@ int is_dir(filename)
 		close(f);
 	isdir = (f >= 0);
 }
-#endif
 #endif
 	return (isdir);
 }

@@ -96,7 +96,7 @@ RETSIGTYPE winch(type)
 }
 #endif
 
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 /*
  * Handle CTRL-C and CTRL-BREAK keys.
  */
@@ -133,7 +133,7 @@ void init_signals(on)
 		/*
 		 * Set signal handlers.
 		 */
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 		SetConsoleCtrlHandler(wbreak_handler, true);
 #else
 		(void) LSIGNAL(SIGINT, u_interrupt);
@@ -158,7 +158,7 @@ void init_signals(on)
 		/*
 		 * Restore signals to defaults.
 		 */
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 		SetConsoleCtrlHandler(wbreak_handler, false);
 #else
 		(void) LSIGNAL(SIGINT, SIG_DFL);

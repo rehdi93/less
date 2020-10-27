@@ -55,7 +55,7 @@
 #include <floss.h>
 #endif
 
-#if LESS_PLATFORM==LP_WINDOWS || OS2
+#if defined(WIN32) || OS2
 #include <io.h>
 #endif
 

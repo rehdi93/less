@@ -14,7 +14,7 @@
 
 #include "os_defs.h"
 
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 #include <windows.h>
 DWORD console_mode;
 HANDLE tty;
@@ -36,7 +36,7 @@ extern int wheel_lines;
  */
 void open_getchr()
 {
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 	/* Need this to let child processes inherit our console handle */
 	SECURITY_ATTRIBUTES sa;
 	memset(&sa, 0, sizeof(SECURITY_ATTRIBUTES));
@@ -75,13 +75,13 @@ void open_getchr()
  */
 void close_getchr()
 {
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 	SetConsoleMode(tty, console_mode);
 	CloseHandle(tty);
 #endif
 }
 
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 /*
  * Close the pipe, restoring the keyboard (CMD resets it, losing the mouse).
  */
@@ -101,7 +101,7 @@ int pclose(FILE* f)
 int default_wheel_lines()
 {
 	int lines = 1;
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 	if (SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &lines, 0))
 	{
 		if (lines == WHEEL_PAGESCROLL)
@@ -126,7 +126,7 @@ int getchr()
 		 * In raw read, we don't see ^C so look here for it.
 		 */
 		flush();
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 		if (ABORT_SIGS())
 			return (READ_INTR);
 		c = WIN32getch();

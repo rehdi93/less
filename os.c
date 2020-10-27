@@ -60,7 +60,7 @@ int iread(fd, buf, len)
 	int n;
 
 start:
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 	if (ABORT_SIGS())
 		return (READ_INTR);
 #elif LESS_PLATFORM_OLD && LESS_PLATFORM!=LP_DOS_DJGPPC

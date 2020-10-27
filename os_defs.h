@@ -1,6 +1,6 @@
 // os_defs.h - OS specific defines
 
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 // If defined, the following flags inhibit definition of the indicated items.
 
 #define WIN32_LEAN_AND_MEAN	// - Excludes less common APIs like Cryptography DDE, RPC, Shell and Windows Sockets

@@ -91,7 +91,7 @@ void inttoa (int, char*);
 int lstrtoi (char* str, char** end_ptr);
 POSITION lstrtopos (char* str, char** end_ptr);
 
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 int pclose(FILE*);
 #endif
 

@@ -9,7 +9,7 @@
 #include "less.h"
 #include "os_defs.h"
 
-#if LESS_PLATFORM == LP_WINDOWS
+#if defined(WIN32)
 #include <errno.h>
 #include <windows.h>
 #endif
@@ -268,7 +268,7 @@ read_more:
 		return (EOI);
 	if (n < 0)
 	{
-#if LESS_PLATFORM == LP_WINDOWS
+#if defined(WIN32)
 		if (errno != EPIPE)
 #endif
 		{
@@ -308,7 +308,7 @@ read_more:
 				parg.p_string = wait_message();
 				ierror("%s", &parg);
 			}
-#if LESS_PLATFORM == LP_WINDOWS
+#if defined(WIN32)
 			Sleep(1000);
 #else
 			sleep(1);

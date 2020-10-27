@@ -9,7 +9,7 @@
 #include "os_defs.h"
 #include "pckeys.h"
 
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 #include "windows.h"
 
 #ifndef COMMON_LVB_UNDERSCORE
@@ -31,7 +31,7 @@ extern bool any_display;
 extern int is_tty;
 extern int oldbot;
 
-#if LESS_PLATFORM==LP_WINDOWS || (LESS_PLATFORM_DOS && LESS_PLATFORM!=LP_DOS_MSC)
+#if defined(WIN32) || (LESS_PLATFORM_DOS && LESS_PLATFORM!=LP_DOS_MSC)
 extern int ctldisp;
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
@@ -39,7 +39,7 @@ extern int ul_fg_color, ul_bg_color;
 extern int so_fg_color, so_bg_color;
 extern int bl_fg_color, bl_bg_color;
 extern int sgr_mode;
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 extern bool vt_enabled;
 #endif
 #endif
@@ -131,7 +131,7 @@ void flush()
 			static int at;
 			int f, b;
 			/* Screen colors used by 3x and 4x SGR commands. */
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 			static unsigned char screen_color[] = {
 				0, /* BLACK */
 				FOREGROUND_RED,
@@ -356,7 +356,7 @@ void flush()
 					if (at & 16)
 						f = b ^ 8;
 					f &= 0xf;
-#if LESS_PLATFORM==LP_WINDOWS
+#if defined(WIN32)
 					b &= 0xf | (COMMON_LVB_UNDERSCORE >> 4);
 #else
  					b &= 0xf;
