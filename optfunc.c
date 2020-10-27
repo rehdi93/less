@@ -77,9 +77,7 @@ extern int sgr_mode;
 /*
  * Handler for -o option.
  */
-void opt_o(type, s)
-	int type;
-	char *s;
+void opt_o(int type, char *s)
 {
 	PARG parg;
 	char *filename;
@@ -129,9 +127,7 @@ void opt_o(type, s)
 /*
  * Handler for -O option.
  */
-void opt__O(type, s)
-	int type;
-	char *s;
+void opt__O(int type, char *s)
 {
 	force_logfile = true;
 	opt_o(type, s);
@@ -141,9 +137,7 @@ void opt__O(type, s)
 /*
  * Handlers for -j option.
  */
-void opt_j(type, s)
-	int type;
-	char *s;
+void opt_j(int type, char *s)
 {
 	PARG parg;
 	char buf[16];
@@ -204,9 +198,7 @@ void calc_jump_sline()
 /*
  * Handlers for -# option.
  */
-void opt_shift(type, s)
-	int type;
-	char *s;
+void opt_shift(int type, char *s)
 {
 	PARG parg;
 	char buf[16];
@@ -264,9 +256,7 @@ void calc_shift_count()
 }
 
 #if USERFILE
-void opt_k(type, s)
-	int type;
-	char *s;
+void opt_k(int type, char *s)
 {
 	PARG parg;
 
@@ -287,9 +277,7 @@ void opt_k(type, s)
 /*
  * Handler for -t option.
  */
-void opt_t(type, s)
-	int type;
-	char *s;
+void opt_t(int type, char *s)
 {
 	IFILE save_ifile;
 	POSITION pos;
@@ -327,9 +315,7 @@ void opt_t(type, s)
 /*
  * Handler for -T option.
  */
-void opt__T(type, s)
-	int type;
-	char *s;
+void opt__T(int type, char *s)
 {
 	PARG parg;
 	char *filename;
@@ -358,9 +344,7 @@ void opt__T(type, s)
 /*
  * Handler for -p option.
  */
-void opt_p(type, s)
-	int type;
-	char *s;
+void opt_p(int type, char *s)
 {
 	switch (type)
 	{
@@ -393,9 +377,7 @@ void opt_p(type, s)
 /*
  * Handler for -P option.
  */
-void opt__P(type, s)
-	int type;
-	char *s;
+void opt__P(int type, char *s)
 {
 	char **proto;
 	PARG parg;
@@ -431,9 +413,7 @@ void opt__P(type, s)
  * Handler for the -b option.
  */
 	/*ARGSUSED*/
-void opt_b(type, s)
-	int type;
-	char *s;
+void opt_b(int type, char *s)
 {
 	switch (type)
 	{
@@ -453,9 +433,7 @@ void opt_b(type, s)
  * Handler for the -i option.
  */
 	/*ARGSUSED*/
-void opt_i(type, s)
-	int type;
-	char *s;
+void opt_i(int type, char *s)
 {
 	switch (type)
 	{
@@ -472,9 +450,7 @@ void opt_i(type, s)
  * Handler for the -V option.
  */
 	/*ARGSUSED*/
-void opt__V(type, s)
-	int type;
-	char *s;
+void opt__V(int type, char *s)
 {
 	switch (type)
 	{
@@ -506,11 +482,7 @@ void opt__V(type, s)
 /*
  * Parse an MSDOS color descriptor.
  */
-   	static void
-colordesc(s, fg_color, bg_color)
-	char *s;
-	int *fg_color;
-	int *bg_color;
+static void colordesc(char *s, int *fg_color, int *bg_color)
 {
 	int fg, bg;
 	int err;
@@ -566,9 +538,7 @@ colordesc(s, fg_color, bg_color)
  * Handler for the -D option.
  */
 	/*ARGSUSED*/
-void opt_D(type, s)
-	int type;
-	char *s;
+void opt_D(int type, char *s)
 {
 	PARG p;
 
@@ -617,9 +587,7 @@ void opt_D(type, s)
 /*
  * Handler for the -x option.
  */
-void opt_x(type, s)
-	int type;
-	char *s;
+void opt_x(int type, char *s)
 {
 	extern int tabstops[];
 	extern int ntabstops;
@@ -674,9 +642,7 @@ void opt_x(type, s)
 /*
  * Handler for the -" option.
  */
-void opt_quote(type, s)
-	int type;
-	char *s;
+void opt_quote(int type, char *s)
 {
 	char buf[3];
 	PARG parg;
@@ -715,9 +681,7 @@ void opt_quote(type, s)
  * Handler for the --rscroll option.
  */
 	/*ARGSUSED*/
-void opt_rscroll(type, s)
-	int type;
-	char *s;
+void opt_rscroll(int type, char *s)
 {
 	PARG p;
 
@@ -749,9 +713,7 @@ void opt_rscroll(type, s)
  * If from the command line, exit immediately.
  */
 	/*ARGSUSED*/
-void opt_query(type, s)
-	int type;
-	char *s;
+void opt_query(int type, char *s)
 {
 	switch (type)
 	{
@@ -768,9 +730,7 @@ void opt_query(type, s)
  * Handler for the --mouse option.
  */
 	/*ARGSUSED*/
-void opt_mousecap(type, s)
-	int type;
-	char *s;
+void opt_mousecap(int type, char *s)
 {
 	switch (type)
 	{
@@ -790,9 +750,7 @@ void opt_mousecap(type, s)
  * Handler for the --wheel-lines option.
  */
 	/*ARGSUSED*/
-void opt_wheel_lines(type, s)
-	int type;
-	char *s;
+void opt_wheel_lines(int type, char *s)
 {
 	switch (type)
 	{

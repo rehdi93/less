@@ -384,8 +384,7 @@ void flush()
 /*
  * Output a character.
  */
-int putchr(c)
-	int c;
+int putchr(int c)
 {
 #if 0 /* fake UTF-8 output for testing */
 	extern int utf_mode;
@@ -435,8 +434,7 @@ int putchr(c)
 /*
  * Output a string.
  */
-void putstr(s)
-	const char *s;
+void putstr(const char *s)
 {
 	while (*s != '\0')
 		putchr(*s++);
@@ -515,8 +513,7 @@ POSITION lstrtopos (char* str, char** strend)
 /*
  * Output an integer in a given radix.
  */
-static int iprint_int(num)
-	int num;
+static int iprint_int(int num)
 {
 	char buf[INT_STRLEN_BOUND(num)];
 
@@ -528,8 +525,7 @@ static int iprint_int(num)
 /*
  * Output a line number in a given radix.
  */
-static int iprint_linenum(num)
-	LINENUM num;
+static int iprint_linenum(LINENUM num)
 {
 	char buf[INT_STRLEN_BOUND(num)];
 
@@ -542,9 +538,7 @@ static int iprint_linenum(num)
  * This function implements printf-like functionality
  * using a more portable argument list mechanism than printf's.
  */
-static int less_printf(fmt, parg)
-	char *fmt;
-	PARG *parg;
+static int less_printf(char *fmt, PARG *parg)
 {
 	char *s;
 	int col;
@@ -610,9 +604,7 @@ void get_return()
  * Output a message in the lower left corner of the screen
  * and wait for carriage return.
  */
-void error(fmt, parg)
-	char *fmt;
-	PARG *parg;
+void error(char *fmt, PARG *parg)
 {
 	int col = 0;
 	static char return_to_continue[] = "  (press RETURN)";
@@ -669,9 +661,7 @@ static char intr_to_abort[] = "... (interrupt to abort)";
  * Usually used to warn that we are beginning a potentially
  * time-consuming operation.
  */
-void ierror(fmt, parg)
-	char *fmt;
-	PARG *parg;
+void ierror(char *fmt, PARG *parg)
 {
 	at_exit();
 	clear_bot();
@@ -687,9 +677,7 @@ void ierror(fmt, parg)
  * Output a message in the lower left corner of the screen
  * and return a single-character response.
  */
-int query(fmt, parg)
-	char *fmt;
-	PARG *parg;
+int query(char *fmt, PARG *parg)
 {
 	int c;
 	int col = 0;

@@ -13,10 +13,7 @@ extern int utf_mode;
  * Compile a search pattern, for future use by match_pattern.
  */
 static int compile_pattern2(pattern, search_type, comp_pattern, show_error)
-	char *pattern;
-	int search_type;
-	PATTERN_TYPE *comp_pattern;
-	int show_error;
+	char *pattern; int search_type; PATTERN_TYPE *comp_pattern; int show_error;
 {
 	if (search_type & SRCH_NO_REGEX)
 		return (0);
@@ -160,8 +157,7 @@ int compile_pattern(pattern, search_type, comp_pattern)
 /*
  * Forget that we have a compiled pattern.
  */
-void uncompile_pattern(pattern)
-	PATTERN_TYPE *pattern;
+void uncompile_pattern(PATTERN_TYPE *pattern)
 {
 #if HAVE_GNU_REGEX
 	if (*pattern != NULL)
@@ -207,8 +203,7 @@ void uncompile_pattern(pattern)
 /*
  * Can a pattern be successfully compiled?
  */
-int valid_pattern(pattern)
-	char *pattern;
+int valid_pattern(char *pattern)
 {
 	PATTERN_TYPE comp_pattern;
 	int result;
@@ -224,8 +219,7 @@ int valid_pattern(pattern)
 /*
  * Is a compiled pattern null?
  */
-int is_null_pattern(pattern)
-	PATTERN_TYPE pattern;
+int is_null_pattern(PATTERN_TYPE pattern)
 {
 #if HAVE_GNU_REGEX
 	return (pattern == NULL);
@@ -418,31 +412,19 @@ char * pattern_lib_name()
 {
 #if HAVE_GNU_REGEX
 	return ("GNU");
-#else
-#if HAVE_POSIX_REGCOMP
+#elif HAVE_POSIX_REGCOMP
 	return ("POSIX");
-#else
-#if HAVE_PCRE2
+#elif HAVE_PCRE2
 	return ("PCRE2");
-#else
-#if HAVE_PCRE
+#elif HAVE_PCRE
 	return ("PCRE");
-#else
-#if HAVE_RE_COMP
+#elif HAVE_RE_COMP
 	return ("BSD");
-#else
-#if HAVE_REGCMP
+#elif HAVE_REGCMP
 	return ("V8");
-#else
-#if HAVE_V8_REGCOMP
+#elif HAVE_V8_REGCOMP
 	return ("Spencer V8");
 #else
 	return ("no");
-#endif
-#endif
-#endif
-#endif
-#endif
-#endif
 #endif
 }

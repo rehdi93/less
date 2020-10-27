@@ -53,9 +53,7 @@ extern int sigs;
  * any pending iread().
  */
 int iread(fd, buf, len)
-	int fd;
-	unsigned char *buf;
-	unsigned int len;
+	int fd; unsigned char *buf; unsigned int len;
 {
 	int n;
 
@@ -209,8 +207,7 @@ static char * strerror(err)
 /*
  * errno_message: Return an error message based on the value of "errno".
  */
-char * errno_message(filename)
-	char *filename;
+char * errno_message(char *filename)
 {
 	char *p;
 	char *m;
@@ -231,8 +228,7 @@ char * errno_message(filename)
 
 /* #define HAVE_FLOAT 0 */
 
-static POSITION muldiv(val, num, den)
-	POSITION val, num, den;
+static POSITION muldiv(POSITION val, POSITION num, POSITION den)
 {
 #if HAVE_FLOAT
 	double v = (((double) val) * num) / den;
@@ -254,9 +250,7 @@ static POSITION muldiv(val, num, den)
  * Return the ratio of two POSITIONS, as a percentage.
  * {{ Assumes a POSITION is a long int. }}
  */
-int percentage(num, den)
-	POSITION num;
-	POSITION den;
+int percentage(POSITION num, POSITION den)
 {
 	return (int) muldiv(num,  (POSITION) 100, den);
 }
@@ -264,10 +258,7 @@ int percentage(num, den)
 /*
  * Return the specified percentage of a POSITION.
  */
-POSITION percent_pos(pos, percent, fraction)
-	POSITION pos;
-	int percent;
-	long fraction;
+POSITION percent_pos(POSITION pos, int percent, long fraction)
 {
 	/* Change percent (parts per 100) to perden (parts per NUM_FRAC_DENOM). */
 	POSITION perden = (percent * (NUM_FRAC_DENOM / 100)) + (fraction / 100);

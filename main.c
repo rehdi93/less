@@ -273,8 +273,7 @@ int main(int argc, char *argv[])
  * Copy a string to a "safe" place
  * (that is, to a buffer allocated by calloc).
  */
-char * save(s)
-	const char *s;
+char * save(const char *s)
 {
 	char *p;
 
@@ -306,10 +305,7 @@ void* ecalloc(size_t count, size_t size)
  * If uppercase is true, the first string must begin with an uppercase
  * character; the remainder of the first string may be either case.
  */
-int sprefix(ps, s, uppercase)
-	char *ps;
-	char *s;
-	int uppercase;
+int sprefix(char *ps, char *s, int uppercase)
 {
 	int c;
 	int sc;

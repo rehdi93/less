@@ -28,8 +28,7 @@ extern int sc_width, sc_height;
  *	the bottom line on the screen
  *	the line after the bottom line on the screen
  */
-POSITION position(sindex)
-	int sindex;
+POSITION position(int sindex)
 {
 	switch (sindex)
 	{
@@ -49,8 +48,7 @@ POSITION position(sindex)
 /*
  * Add a new file position to the bottom of the position table.
  */
-void add_forw_pos(pos)
-	POSITION pos;
+void add_forw_pos(POSITION pos)
 {
 	int i;
 
@@ -65,8 +63,7 @@ void add_forw_pos(pos)
 /*
  * Add a new file position to the top of the position table.
  */
-void add_back_pos(pos)
-	POSITION pos;
+void add_back_pos(POSITION pos)
 {
 	int i;
 
@@ -120,8 +117,7 @@ void pos_init()
  * Check the position table to see if the position falls within its range.
  * Return the position table entry if found, -1 if not.
  */
-int onscreen(pos)
-	POSITION pos;
+int onscreen(POSITION pos)
 {
 	int i;
 
@@ -141,9 +137,7 @@ int empty_screen()
 	return (empty_lines(0, sc_height-1));
 }
 
-int empty_lines(s, e)
-	int s;
-	int e;
+int empty_lines(int s, int e)
 {
 	int i;
 
@@ -161,9 +155,7 @@ int empty_lines(s, e)
  * such that the top few lines are empty, we may have to set
  * the screen line to a number > 0.
  */
-void get_scrpos(scrpos, where)
-	struct scrpos *scrpos;
-	int where;
+void get_scrpos(struct scrpos *scrpos, int where)
 {
 	int i;
 	int dir;
@@ -216,8 +208,7 @@ void get_scrpos(scrpos, where)
  * or it may be in { -1 .. -(sc_height-1) } to refer to lines
  * relative to the bottom of the screen.
  */
-int sindex_from_sline(sline)
-	int sline;
+int sindex_from_sline(int sline)
 {
 	/*
 	 * Negative screen line number means

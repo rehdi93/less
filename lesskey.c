@@ -221,9 +221,7 @@ void usage()
 	exit(1);
 }
 
-char * mkpathname(dirname, filename)
-	char *dirname;
-	char *filename;
+char * mkpathname(char *dirname, char *filename)
 {
 	char *pathname;
 
@@ -237,8 +235,7 @@ char * mkpathname(dirname, filename)
 /*
  * Figure out the name of a default file (in the user's HOME directory).
  */
-char * homefile(filename)
-	char *filename;
+char * homefile(char *filename)
 {
 	char *p;
 	char *pathname;
@@ -260,9 +257,7 @@ char * homefile(filename)
 /*
  * Parse command line arguments.
  */
-void parse_args(argc, argv)
-	int argc;
-	char **argv;
+void parse_args(int argc, char** argv)
 {
 	char *arg;
 
@@ -349,9 +344,7 @@ void init_tables()
 /*
  * Parse one character of a string.
  */
-char * tstr(pp, xlate)
-	char **pp;
-	int xlate;
+char * tstr(char **pp, int xlate)
 {
 	char *p;
 	char ch;
@@ -477,8 +470,7 @@ char * skipnsp(char *s)
  * Clean up an input line:
  * strip off the trailing newline & any trailing # comment.
  */
-char * clean_line(s)
-	char *s;
+char * clean_line(char *s)
 {
 	int i;
 
@@ -493,8 +485,7 @@ char * clean_line(s)
 /*
  * Add a byte to the output command table.
  */
-void add_cmd_char(c)
-	int c;
+void add_cmd_char(int c)
 {
 	if (currtable->pbuffer >= currtable->buffer + MAX_USERCMD)
 	{
@@ -507,8 +498,7 @@ void add_cmd_char(c)
 /*
  * Add a string to the output command table.
  */
-void add_cmd_str(s)
-	char *s;
+void add_cmd_str(char *s)
 {
 	for ( ;  *s != '\0';  s++)
 		add_cmd_char(*s);
@@ -517,8 +507,7 @@ void add_cmd_str(s)
 /*
  * See if we have a special "control" line.
  */
-int control_line(s)
-	char *s;
+int control_line(char *s)
 {
 #define	PREFIX(str,pat)	(strncmp(str,pat,strlen(pat)) == 0)
 
@@ -549,10 +538,7 @@ int control_line(s)
 /*
  * Output some bytes.
  */
-void fputbytes(fd, buf, len)
-	FILE *fd;
-	char *buf;
-	int len;
+void fputbytes(FILE *fd, char *buf, int len)
 {
 	while (len-- > 0)
 	{
@@ -564,9 +550,7 @@ void fputbytes(fd, buf, len)
 /*
  * Output an integer, in special KRADIX form.
  */
-void fputint(fd, val)
-	FILE *fd;
-	unsigned int val;
+void fputint(FILE *fd, unsigned val)
 {
 	char c;
 
@@ -585,8 +569,7 @@ void fputint(fd, val)
 /*
  * Find an action, given the name of the action.
  */
-int findaction(actname)
-	char *actname;
+int findaction(char *actname)
 {
 	int i;
 
@@ -604,8 +587,7 @@ void error(const char *s)
 }
 
 
-void parse_cmdline(p)
-	char *p;
+void parse_cmdline(char *p)
 {
 	int cmdlen;
 	char *actname;
@@ -673,8 +655,7 @@ void parse_cmdline(p)
 	}
 }
 
-void parse_varline(p)
-	char *p;
+void parse_varline(char *p)
 {
 	char *s;
 
@@ -709,8 +690,7 @@ void parse_varline(p)
 /*
  * Parse a line from the lesskey file.
  */
-void parse_line(line)
-	char *line;
+void parse_line(char *line)
 {
 	char *p;
 
@@ -739,9 +719,7 @@ char* win32_get_home(void*(*allocfn)(size_t,size_t));
 #endif
 
 
-int main(argc, argv)
-	int argc;
-	char *argv[];
+int main(int argc, char *argv[])
 {
 	FILE *desc;
 	FILE *out;
@@ -831,5 +809,5 @@ int main(argc, argv)
 	/* File trailer */
 	fputbytes(out, endsection, sizeof(endsection));
 	fputbytes(out, filetrailer, sizeof(filetrailer));
-	return (0);
+	return 0;
 }
