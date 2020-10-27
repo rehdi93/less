@@ -115,7 +115,6 @@
 /* This is not needed; it is defined by the compiler. */
 /* #define _OSK 1 */
 #define OS2 		0
-#define LESS_PLATFORM	0
 
 /*
  * Pathname separator character.

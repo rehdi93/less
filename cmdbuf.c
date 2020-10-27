@@ -1053,7 +1053,7 @@ static void init_compl()
 		tk_text = fcomplete(word);
 	} else
 	{
-#if LESS_PLATFORM
+#if !UNIX
 		char *qword = NULL;
 #else
 		char *qword = shell_quote(word+1);
@@ -1210,7 +1210,7 @@ int cmd_char(c)
 			*cmd_mbc_buf = c;
 			if (IS_ASCII_OCTET(c))
 				cmd_mbc_buf_len = 1;
-#if LESS_PLATFORM || OS2
+#if !UNIX || OS2
 			else if (c == (unsigned char) '\340' && IS_ASCII_OCTET(peekcc()))
 			{
 				/* Assume a special key. */

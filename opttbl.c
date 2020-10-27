@@ -66,7 +66,7 @@ static struct optname b_optname      = { "buffers",              NULL };
 static struct optname B__optname     = { "auto-buffers",         NULL };
 static struct optname c_optname      = { "clear-screen",         NULL };
 static struct optname d_optname      = { "dumb",                 NULL };
-#if LESS_PLATFORM
+#if !UNIX
 static struct optname D__optname     = { "color",                NULL };
 #endif
 static struct optname e_optname      = { "quit-at-eof",          NULL };
@@ -178,7 +178,7 @@ static struct loption option[] =
 			NULL
 		}
 	},
-#if LESS_PLATFORM
+#if !UNIX
 	{ 'D', &D__optname,
 		STRING|REPAINT, 0, NULL, opt_D,
 		{

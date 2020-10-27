@@ -6,23 +6,18 @@
  * Standard include file for "less".
  */
 
-/*
- * Possible values for LESS_PLATFORM.
- * When targeting UNIX, LESS_PLATFORM is 0 (falsy)
- */
-#define LP_UNIX 0
-#define LP_DOS_DJGPPC 1
-#define LP_DOS_MSC 2
-#define LP_DOS_BORLAND 2
-#define LP_WINDOWS_BORLAND 4 /* Borland C for Windows */
-#define LP_OS2 5
-#define LP_OS9 6
-#define LP_OS9_MWC32 7
-#define	LP_WINDOWS 100	/* Modern Windows */
 
-/* LESS_PLATFORM helpers */
-#define LESS_PLATFORM_DOS (LESS_PLATFORM > LP_UNIX && LESS_PLATFORM < LP_WINDOWS_BORLAND)
-#define LESS_PLATFORM_OLD LESS_PLATFORM > LP_UNIX && LESS_PLATFORM < LP_WINDOWS
+/* platform detection helpers */
+#if defined DOS_DJGPPC || defined DOS_BORLAND || defined DOS_MSC
+#   define DOS_PLATFORM 1
+#endif
+
+#if defined WIN32 || defined DOS_PLATFORM
+//  !UNIX
+#else
+#   define UNIX 1
+#endif
+
 
 /*
  * Include the file of compile-time options.
@@ -36,7 +31,7 @@
 /*
  * Flags for open()
  */
-#if LESS_PLATFORM || OS2
+#if !UNIX || OS2
 #   define	OPEN_READ	(O_RDONLY|O_BINARY)
 #elif defined(_OSK)
 #   define	OPEN_READ	(S_IREAD)
@@ -61,7 +56,7 @@
 /*
  * Set a file descriptor to binary mode.
  */
-#if LESS_PLATFORM || OS2
+#if !UNIX || OS2
 #define	SET_BINARY(f)	setmode(f, O_BINARY)
 #else
 #define	SET_BINARY(f)
@@ -70,7 +65,7 @@
 /*
  * Does the shell treat "?" as a metacharacter?
  */
-#if LESS_PLATFORM || OS2 || _OSK
+#if !UNIX || OS2 || _OSK
 #define	SHELL_META_QUEST 0
 #else
 #define	SHELL_META_QUEST 1

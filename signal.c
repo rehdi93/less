@@ -32,7 +32,7 @@ extern long jump_sline_fraction;
 /*
  * Interrupt signal handler.
  */
-#if LESS_PLATFORM!=LP_WINDOWS
+#if defined WIN32
 	/* ARGSUSED*/
 static RETSIGTYPE u_interrupt(type)
 	int type;
@@ -43,7 +43,7 @@ static RETSIGTYPE u_interrupt(type)
 #endif
 	LSIGNAL(SIGINT, u_interrupt);
 	sigs |= S_INTERRUPT;
-#if LESS_PLATFORM==LP_DOS_DJGPPC
+#if DOS_DJGPPC
 	/*
 	 * If a keyboard has been hit, it must be Ctrl-C
 	 * (as opposed to Ctrl-Break), so consume it.

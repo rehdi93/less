@@ -63,7 +63,7 @@ start:
 #if defined(WIN32)
 	if (ABORT_SIGS())
 		return (READ_INTR);
-#elif LESS_PLATFORM_OLD && LESS_PLATFORM!=LP_DOS_DJGPPC
+#elif DOS_PLATFORM && !DOS_DJGPPC
 	if (kbhit())
 	{
 		int c;
@@ -96,7 +96,7 @@ start:
 
 	flush();
 	reading = 1;
-#if LESS_PLATFORM==LP_DOS_DJGPPC
+#if DOS_DJGPPC
 	if (isatty(fd))
 	{
 		/*

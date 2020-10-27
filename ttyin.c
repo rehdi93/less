@@ -48,7 +48,7 @@ void open_getchr()
 	GetConsoleMode(tty, &console_mode);
 	/* Make sure we get Ctrl+C events. */
 	SetConsoleMode(tty, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT);
-#elif LESS_PLATFORM_DOS
+#elif DOS_PLATFORM
 	extern int fd0;
 	/*
 	 * Open a new handle to CON: in binary mode 
@@ -121,7 +121,7 @@ int getchr()
 
 	do
 	{
-#if LESS_PLATFORM && LESS_PLATFORM != LP_DOS_DJGPPC
+#if !UNIX && !DOS_DJGPPC
 		/*
 		 * In raw read, we don't see ^C so look here for it.
 		 */

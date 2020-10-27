@@ -85,7 +85,7 @@ inline void lglob_done(struct lglob_s* glob)
 	_fnexplodefree(glob->list);
 }
 
-#elif LESS_PLATFORM==LP_DOS_DJGPPC
+#elif DOS_DJGPPC
 #define GLOB_LIST
 
 struct lglob_s
@@ -118,7 +118,7 @@ inline void lglob_done(struct lglob_s* glob)
 {
 	globfree(&glob->list);
 }
-#elif LESS_PLATFORM_DOS
+#elif DOS_PLATFORM
 #define GLOB_NAME
 
 struct lglob_s
@@ -145,7 +145,7 @@ inline bool lglob_next(struct lglob_s* glob)
 	glob->handle = _dos_findnext(glob->find_data);
 	return glob->handle == 0;
 }
-#elif LESS_PLATFORM==LP_WINDOWS_BORLAND
+#elif WINDOWS_BORLAND
 #define GLOB_NAME
 
 struct lglob_s

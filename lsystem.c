@@ -10,7 +10,7 @@
 #include <signal.h>
 #include "position.h"
 
-#if LESS_PLATFORM
+#if !UNIX
 #include <dos.h>
 
 #if (defined(WIN32) && defined(MINGW)) || defined(_MSC_VER)
@@ -22,7 +22,7 @@
 #  include <dir.h>
 #endif
 
-#if LESS_PLATFORM==LP_OS2
+#if OS2
 /* The __open() system call translates "/dev/tty" to "con". */
 #  define open __open
 #endif
@@ -49,7 +49,7 @@ void lsystem(cmd, donemsg)
 	char *p;
 #endif
 	IFILE save_ifile;
-#if LESS_PLATFORM_OLD
+#if DOS_PLATFORM
 	char cwd[FILENAME_MAX+1];
 #endif
 
@@ -147,7 +147,7 @@ void lsystem(cmd, donemsg)
 	}
 	system(p);
 	free(p);
-#elif LESS_PLATFORM==LP_DOS_DJGPPC
+#elif DOS_DJGPPC
 	/*
 	 * Make stdin of the child be in cooked mode.
 	 */
@@ -188,13 +188,13 @@ void lsystem(cmd, donemsg)
 	init();
 	screen_trashed = 1;
 
-#if LESS_PLATFORM_OLD
+#if DOS_PLATFORM
 	/*
 	 * Restore the previous directory (possibly
 	 * changed by the child program we just ran).
 	 */
 	chdir(cwd);
-#if LESS_PLATFORM != LP_DOS_DJGPPC
+#if !DOS_DJGPPC
 	/*
 	 * Some versions of chdir() don't change to the drive
 	 * which is part of CWD.  (DJGPP does this in chdir.)

@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 		ifile = get_ifile(FAKE_HELPFILE, ifile);
 	while (argc-- > 0)
 	{
-#if LESS_PLATFORM
+#if !UNIX
 		/*
 		 * Because the "shell" doesn't expand filename patterns,
 		 * treat each argument as a filename pattern rather than
@@ -374,7 +374,7 @@ void cleanup()
 #ifdef WIN32
 	SetConsoleTitleA(consoleTitle);
 #endif
-#if LESS_PLATFORM
+#if !UNIX
 	/* 
 	 * If we don't close 2, we get some garbage from
 	 * 2's buffer when it flushes automatically.

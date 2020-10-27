@@ -637,8 +637,6 @@ AH_TOP([
 
 /* Settings always true on Unix.  */
 
-#define	LESS_PLATFORM	0
-
 /*
  * Pathname separator character.
  */

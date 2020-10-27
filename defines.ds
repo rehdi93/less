@@ -124,12 +124,12 @@
  * Define MSDOS_COMPILER if compiling for MS-DOS.
  */
 #ifdef __DJGPP__
-#define	LESS_PLATFORM		LP_DOS_DJGPPC
+#define	DOS_DJGPPC 1
 #else
 #ifdef __BORLANDC__
-#define	LESS_PLATFORM		LP_DOS_BORLAND
+#define	DOS_BORLAND 1
 #else
-#define	LESS_PLATFORM		LP_DOS_MSC
+#define	DOS_MSC 1
 #endif
 #endif
 

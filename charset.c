@@ -358,7 +358,7 @@ static void set_charset()
 	 * rather than from predefined charset entry.
 	 */
 	ilocale();
-#elif LESS_PLATFORM_DOS
+#elif DOS_PLATFORM
 	/*
 	 * Default to "dos".
 	 */

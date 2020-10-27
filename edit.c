@@ -330,7 +330,7 @@ int edit_ifile(IFILE ifile)
 			 * Must switch stdin to BINARY mode.
 			 */
 			SET_BINARY(f);
-#if LESS_PLATFORM==LP_DOS_DJGPPC
+#if DOS_DJGPPC
 			/*
 			 * Setting stdin to binary by default causes
 			 * Ctrl-C to not raise SIGINT.  We must undo

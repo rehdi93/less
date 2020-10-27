@@ -10,11 +10,11 @@
 #include "lglob.h"
 #include "pckeys.h"
 
-#if LESS_PLATFORM
+#if !UNIX
 #include <dos.h>
-#if LESS_PLATFORM==LP_WINDOWS_BORLAND
+#if WINDOWS_BORLAND
 #include <dir.h>
-#elif LESS_PLATFORM==LP_DOS_DJGPPC
+#elif DOS_DJGPPC
 #include <glob.h>
 #include <dir.h>
 #endif
@@ -255,12 +255,12 @@ char * homefile(char *filename)
 	if (pathname != NULL)
 		return (pathname);
 #endif
-#if LESS_PLATFORM || OS2
+#if !UNIX || OS2
 	/*
 	 * Look for the file anywhere on search path.
 	 */
 	pathname = (char *) calloc(_MAX_PATH, sizeof(char));
-#if LESS_PLATFORM==LP_DOS_DJGPPC
+#if DOS_DJGPPC
 	{
 		char *res = searchpath(filename);
 		if (res == 0)
@@ -392,7 +392,7 @@ char * fcomplete(char *s)
 	/*
 	 * Complete the filename "s" by globbing "s*".
 	 */
-#if LESS_PLATFORM == LP_DOS_MSC || LESS_PLATFORM == LP_DOS_BORLAND
+#if DOS_MSC || DOS_BORLAND
 	/*
 	 * But in DOS, we have to glob "s*.*".
 	 * But if the final component of the filename already has

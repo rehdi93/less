@@ -31,7 +31,7 @@ extern bool any_display;
 extern int is_tty;
 extern int oldbot;
 
-#if defined(WIN32) || (LESS_PLATFORM_DOS && LESS_PLATFORM!=LP_DOS_MSC)
+#if defined(WIN32) || (DOS_PLATFORM && !DOS_MSC)
 extern int ctldisp;
 extern int nm_fg_color, nm_bg_color;
 extern int bo_fg_color, bo_bg_color;
@@ -104,7 +104,7 @@ void flush()
 	n = (int) (ob - obuf);
 	if (n == 0)
 		return;
-#if LESS_PLATFORM==LP_DOS_MSC
+#if DOS_MSC
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
@@ -112,7 +112,7 @@ void flush()
 		ob = obuf;
 		return;
 	}
-#elif LESS_PLATFORM==LP_WINDOWS || LESS_PLATFORM_DOS
+#elif defined WIN32 || DOS_PLATFORM
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
@@ -411,7 +411,7 @@ int putchr(c)
 		need_clr = 0;
 		clear_bot();
 	}
-#if LESS_PLATFORM
+#if !UNIX
 	if (c == '\n' && is_tty)
 	{
 		/* remove_top(1); */

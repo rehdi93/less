@@ -502,7 +502,7 @@ void opt__V(type, s)
 	}
 }
 
-#if LESS_PLATFORM
+#if !UNIX
 /*
  * Parse an MSDOS color descriptor.
  */

@@ -795,7 +795,7 @@ static void ch_delbufs()
  */
 int seekable(f) int f;
 {
-#if LESS_PLATFORM
+#if !UNIX
 	extern int fd0;
 	if (f == fd0 && !isatty(fd0))
 	{
