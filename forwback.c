@@ -110,12 +110,7 @@ void squish_check()
  *   real line.  If nblank > 0, the pos must be NULL_POSITION.
  *   The first real line after the blanks will start at ch_zero().
  */
-void forw(n, pos, force, only_last, nblank)
-	int n;
-	POSITION pos;
-	int force;
-	int only_last;
-	int nblank;
+void forw(int n, POSITION pos, int force, int only_last, int nblank)
 {
 	int nlines = 0;
 	int do_repaint;
@@ -283,11 +278,7 @@ void forw(n, pos, force, only_last, nblank)
 /*
  * Display n lines, scrolling backward.
  */
-void back(n, pos, force, only_last)
-	int n;
-	POSITION pos;
-	int force;
-	int only_last;
+void back(int n, POSITION pos, int force, int only_last)
 {
 	int nlines = 0;
 	int do_repaint;
@@ -344,10 +335,7 @@ void back(n, pos, force, only_last)
  * Display n more lines, forward.
  * Start just after the line currently displayed at the bottom of the screen.
  */
-void forward(n, force, only_last)
-	int n;
-	int force;
-	int only_last;
+void forward(int n, int force, int only_last)
 {
 	POSITION pos;
 
@@ -395,10 +383,7 @@ void forward(n, force, only_last)
  * Display n more lines, backward.
  * Start just before the line currently displayed at the top of the screen.
  */
-void backward(n, force, only_last)
-	int n;
-	int force;
-	int only_last;
+void backward(int n, int force, int only_last)
 {
 	POSITION pos;
 

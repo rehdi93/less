@@ -118,8 +118,7 @@ static char * metachars()
 /*
  * Is this a shell metacharacter?
  */
-static int metachar(c)
-	char c;
+static int metachar(char c)
 {
 	return (strchr(metachars(), c) != NULL);
 }
@@ -439,8 +438,7 @@ char * fcomplete(char *s)
  * Try to determine if a file is "binary".
  * This is just a guess, and we need not try too hard to make it accurate.
  */
-int bin_file(f)
-	int f;
+int bin_file(int f)
 {
 	int n;
 	int bin_count = 0;
@@ -481,8 +479,7 @@ int bin_file(f)
 /*
  * Try to determine the size of a file by seeking to the end.
  */
-static POSITION seek_filesize(f)
-	int f;
+static POSITION seek_filesize(int f)
 {
 	off_t spos;
 
@@ -771,8 +768,7 @@ char* lglob(char* filename)
 /*
  * Return canonical pathname.
  */
-char * lrealpath(path)
-	char *path;
+char * lrealpath(char* path)
 {
 #if HAVE_REALPATH
 	char rpath[PATH_MAX];
@@ -786,8 +782,7 @@ char * lrealpath(path)
  * Return number of %s escapes in a string.
  * Return a large number if there are any other % escapes besides %s.
  */
-static int num_pct_s(lessopen)
-	char *lessopen;
+static int num_pct_s(char* lessopen)
 {
 	int num = 0;
 
@@ -929,9 +924,7 @@ char * open_altfile(char *filename, int *pf, void **pfd)
 /*
  * Close a replacement file.
  */
-void close_altfile(altfilename, filename)
-	char *altfilename;
-	char *filename;
+void close_altfile(char *altfilename, char *filename)
 {
 #if HAVE_POPEN
 	char *lessclose;
@@ -992,8 +985,7 @@ int is_dir(char* filename)
  * is an ordinary file, otherwise an error message
  * (if it cannot be opened or is a directory, etc.)
  */
-char * bad_file(filename)
-	char *filename;
+char * bad_file(char *filename)
 {
 	char *m = NULL;
 
@@ -1035,8 +1027,7 @@ char * bad_file(filename)
  * Return the size of a file, as cheaply as possible.
  * In Unix, we can stat the file.
  */
-POSITION filesize(f)
-	int f;
+POSITION filesize(int f)
 {
 #if HAVE_STAT
 	struct stat statbuf;
@@ -1065,8 +1056,7 @@ char * shell_coption()
 /*
  * Return last component of a pathname.
  */
-char * last_component(name)
-	char *name;
+char * last_component(char *name)
 {
 	char *slash;
 

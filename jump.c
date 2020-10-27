@@ -72,8 +72,7 @@ void jump_forw_buffered()
 /*
  * Jump to line n in the file.
  */
-void jump_back(linenum)
-	LINENUM linenum;
+void jump_back(LINENUM linenum)
 {
 	POSITION pos;
 	PARG parg;
@@ -123,9 +122,7 @@ void repaint()
 /*
  * Jump to a specified percentage into the file.
  */
-void jump_percent(percent, fraction)
-	int percent;
-	long fraction;
+void jump_percent(int percent, long fraction)
 {
 	POSITION pos, len;
 
@@ -155,9 +152,7 @@ void jump_percent(percent, fraction)
  * Like jump_loc, but the position need not be 
  * the first character in a line.
  */
-void jump_line_loc(pos, sline)
-	POSITION pos;
-	int sline;
+void jump_line_loc(POSITION pos, int sline)
 {
 	int c;
 
@@ -182,9 +177,7 @@ void jump_line_loc(pos, sline)
  * The position must be the first character in a line.
  * Place the target line on a specified line on the screen.
  */
-void jump_loc(pos, sline)
-	POSITION pos;
-	int sline;
+void jump_loc(POSITION pos, int sline)
 {
 	int nline;
 	int sindex;
