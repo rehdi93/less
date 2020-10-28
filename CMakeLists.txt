@@ -87,6 +87,7 @@ target_link_libraries(lessecho PRIVATE common)
 include(CheckIncludeFiles)
 include(CheckTypeSize)
 include(CheckSymbolExists)
+include(CheckStructHasMember)
 
 # checks
 check_include_files("termios.h" HAVE_TERMIOS_H)
@@ -100,6 +101,10 @@ list(APPEND CMAKE_EXTRA_INCLUDE_FILES "signal.h")
 check_type_size("(sigset_t*)0" SIGSET_T)
 check_symbol_exists(sigemptyset "signal.h" HAVE_SIGEMPTYSET)
 check_include_files("regex.h" HAVE_POSIX_REGCOMP)
+check_symbol_exists(realpath "stdlib.h" HAVE_REALPATH)
+if(UNIX)
+    check_struct_has_member("struct stat" st_ino "sys/stat.h" HAVE_STAT_INO)
+endif()
 
 # find terminal libraries
 find_package(Curses) # curses or ncurses

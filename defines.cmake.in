@@ -42,6 +42,7 @@
 #define HAVE_VOID 1
 #define HAVE_WCTYPE 1
 #define HAVE_WCTYPE_H 1
+#define HAVE_REALLOC 1
 
 /*
  * Sizes of various buffers.
@@ -69,6 +70,9 @@
 #cmakedefine01 HAVE_TERMIOS_H
 #cmakedefine01 HAVE_SIGSETMASK
 #cmakedefine01 HAVE_SIGSET_T
+#cmakedefine01 HAVE_REALPATH
+#cmakedefine01 HAVE_STAT_INO
+
 #define HAVE_TERMIOS_FUNCS HAVE_TERMIOS_H
 
 /* 
