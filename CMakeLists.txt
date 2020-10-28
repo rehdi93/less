@@ -37,30 +37,37 @@ set(REGEX_LIBRARY regcomp-local CACHE STRING "Select what regular expression lib
 
 set(SECURE ${SECURE_COMPILE})
 
-# needed for generating files and making pkg releases
+# generate files ONLY if needed
 find_package(Perl)
-set(perl_generated_files help.c)
+macro(perl_generate filename COMMAND script)
+    find_file(location ${filename} ${CMAKE_SOURCE_DIR} NO_DEFAULT_PATH)
+    if(NOT location)
+        set(genfile ${CMAKE_SOURCE_DIR}/${filename})
+        add_custom_command(OUTPUT ${genfile}
+            DEPENDS ${PERL_EXECUTABLE} ${script}
+            COMMAND ${PERL_EXECUTABLE} ${script} ${ARGN}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            COMMENT "Generating ${genfile} ..."
+        )
+    else()
+        set(genfile ${location})
+    endif()
+    
+    list(APPEND generated_files ${genfile})
+endmacro()
 
-if(NOT PERL_FOUND)
-    message(AUTHOR_WARNING "Perl is required to generate these files: ${perl_generated_files}")
-endif()
+perl_generate(help.c COMMAND mkhelp.pl < "less.hlp" > help.c)
+
 
 set(LESS_SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
-    command.c cvt.c decode.c edit.c filename.c forwback.c
+    "command.c" cvt.c decode.c edit.c filename.c forwback.c
     ifile.c input.c jump.c line.c linenum.c
     lsystem.c mark.c optfunc.c option.c opttbl.c os.c
     output.c pattern.c position.c prompt.c search.c signal.c
     tags.c ttyin.c)
 
-# full path is required here
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/help.c
-    COMMAND ${PERL_EXECUTABLE} mkhelp.pl < "less.hlp" > help.c
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    COMMENT "Generating help.c ..."
-    USES_TERMINAL
-)
-
 add_executable(less ${LESS_SRC} help.c)
+
 add_executable(lesskey lesskey.c)
 add_executable(lessecho lessecho.c)
 
@@ -144,7 +151,7 @@ endif()
 message(STATUS "regex lib: ${REGEX_LIBRARY}")
 
 if(NOT found)
-    message("Cannot find regex lib '${REGEX_LIBRARY}'")
+    message("Cannot find regex lib")
     set(REGEX_LIBRARY NOTFOUND)
 endif()
 
