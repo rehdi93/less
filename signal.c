@@ -34,8 +34,7 @@ extern long jump_sline_fraction;
  */
 #if defined WIN32
 	/* ARGSUSED*/
-static RETSIGTYPE u_interrupt(type)
-	int type;
+static RETSIGTYPE u_interrupt(int type)
 {
 	bell();
 #if OS2
@@ -125,8 +124,7 @@ static RETSIGTYPE terminate(int type)
 /*
  * Set up the signal handlers.
  */
-void init_signals(on)
-	int on;
+void init_signals(int on)
 {
 	if (on)
 	{

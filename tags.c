@@ -104,12 +104,7 @@ void cleantags()
 /*
  * Create a new tag entry.
  */
-static struct tag * maketagent(name, file, linenum, pattern, endline)
-	char *name;
-	char *file;
-	LINENUM linenum;
-	char *pattern;
-	int endline;
+static struct tag * maketagent(char *name, char *file, LINENUM linenum, char *pattern, int endline)
 {
 	struct tag *tp;
 
@@ -161,8 +156,7 @@ int gettagtype()
  * and "tagpattern" to the search pattern which should be used
  * to find the tag.
  */
-void findtag(tag)
-	char *tag;
+void findtag(char *tag)
 {
 	int type = gettagtype();
 	enum tag_result result;
@@ -204,8 +198,7 @@ POSITION tagsearch()
 /*
  * Go to the next tag.
  */
-char * nexttag(n)
-	int n;
+char * nexttag(int n)
 {
 	char *tagfile = (char *) NULL;
 
@@ -217,8 +210,7 @@ char * nexttag(n)
 /*
  * Go to the previous tag.
  */
-char * prevtag(n)
-	int n;
+char * prevtag(int n)
 {
 	char *tagfile = (char *) NULL;
 
@@ -251,8 +243,7 @@ int curr_tag()
  * Find tags in the "tags" file.
  * Sets curtag to the first tag entry.
  */
-static enum tag_result findctag(tag)
-	char *tag;
+static enum tag_result findctag(char *tag)
 {
 	char *p;
 	FILE *f;
