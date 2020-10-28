@@ -202,7 +202,7 @@ static void longloopmessage()
 
 static int loopcount;
 #if HAVE_TIME
-static time_type startime;
+static time_t startime;
 #endif
 
 static void longish()

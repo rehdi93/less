@@ -95,10 +95,8 @@ int os9_signal (int type, RETSIGTYPE (*handler)());
 #define sigemptyset(mp) *(mp) = 0
 #endif
 
-#if HAVE_TIME_T
-#define time_type	time_t
-#else
-#define	time_type	long
+#if !HAVE_TIME_T
+#define	time_t	long
 #endif
 
 #ifndef SEEK_SET

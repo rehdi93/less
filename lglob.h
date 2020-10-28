@@ -2,13 +2,6 @@
 
 /*
  * helper functions for "globbing".
-
-	struct lglob_s;
-	struct lglob_s lglob_new();
-	bool lglob_failed(struct lglob_s* glob);
-	bool lglob_next(struct lglob_s* glob);
-	void lglob_done(struct lglob_s* glob);
-
  * 
  * There are three possible mechanisms:
  *   1.	GLOB_LIST
@@ -20,6 +13,14 @@
  *	This defines a function that returns the complete list of
  *	matching filenames as a single space-separated string.
  */
+
+
+struct lglob_s;
+
+struct lglob_s lglob_new();
+bool lglob_failed(struct lglob_s* glob);
+bool lglob_next(struct lglob_s* glob);
+void lglob_done(struct lglob_s* glob);
 
 
 #if defined(WIN32) && (defined(_MSC_VER) || defined(MINGW))

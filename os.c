@@ -172,9 +172,9 @@ void intread()
  * Return the current time.
  */
 #if HAVE_TIME
-time_type get_time()
+time_t get_time()
 {
-	time_type t;
+	time_t t;
 
 	time(&t);
 	return (t);
