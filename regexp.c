@@ -27,7 +27,7 @@
  * Added regexec2 with notbol parameter. -- 4/19/99 Mark Nudelman
  */
 
-#include "lesspoly.h"
+#include "defines.h"
 #if HAVE_STDIO_H
 #include <stdio.h>
 #endif
