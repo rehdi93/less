@@ -4,7 +4,9 @@
  * Routines to do pattern matching.
  */
 
-#include "less.h"
+#include "lessdef.h"
+#include "lesslib.h"
+#include "pattern.h"
 
 extern int caseless;
 extern int utf_mode;
@@ -12,8 +14,7 @@ extern int utf_mode;
 /*
  * Compile a search pattern, for future use by match_pattern.
  */
-static int compile_pattern2(pattern, search_type, comp_pattern, show_error)
-	char *pattern; int search_type; PATTERN_TYPE *comp_pattern; int show_error;
+static int compile_pattern2(char *pattern, int search_type, PATTERN_TYPE *comp_pattern, int show_error)
 {
 	if (search_type & SRCH_NO_REGEX)
 		return (0);
@@ -133,10 +134,7 @@ static int compile_pattern2(pattern, search_type, comp_pattern, show_error)
 /*
  * Like compile_pattern2, but convert the pattern to lowercase if necessary.
  */
-int compile_pattern(pattern, search_type, comp_pattern)
-	char *pattern;
-	int search_type;
-	PATTERN_TYPE *comp_pattern;
+int compile_pattern(char *pattern, int search_type, PATTERN_TYPE *comp_pattern)
 {
 	char *cvt_pattern;
 	int result;
@@ -251,12 +249,7 @@ int is_null_pattern(PATTERN_TYPE pattern)
  * Simple pattern matching function.
  * It supports no metacharacters like *, etc.
  */
-static int match(pattern, pattern_len, buf, buf_len, pfound, pend)
-	char *pattern;
-	int pattern_len;
-	char *buf;
-	int buf_len;
-	char **pfound, **pend;
+static int match(char *pattern, int pattern_len, char *buf, int buf_len, char **pfound, char **pend)
 {
 	char *pp, *lp;
 	char *pattern_end = pattern + pattern_len;
@@ -291,15 +284,7 @@ static int match(pattern, pattern_len, buf, buf_len, pfound, pend)
  * Perform a pattern match with the previously compiled pattern.
  * Set sp and ep to the start and end of the matched string.
  */
-int match_pattern(pattern, tpattern, line, line_len, sp, ep, notbol, search_type)
-	PATTERN_TYPE pattern;
-	char *tpattern;
-	char *line;
-	int line_len;
-	char **sp;
-	char **ep;
-	int notbol;
-	int search_type;
+int match_pattern(PATTERN_TYPE pattern, char *tpattern, char *line, int line_len, char **sp, char **ep, int notbol, int search_type)
 {
 	int matched;
 
