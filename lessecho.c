@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 				meta_escape = arg;
 			break;
 		case 'f':
-			meta_escape_buf[0] = (char)lstrtol(++arg, 0, &s);
+			meta_escape_buf[0] = (char)strtol(++arg, &s, 10);
 			meta_escape = meta_escape_buf;
 			if (s == arg)
 				pr_error("Missing number after -f");
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
 			openquote = *++arg;
 			break;
 		case 'p':
-			openquote = (char)lstrtol(++arg, 0, &s);
+			openquote = (char)strtol(++arg, &s, 10);
 			if (s == arg)
 				pr_error("Missing number after -p");
 			break;
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
 			metachars[num_metachars] = '\0';
 			break;
 		case 'n':
-			metachars[num_metachars++] = (char)lstrtol(++arg, 0, &s);
+			metachars[num_metachars++] = (char)strtol(++arg, &s, 10);
 			if (s == arg)
 				pr_error("Missing number after -n");
 			metachars[num_metachars] = '\0';

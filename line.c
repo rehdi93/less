@@ -1108,7 +1108,7 @@ void set_status_col(int c)
  * Return the character as the function return value,
  * and the character attribute in *ap.
  */
-int gline(int i, int ap)
+int gline(int i, int* ap)
 {
 	if (is_null_line)
 	{
