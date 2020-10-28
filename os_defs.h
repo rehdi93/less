@@ -1,6 +1,7 @@
 // os_defs.h - OS specific defines
 
 #if defined(WIN32)
+// Minimize what's included from "windows.h"
 // If defined, the following flags inhibit definition of the indicated items.
 
 #define WIN32_LEAN_AND_MEAN	// - Excludes less common APIs like Cryptography DDE, RPC, Shell and Windows Sockets
@@ -41,7 +42,7 @@
 
 // minimum OS version
 // https://docs.microsoft.com/en-us/cpp/porting/modifying-winver-and-win32-winnt?view=vs-2019
-#define _WIN32_WINNT 0x500
-
+#define _WIN32_WINNT 0x500 // Windows 2000
+#define WINVER _WIN32_WINNT
 
 #endif
