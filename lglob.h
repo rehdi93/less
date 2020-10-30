@@ -78,7 +78,11 @@ inline bool lglob_next(struct lglob_s* glob)
 		glob->iter++;
 		return true;
 	}
-	else return false;
+	else {
+		glob->iter = glob->list;
+		glob->current = NULL;
+		return false;
+	}
 }
 
 inline void lglob_done(struct lglob_s* glob)
@@ -101,23 +105,28 @@ inline struct lglob_s lglob_new(const char* filename)
 	struct lglob_s gd;
 	glob(filename, GLOB_NOCHECK, 0, &gd.list);
 	gd.i = 0;
+	gd.current = NULL;
 	return gd;
 }
 
 inline bool lglob_failed(struct lglob_s*) { return false; }
 
-inline bool lglob_next(struct lglob_s* glob)
+inline bool lglob_next(struct lglob_s* g)
 {
-	if (glob->i < glob->list.gl_pathc) {
-		glob->current = glob->list.gl_pathv[glob->i++];
+	if (g->i < g->list.gl_pathc) {
+		g->current = g->list.gl_pathv[glob->i++];
 		return true;
 	}
-	else return false;
+	else {
+		g->i = 0;
+		g->current = NULL;
+		return false;
+	}
 }
 
-inline void lglob_done(struct lglob_s* glob)
+inline void lglob_done(struct lglob_s* g)
 {
-	globfree(&glob->list);
+	globfree(&g->list);
 }
 #elif DOS_PLATFORM
 #define GLOB_NAME
