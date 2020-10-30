@@ -100,7 +100,6 @@
 
     #define HAVE_DUP 1
     #define HAVE_POPEN 1
-    #define MUST_DEFINE_ERRNO 0
     #define HAVE_STAT 1
     #define HAVE_SYS_ERRLIST 1
 
