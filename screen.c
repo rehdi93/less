@@ -60,7 +60,7 @@ extern int fd0;
 #include <sys/ptem.h>
 #endif
 
-#endif /* LESS_PLATFORM */
+#endif /* !UNIX */
 
 /*
  * Check for broken termios package that forces you to manually
@@ -687,7 +687,7 @@ static char * ltgetstr(capname, pp)
 		return (NULL);
 	return (tgetstr(capname, pp));
 }
-#endif /* !LESS_PLATFORM */
+#endif /* UNIX */
 
 /*
  * Get size of the output screen.
@@ -1079,7 +1079,7 @@ void get_term()
 	pos_init();
 
 
-#else /* !UNIX */
+#else /* UNIX */
 {
 	char *sp;
 	char *t1, *t2;
@@ -1312,7 +1312,7 @@ void get_term()
 		no_back_scroll = 1;
 	}
 }
-#endif /* LESS_PLATFORM */
+#endif
 }
 
 #if UNIX
@@ -1391,7 +1391,7 @@ static void tmodes(incap, outcap, instr, outstr, def_instr, def_outstr, spp)
 		*outstr = "";
 }
 
-#endif /* !LESS_PLATFORM */
+#endif
 
 
 /*

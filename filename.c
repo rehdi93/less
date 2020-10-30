@@ -774,8 +774,11 @@ char * lrealpath(char* path)
 	char rpath[PATH_MAX];
 	if (realpath(path, rpath) != NULL)
 		return (save(rpath));
-#endif
+#elif defined WIN32
+	return _fullpath(NULL, path, 0);
+#else
 	return (save(path));
+#endif
 }
 
 /*
