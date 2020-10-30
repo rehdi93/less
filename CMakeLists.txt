@@ -54,6 +54,7 @@ macro(perl_generate filename COMMAND script)
     endif()
     
     list(APPEND generated_files ${genfile})
+    unset(location CACHE)
 endmacro()
 
 perl_generate(help.c COMMAND mkhelp.pl < "less.hlp" > help.c)

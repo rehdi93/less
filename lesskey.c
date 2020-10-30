@@ -454,6 +454,7 @@ char * tstr(char **pp, int xlate)
 	return (buf);
 }
 
+// shared.c
 char* skipsp(char *s);
 
 /*
@@ -715,7 +716,7 @@ void parse_line(char *line)
 }
 
 #ifdef WIN32
-char* win32_get_home(void*(*allocfn)(size_t,size_t));
+char* win32_get_home();
 #endif
 
 
@@ -728,7 +729,7 @@ int main(int argc, char *argv[])
 #ifdef WIN32
 	if (getenv("HOME") == NULL)
 	{
-		char* home = win32_get_home(calloc);
+		char* home = win32_get_home();
 		_putenv_s("HOME", home);
 	}
 #endif /* WIN32 */
