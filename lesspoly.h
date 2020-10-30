@@ -17,8 +17,8 @@ void* calloc();
 void free();
 #endif
 #if !HAVE_STDBOOL_H
-enum bool_enum { false, true };
-typedef bool_enum bool;
+enum boolean { false, true };
+typedef enum boolean bool;
 #endif
 
 /*

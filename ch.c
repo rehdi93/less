@@ -136,6 +136,10 @@ extern char *namelogfile;
 
 static int ch_addbuf();
 
+#if defined(WIN32)
+static void sleep(unsigned long sec) { Sleep(sec*1000); }
+#endif
+
 /*
  * Get the character pointed to by the read pointer.
  */
@@ -308,11 +312,8 @@ read_more:
 				parg.p_string = wait_message();
 				ierror("%s", &parg);
 			}
-#if defined(WIN32)
-			Sleep(1000);
-#else
+
 			sleep(1);
-#endif
 			slept = true;
 
 #if HAVE_STAT_INO
@@ -372,8 +373,7 @@ found:
  * ch_ungetchar is a rather kludgy and limited way to push 
  * a single char onto an input file descriptor.
  */
-void
-	ch_ungetchar(c) int c;
+void ch_ungetchar(c) int c;
 {
 	if (c != -1 && ch_ungotchar != -1)
 		error("ch_ungetchar overrun", NULL_PARG);
@@ -793,7 +793,7 @@ static void ch_delbufs()
 /*
  * Is it possible to seek on a file descriptor?
  */
-int seekable(f) int f;
+int seekable(int f)
 {
 #if !UNIX
 	extern int fd0;
@@ -822,7 +822,7 @@ void ch_set_eof()
 /*
  * Initialize file state for a new file.
  */
-void ch_init(f, flags) int f; int flags;
+void ch_init(int f, int flags)
 {
 	/*
 	 * See if we already have a filestate for this file.

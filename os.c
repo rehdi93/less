@@ -34,11 +34,8 @@
  * _setjmp() does not exist; we just use setjmp().
  */
 #if HAVE__SETJMP && HAVE_SIGSETMASK
-#define SET_JUMP	_setjmp
-#define LONG_JUMP	_longjmp
-#else
-#define SET_JUMP	setjmp
-#define LONG_JUMP	longjmp
+#define setjmp	_setjmp
+#define longjmp	_longjmp
 #endif
 
 int reading;
@@ -52,8 +49,7 @@ extern int sigs;
  * A call to intread() from a signal handler will interrupt
  * any pending iread().
  */
-int iread(fd, buf, len)
-	int fd; unsigned char *buf; unsigned int len;
+int iread(int fd, unsigned char *buf, unsigned int len)
 {
 	int n;
 
@@ -72,7 +68,7 @@ start:
 		ungetch(c);
 	}
 #endif
-	if (SET_JUMP(read_label))
+	if (setjmp(read_label))
 	{
 		/*
 		 * We jumped here from intread.
@@ -162,7 +158,7 @@ start:
  */
 void intread()
 {
-	LONG_JUMP(read_label, 1);
+	longjmp(read_label, 1);
 }
 
 /*
@@ -220,7 +216,6 @@ char * errno_message(char *filename)
 	return (m);
 }
 
-/* #define HAVE_FLOAT 0 */
 
 static POSITION muldiv(POSITION val, POSITION num, POSITION den)
 {

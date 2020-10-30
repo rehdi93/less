@@ -101,7 +101,6 @@
     #define HAVE_DUP 1
     #define HAVE_POPEN 1
     #define HAVE_STAT 1
-    #define HAVE_SYS_ERRLIST 1
 
     #define HAVE__SETJMP 1
     #define HAVE_FCNTL_H 1
