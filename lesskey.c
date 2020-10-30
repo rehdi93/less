@@ -224,11 +224,15 @@ void usage()
 char * mkpathname(char *dirname, char *filename)
 {
 	char *pathname;
-
 	pathname = calloc(strlen(dirname) + strlen(filename) + 2, sizeof(char));
+
+#ifdef WIN32
+	_makepath(pathname, NULL, dirname, filename, NULL);
+#else
 	strcpy(pathname, dirname);
 	strcat(pathname, PATHNAME_SEP);
 	strcat(pathname, filename);
+#endif
 	return (pathname);
 }
 
