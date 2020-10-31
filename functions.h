@@ -6,11 +6,14 @@
 
 #include <stddef.h>
 
+/* main.c */
 char * save (const char *s);
 void* ecalloc (size_t count, size_t size);
 char * skipsp (char *s);
 int sprefix (char *ps, char *s, int uppercase);
 void quit (int status);
+
+/* screen.c */
 void raw_mode (int on);
 void scrsize (void);
 char * special_key_str (int key);
@@ -44,7 +47,11 @@ int win32_kbhit (void);
 char WIN32getch (void);
 void WIN32setcolors (int fg, int bg);
 void WIN32textout (char *text, int len);
+
+/* brac.c */
 void match_brac (int obrac, int cbrac, int forwdir, int n);
+
+/* ch.c */
 void ch_ungetchar (int c);
 void end_logfile (void);
 void sync_logfile (void);
@@ -64,6 +71,8 @@ void ch_init (int f, int flags);
 void ch_close (void);
 int ch_getflags (void);
 void ch_dump (void);
+
+/* charset.c */
 void setfmt (char *s, char **fmtvarptr, int *attrptr, char *default_fmt);
 void init_charset (void);
 int binary_char (LWCHAR c);
@@ -80,6 +89,8 @@ int is_composing_char (LWCHAR ch);
 int is_ubin_char (LWCHAR ch);
 int is_wide_char (LWCHAR ch);
 int is_combining_char (LWCHAR ch1, LWCHAR ch2);
+
+/* cmdbuf.c */
 void cmd_reset (void);
 void clear_cmd (void);
 void cmd_putstr (const char *s);
@@ -93,6 +104,8 @@ char * get_cmdbuf (void);
 char * cmd_lastpattern (void);
 void init_cmdhist (void);
 void save_cmdhist (void);
+
+/* command.c */
 int in_mca (void);
 void dispversion (void);
 int getcc (void);
@@ -100,9 +113,13 @@ void ungetcc (LWCHAR c);
 void ungetsc (char *s);
 LWCHAR peekcc (void);
 void commands (void);
+
+/* cvt.c */
 int cvt_length (int len, int ops);
 int * cvt_alloc_chpos (int len);
 void cvt_text (char *odst, char *osrc, int *chpos, int *lenp, int ops);
+
+/* decode.c */
 void expand_cmd_tables (void);
 void init_cmds (void);
 void add_fcmd_table (char *buf, int len);
@@ -114,6 +131,8 @@ int isnullenv (char* s);
 int lesskey (char *filename, int sysvar);
 void add_hometable (char *envname, char *def_filename, int sysvar);
 int editchar (int c, int flags);
+
+/* edit.c */
 void init_textlist (struct textlist *tlist, char *str);
 char * forw_textlist (struct textlist *tlist, char *prev);
 char * back_textlist (struct textlist *tlist, char *prev);
@@ -132,6 +151,8 @@ void reopen_curr_ifile (void);
 int edit_stdin (void);
 void cat_file (void);
 void use_logfile (char *filename);
+
+/* filename.c */
 char * shell_unquote (char *str);
 char * get_meta_escape (void);
 char * shell_quote (char *s);
@@ -148,6 +169,8 @@ char * bad_file (char *filename);
 POSITION filesize (int f);
 char * shell_coption (void);
 char * last_component (char *name);
+
+/* forwback.c */
 int eof_displayed (void);
 int entire_file_displayed (void);
 void squish_check (void);
@@ -157,6 +180,8 @@ void forward (int n, int force, int only_last);
 void backward (int n, int force, int only_last);
 int get_back_scroll (void);
 int get_one_screen (void);
+
+/* ifile.c */
 void del_ifile (IFILE h);
 IFILE next_ifile (IFILE h);
 IFILE prev_ifile (IFILE h);
@@ -179,9 +204,13 @@ void * get_altpipe (IFILE ifile);
 void set_altfilename (IFILE ifile, char *altfilename);
 char * get_altfilename (IFILE ifile);
 void if_dump (void);
+
+/* input.c */
 POSITION forw_line (POSITION curr_pos);
 POSITION back_line (POSITION curr_pos);
 void set_attnpos (POSITION pos);
+
+/* jump.c */
 void jump_forw (void);
 void jump_forw_buffered (void);
 void jump_back (LINENUM linenum);
@@ -189,6 +218,8 @@ void repaint (void);
 void jump_percent (int percent, long fraction);
 void jump_line_loc (POSITION pos, int sline);
 void jump_loc (POSITION pos, int sline);
+
+/* line.c */
 void init_line (void);
 int is_ascii_char (LWCHAR ch);
 void prewind (void);
@@ -206,14 +237,20 @@ void null_line (void);
 POSITION forw_raw_line (POSITION curr_pos, char **linep, int *line_lenp);
 POSITION back_raw_line (POSITION curr_pos, char **linep, int *line_lenp);
 int rrshift (void);
+
+/* linenum.c */
 void clr_linenum (void);
 void add_lnum (LINENUM linenum, POSITION pos);
 LINENUM find_linenum (POSITION pos);
 POSITION find_pos (LINENUM linenum);
 LINENUM currline (int where);
+
+/* lsystem.c */
 void lsystem (char *cmd, char *donemsg);
 int pipe_mark (int c, char *cmd);
 int pipe_data (char *cmd, POSITION spos, POSITION epos);
+
+/* mark.c */
 void init_mark (void);
 int badmark (int c);
 void setmark (int c, int where);
@@ -226,6 +263,8 @@ void unmark (IFILE ifile);
 void mark_check_ifile (IFILE ifile);
 void save_marks (FILE *fout, char *hdr);
 void restore_mark (char *line);
+
+/* optfunc.c */
 void opt_o (int type, char *s);
 void opt__O (int type, char *s);
 void opt_j (int type, char *s);
@@ -249,6 +288,8 @@ void opt_mousecap (int type, char *s);
 void opt_wheel_lines (int type, char *s);
 char * opt_toggle_disallowed(int c);
 int get_swindow (void);
+
+/* option.c */
 char * propt (int c);
 void scan_option (char *s);
 void toggle_option (struct loption *o, int lower, char *s, int how_toggle);
@@ -259,15 +300,21 @@ void nopendopt (void);
 int getnum (char **sp, char *printopt, int *errp);
 long getfraction (char **sp, char *printopt, int *errp);
 int get_quit_at_eof (void);
+
+/* opttbl.c */
 void init_option (void);
 struct loption * findopt (int c);
 struct loption * findopt_name (char **p_optname, char **p_oname, int *p_err);
+
+/* os.c */
 int iread (int fd, unsigned char *buf, unsigned int len);
 void intread (void);
 time_t get_time (void);
 char * errno_message (char *filename);
 int percentage (POSITION num, POSITION den);
 POSITION percent_pos (POSITION pos, int percent, long fraction);
+
+/* output.c */
 void put_line (void);
 void flush (void);
 int putchr (int c);
@@ -276,12 +323,16 @@ void get_return (void);
 void error (char *fmt, PARG *parg);
 void ierror (char *fmt, PARG *parg);
 int query (char *fmt, PARG *parg);
+
+/* pattern.c */
 int compile_pattern (char *pattern, int search_type, PATTERN_TYPE *comp_pattern);
 void uncompile_pattern (PATTERN_TYPE *pattern);
 int valid_pattern (char *pattern);
 int is_null_pattern (PATTERN_TYPE pattern);
 int match_pattern (PATTERN_TYPE pattern, char *tpattern, char *line, int line_len, char **sp, char **ep, int notbol, int search_type);
 char * pattern_lib_name (void);
+
+/* position.c */
 POSITION position (int sindex);
 void add_forw_pos (POSITION pos);
 void add_back_pos (POSITION pos);
@@ -292,11 +343,15 @@ int empty_screen (void);
 int empty_lines (int s, int e);
 void get_scrpos (struct scrpos *scrpos, int where);
 int sindex_from_sline (int sline);
+
+/* prompt.c */
 void init_prompt (void);
 char * pr_expand (const char *proto, int maxwidth);
 char * eq_message (void);
 char * pr_string (void);
 char * wait_message (void);
+
+/* search.c */
 void init_search (void);
 void repaint_hilite (int on);
 void clear_attn (void);
@@ -314,9 +369,13 @@ int search (int search_type, char *pattern, int n);
 void prep_hilite (POSITION spos, POSITION epos, int maxlines);
 void set_filter_pattern (char *pattern, int search_type);
 int is_filtering (void);
+
+/* signal.c */
 RETSIGTYPE winch (int type);
 void init_signals (int on);
 void psignals (void);
+
+/* tags.c */
 void cleantags (void);
 int gettagtype (void);
 void findtag (char *tag);
@@ -326,6 +385,8 @@ char * prevtag (int n);
 int ntags (void);
 int curr_tag (void);
 int edit_tagfile (void);
+
+/* ttyin.c */
 void open_getchr (void);
 void close_getchr (void);
 int default_wheel_lines (void);
