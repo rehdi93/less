@@ -4,8 +4,6 @@
     This replaces the old perl-generated funcs.h
 */
 
-#include <stddef.h>
-
 /* main.c */
 char * save (const char *s);
 void* ecalloc (size_t count, size_t size);
