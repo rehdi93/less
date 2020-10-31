@@ -1706,8 +1706,7 @@ static void win32_clear()
  * Remove the n topmost lines and scroll everything below it in the 
  * window upward.
  */
-void win32_scroll_up(n)
-	int n;
+void win32_scroll_up(int n)
 {
 	SMALL_RECT rcSrc, rcClip;
 	CHAR_INFO fillchar;
@@ -1846,8 +1845,7 @@ void check_winch()
 /*
  * Goto a specific line on the screen.
  */
-void goto_line(sindex)
-	int sindex;
+void goto_line(int sindex)
 {
 #if UNIX
 	tputs(tgoto(sc_move, 0, sindex), 1, putchr);

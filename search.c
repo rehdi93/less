@@ -1640,8 +1640,7 @@ int is_filtering()
  */
 int reg_show_error = 1;
 
-void  regerror(s) 
-	char *s; 
+void regerror(char *s)
 {
 	PARG parg;
 
