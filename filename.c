@@ -609,7 +609,9 @@ char* lglob(char* filename)
 	int length;
 	char *p;
 	char *qfilename;
-	struct lglob_s g = lglob_new(filename);
+
+	struct lglob_s g;
+	lglob_init(&g, filename);
 
 	if (lglob_failed(&g))
 	{
@@ -650,12 +652,12 @@ char* lglob(char* filename)
 	 * is called multiple times to walk thru all names.
 	 */
 	char *p;
-	int len;
-	int n;
 	char *pfilename;
 	char *qfilename;
 	
-	struct lglob_s g = lglob_new(filename);
+	// struct lglob_s g = lglob_new(filename);
+	struct lglob_s g;
+	lglob_init(&g, filename);
 	
 	if (lglob_failed(&g))
 	{
@@ -663,13 +665,15 @@ char* lglob(char* filename)
 	}
 
 	_splitpath(filename, g.drive, g.dir, g.fname, g.ext);
-	len = 100;
+
+	int len = 100;
 	gfilename = (char *) ecalloc(len, sizeof(char));
 	p = gfilename;
+
 	do {
-		n = (int) (strlen(g.drive) + strlen(g.dir) + strlen(g.find_data.name) + 1);
+		int n = (int) (strlen(g.drive) + strlen(g.dir) + strlen(g.current) + 1);
 		pfilename = (char *) ecalloc(n, sizeof(char));
-		snprintf(pfilename, n, "%s%s%s", g.drive, g.dir, g.find_data.name);
+		snprintf(pfilename, n, "%s%s%s", g.drive, g.dir, g.current);
 		qfilename = shell_quote(pfilename);
 		free(pfilename);
 		if (qfilename != NULL)

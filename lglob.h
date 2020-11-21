@@ -17,11 +17,10 @@
 
 struct lglob_s;
 
-struct lglob_s lglob_new();
+void lglob_init(struct lglob_s* g, const char* filename);
 bool lglob_failed(struct lglob_s* glob);
 bool lglob_next(struct lglob_s* glob);
 void lglob_done(struct lglob_s* glob);
-
 
 #if defined(WIN32) && (defined(_MSC_VER) || defined(MINGW))
 #define GLOB_NAME
@@ -31,24 +30,28 @@ struct lglob_s
 	struct _finddata_t find_data;
 	intptr_t handle;
 
+// public
 	char drive[_MAX_DRIVE]; char dir[_MAX_DIR]; 
 	char fname[_MAX_FNAME]; char ext[_MAX_EXT];
+
+	const char* current;
 };
 
-inline struct lglob_s lglob_new(const char* filename)
+// lglob_s has to be an out param, otherwise g.current doesn't work
+inline void lglob_init(struct lglob_s* g, const char* filename)
 {
-	struct lglob_s gd;
-	gd.handle = _findfirst(filename, &gd.find_data);
-	return gd;
+	g->handle = _findfirst(filename, &g->find_data);
+	g->current = g->find_data.name;
 }
 
 inline bool lglob_failed(struct lglob_s* glob) { return glob->handle == -1; }
 inline void lglob_done(struct lglob_s* glob) { _findclose(glob->handle); }
 
-inline bool lglob_next(struct lglob_s* glob)
+inline bool lglob_next(struct lglob_s* g)
 {
-	return _findnext(glob->handle, &glob->find_data) == 0;
+	return _findnext(g->handle, &g->find_data) == 0;
 }
+
 
 #elif OS2
 #define	GLOB_LIST
@@ -57,16 +60,16 @@ struct lglob_s
 {
 	char **list;
 	char **iter;
+
+// public
 	char *current;
 };
 
-inline struct lglob_s lglob_new(const char* filename)
+inline void lglob_init(struct lglob_s* g, const char* filename)
 {
-	struct lglob_s gd;
-	gd.current = NULL;
-	gd.list = _fnexplode(filename);
-	gd.iter = gd.list;
-	return gd;
+	g->current = NULL;
+	g->list = _fnexplode(filename);
+	g->iter = g->list;
 }
 
 inline bool lglob_failed(struct lglob_s* glob) { return glob->list == NULL; }
@@ -97,16 +100,16 @@ struct lglob_s
 {
 	glob_t list;
 	int i;
+	
+// public
 	char *current;
 };
 
-inline struct lglob_s lglob_new(const char* filename)
+inline void lglob_init(struct lglob_s* g, const char* filename)
 {
-	struct lglob_s gd;
-	glob(filename, GLOB_NOCHECK, 0, &gd.list);
-	gd.i = 0;
-	gd.current = NULL;
-	return gd;
+	glob(filename, GLOB_NOCHECK, 0, &g->list);
+	g->i = 0;
+	g->current = NULL;
 }
 
 inline bool lglob_failed(struct lglob_s*) { return false; }
@@ -136,15 +139,16 @@ struct lglob_s
 	struct find_t find_data;
 	unsigned handle;
 
+// public
 	char drive[_MAX_DRIVE]; char dir[_MAX_DIR];
 	char fname[_MAX_FNAME]; char ext[_MAX_EXT];
+
+	char* current;
 };
 
-inline struct lglob_s lglob_new(const char* filename)
+inline void lglob_init(struct lglob_s* g, const char* filename)
 {
-	struct lglob_s gd;
-	gd.handle = _dos_findfirst(filename, ~_A_VOLID, &gd.find_data);
-	return gd;
+	g->handle = _dos_findfirst(filename, ~_A_VOLID, &g->find_data);
 }
 
 inline bool lglob_failed(struct lglob_s* glob) { return glob->handle != 0; }
@@ -163,15 +167,17 @@ struct lglob_s
 	struct ffblk find_data;
 	int handle;
 
+// public
 	char drive[MAXDRIVE]; char dir[MAXDIR];
 	char fname[MAXFILE]; char ext[MAXEXT];
+
+	char* current;
 };
 
-inline struct lglob_s lglob_new(const char* filename)
+inline void lglob_init(struct lglob_s* g, const char* filename)
 {
-	struct lglob_s gd;
-	gd.handle = findfirst(filename, &gd.find_data);
-	return gd;
+	g->handle = findfirst(filename, &g->find_data);
+	g->current = g->find_data.ff_name;
 }
 inline bool lglob_failed(struct lglob_s* glob) { return glob->handle != 0; }
 inline bool lglob_next(struct lglob_s* glob)
