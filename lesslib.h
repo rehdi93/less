@@ -5,9 +5,7 @@
  * Defines types used by less
  */
 
-#ifndef SECURE
-#include "defines.h"
-#endif
+#include "lessdef.h"
 
 #ifndef LESSLIB_H
 #define LESSLIB_H
@@ -114,7 +112,5 @@ struct hilite_tree;
 
 #endif // LESSLIB_H
 
-/*
- * Polyfill.
- */
+/* Polyfills. */
 #include "lesspoly.h"

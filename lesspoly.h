@@ -3,9 +3,8 @@
 /*
  * Include file for polyfills.
  */
-#ifndef SECURE
-#include "defines.h"
-#endif
+
+#include "lessdef.h"
 
 #ifndef LESSPOLY_H
 #define LESSPOLY_H

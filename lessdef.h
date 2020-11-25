@@ -4,10 +4,24 @@
  * Include file for defines and constants.
  */
 
-#include "lesspoly.h"
+#ifndef SECURE
+#include "defines.h"
+#endif
 
 #ifndef LESSDEF_H
 #define LESSDEF_H
+
+/* platform detection helpers. keep this @ the top */
+#if defined DOS_DJGPPC || defined DOS_BORLAND || defined DOS_MSC
+#   define DOS_PLATFORM 1
+#endif
+
+#if defined WIN32 || defined DOS_PLATFORM
+//  !UNIX
+#else
+#   define UNIX 1
+#endif
+
 
 #define MIN_LINENUM_WIDTH  7	/* Min printing width of a line number */
 #define MAX_UTF_CHAR_LEN   6	/* Max bytes in one UTF-8 char */
@@ -123,5 +137,53 @@
 #define	OPT_ONPLUS	2
 
 #define	BAD_LSEEK	((off_t)-1)
+
+/*
+ * Flags for open()
+ */
+#if !UNIX || OS2
+#   define	OPEN_READ	(O_RDONLY|O_BINARY)
+#elif defined(_OSK)
+#   define	OPEN_READ	(S_IREAD)
+#elif defined(O_RDONLY)
+#   define	OPEN_READ	(O_RDONLY)
+#else
+#   define	OPEN_READ	(0)
+#endif
+
+#if defined(O_WRONLY) && defined(O_APPEND)
+#   define	OPEN_APPEND	(O_APPEND|O_WRONLY)
+#elif defined(_OSK)
+#   define OPEN_APPEND	(S_IWRITE)
+#else
+#   define	OPEN_APPEND	(1)
+#endif
+
+#define	CSI		((unsigned char)'\233')
+#define	CHAR_END_COMMAND 0x40000000
+#define IS_CSI_START(c)	(((LWCHAR)(c)) == ESC || (((LWCHAR)(c)) == CSI))
+
+/*
+ * Set a file descriptor to binary mode.
+ */
+#if !UNIX || OS2
+#define	SET_BINARY(f)	setmode(f, O_BINARY)
+#else
+#define	SET_BINARY(f)
+#endif
+
+/*
+ * Does the shell treat "?" as a metacharacter?
+ */
+#if !UNIX || OS2 || _OSK
+#define	SHELL_META_QUEST 0
+#else
+#define	SHELL_META_QUEST 1
+#endif
+
+#define	SPACES_IN_FILENAMES 1
+
+#define	FAKE_HELPFILE	"@/\\less/\\help/\\file/\\@"
+#define FAKE_EMPTYFILE	"@/\\less/\\empty/\\file/\\@"
 
 #endif
