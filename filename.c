@@ -7,7 +7,6 @@
  */
 
 #include "less.h"
-#include "lglob.h"
 #include "pckeys.h"
 
 #if !UNIX
@@ -584,11 +583,7 @@ static FILE * shellcmd(char *cmd)
 #endif /* HAVE_POPEN */
 
 
-// inline declarations, as per C99
-extern struct lglob_s lglob_new();
-extern bool lglob_failed(struct lglob_s* gb);
-extern void lglob_done(struct lglob_s* gb);
-extern bool lglob_next(struct lglob_s* gb);
+#include "lglob.h"
 
 /*
  * Expand a filename, doing any system-specific metacharacter substitutions.
@@ -611,13 +606,14 @@ char* lglob(char* filename)
 	char *qfilename;
 
 	struct lglob_s g;
-	lglob_init(&g, filename);
 
-	if (lglob_failed(&g))
+	if (!lglob_init(&g, filename))
 	{
 		return filename;
 	}
 	length = 1; /* Room for trailing null byte */
+
+	/* measure and alloc buffer */
 	while (lglob_next(&g))
 	{
 		p = g.current;
@@ -628,6 +624,8 @@ char* lglob(char* filename)
 			free(qfilename);
 		}
 	}
+	
+	/* copy names */
 	gfilename = (char *) ecalloc(length, sizeof(char));
 	while (lglob_next(&g))
 	{
@@ -655,11 +653,9 @@ char* lglob(char* filename)
 	char *pfilename;
 	char *qfilename;
 	
-	// struct lglob_s g = lglob_new(filename);
 	struct lglob_s g;
-	lglob_init(&g, filename);
 	
-	if (lglob_failed(&g))
+	if (!lglob_init(&g, filename))
 	{
 		return filename;
 	}
@@ -672,10 +668,13 @@ char* lglob(char* filename)
 
 	do {
 		int n = (int) (strlen(g.drive) + strlen(g.dir) + strlen(g.current) + 1);
+
 		pfilename = (char *) ecalloc(n, sizeof(char));
 		snprintf(pfilename, n, "%s%s%s", g.drive, g.dir, g.current);
+
 		qfilename = shell_quote(pfilename);
 		free(pfilename);
+
 		if (qfilename != NULL)
 		{
 			n = (int) strlen(qfilename);
