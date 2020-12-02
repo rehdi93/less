@@ -31,11 +31,13 @@
 
  not implemented.
  */
+
 struct lglob_s;
 
 bool lglob_init(struct lglob_s* g, const char* filename);
 bool lglob_next(struct lglob_s* glob);
 void lglob_done(struct lglob_s* glob);
+bool lglob_restart(struct lglob_s* g);
 
 #if defined(WIN32) && (defined(_MSC_VER) || defined(MINGW))
 #define GLOB_NAME
@@ -98,10 +100,15 @@ bool lglob_next(struct lglob_s* glob)
 		return true;
 	}
 	else {
-		glob->iter = glob->list;
-		glob->current = NULL;
 		return false;
 	}
+}
+
+bool lglob_restart(struct lglob_s* g)
+{
+	g->iter = g->list;
+	g->current = NULL;
+	return true;
 }
 
 void lglob_done(struct lglob_s* glob)
@@ -136,10 +143,15 @@ bool lglob_next(struct lglob_s* g)
 		return true;
 	}
 	else {
-		g->i = 0;
-		g->current = NULL;
 		return false;
 	}
+}
+
+bool lglob_restart(struct lglob_s* g)
+{
+	g->i = 0;
+	g->current = NULL;
+	return true;
 }
 
 void lglob_done(struct lglob_s* g)
@@ -182,7 +194,7 @@ typedef struct ffblk finddata_t;
 
 struct lglob_s
 {
-	struct ffblk find_data;
+	finddata_t find_data;
 
 // public
 	char drive[MAXDRIVE]; char dir[MAXDIR];

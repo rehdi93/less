@@ -624,6 +624,8 @@ char* lglob(char* filename)
 			free(qfilename);
 		}
 	}
+
+	lglob_restart(&g);
 	
 	/* copy names */
 	gfilename = (char *) ecalloc(length, sizeof(char));
