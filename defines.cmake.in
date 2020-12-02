@@ -39,7 +39,6 @@
 #define HAVE_TIME_H 1
 #define HAVE_TIME_T 1
 #define HAVE_UPPER_LOWER 1
-#define HAVE_VOID 1
 #define HAVE_WCTYPE 1
 #define HAVE_WCTYPE_H 1
 #define HAVE_REALLOC 1
@@ -101,7 +100,6 @@
     #define HAVE_DUP 1
     #define HAVE_POPEN 1
     #define HAVE_STAT 1
-
     #define HAVE__SETJMP 1
     #define HAVE_FCNTL_H 1
     #define HAVE_FILENO 1
@@ -115,9 +113,9 @@
     #endif
 #else /* UNIX */
     #define	PATHNAME_SEP	"/"
+
     #define TGETENT_OK  1
     #define	HAVE_SHELL	1
-
     #define	HAVE_DUP 1
     #define HAVE_FCNTL_H 1
     #define HAVE_POPEN 1
