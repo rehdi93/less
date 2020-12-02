@@ -460,16 +460,7 @@ char * tstr(char **pp, int xlate)
 
 // shared.c
 char* skipsp(char *s);
-
-/*
- * Skip non-space characters in a string.
- */
-char * skipnsp(char *s)
-{
-	while (*s != '\0' && *s != ' ' && *s != '\t')
-		s++;
-	return (s);
-}
+char* skipnsp(char *s);
 
 /*
  * Clean up an input line:

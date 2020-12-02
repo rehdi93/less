@@ -7,11 +7,21 @@
 /*
  * Skip leading spaces in a string.
  */
-char *skipsp(char *s)
+char* skipsp(char *s)
 {
   while (IS_SPACE(*s)) s++;
   return s;
 }
+
+/*
+ * Skip non-space characters in a string.
+ */
+char* skipnsp(char *s)
+{
+  while (!IS_SPACE(*s)) s++;
+  return (s);
+}
+
 
 #ifdef WIN32
 /*

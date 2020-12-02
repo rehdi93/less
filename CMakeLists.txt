@@ -72,13 +72,9 @@ add_executable(less ${LESS_SRC} help.c)
 add_executable(lesskey lesskey.c)
 add_executable(lessecho lessecho.c)
 
-# sudo lib for common settings
-set(COMMON_SRC version.c shared.c)
-list(TRANSFORM COMMON_SRC PREPEND ${CMAKE_SOURCE_DIR}/)
-
-add_library(common INTERFACE)
-target_sources(common INTERFACE ${COMMON_SRC})
-target_include_directories(common INTERFACE ${CMAKE_CURRENT_BINARY_DIR}) # for defines.h
+# lib for common files and settings
+add_library(common OBJECT version.c shared.c)
+target_include_directories(common PUBLIC ${CMAKE_CURRENT_BINARY_DIR}) # for defines.h
 
 target_link_libraries(less PRIVATE common)
 target_link_libraries(lesskey PRIVATE common)

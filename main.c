@@ -272,6 +272,7 @@ int main(int argc, char *argv[])
 /*
  * Copy a string to a "safe" place
  * (that is, to a buffer allocated by calloc).
+ * Same as strdup
  */
 char * save(const char *s)
 {
