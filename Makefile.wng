@@ -72,7 +72,7 @@ endif
 
 # This rule allows us to supply the necessary -D options
 # in addition to whatever the user asks for.
-.c.o:
+%.o: %.c
 	${CC} -c -I. ${CFLAGS} $<
 
 LESS_SRC = brac.c ch.c charset.c cmdbuf.c command.c		\

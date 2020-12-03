@@ -20,7 +20,7 @@ LIBS = user32.lib
 
 # This rule allows us to supply the necessary -D options
 # in addition to whatever the user asks for.
-.c.obj::
+%.obj: %.c
 	$(CC) $(CFLAGS) $<
 
 SHARED_OBJ = version.obj shared.obj
@@ -33,7 +33,7 @@ OBJ = \
 	output.obj pattern.obj position.obj prompt.obj search.obj signal.obj \
 	tags.obj ttyin.obj regexp.obj
 
-all: less.exe lesskey.exe lessecho.exe
+all: less.exe lesskey.exe
 
 less.exe: $(OBJ) $(SHARED_OBJ)
 	$(LD) $(LDFLAGS) $** $(LIBS) /out:$@
@@ -51,7 +51,8 @@ defines.h: defines.wn
 $(OBJ): less.h defines.h functions.h cmd.h
 
 clean:
-	-del *.obj 
+	-del *.obj
+	-del defines.h
 	-del less.exe
 	-del lesskey.exe
 

@@ -40,7 +40,7 @@ SHELL = /bin/sh
 
 # This rule allows us to supply the necessary -D options
 # in addition to whatever the user asks for.
-.c.o:
+%.o: %.c
 	${CC} -I. ${CFLAGS_COMPILE_ONLY} -DBINDIR=\"${bindir}\" -DSYSDIR=\"${sysconfdir}\" ${CPPFLAGS} ${CFLAGS} $<
 
 SHARED_OBJ = version.${O} shared.${O}
