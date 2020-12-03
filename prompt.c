@@ -95,12 +95,14 @@ static void ap_char(char c)
 	ap_str(buf);
 }
 
+#define BUFSIZE(t)  INT_STRLEN_BOUND(t) + 2
+
 /*
  * Append a POSITION (as a decimal integer) to the end of the message.
  */
 static void ap_pos(POSITION pos)
 {
-	char buf[INT_STRLEN_BOUND(pos) + 2];
+	char buf[BUFSIZE(pos)];
 
 	postoa(pos, buf);
 	ap_str(buf);
@@ -111,7 +113,7 @@ static void ap_pos(POSITION pos)
  */
 static void ap_linenum(LINENUM linenum)
 {
-	char buf[INT_STRLEN_BOUND(linenum) + 2];
+	char buf[BUFSIZE(linenum)];
 
 	linenumtoa(linenum, buf);
 	ap_str(buf);
@@ -122,11 +124,13 @@ static void ap_linenum(LINENUM linenum)
  */
 static void ap_int(int num)
 {
-	char buf[INT_STRLEN_BOUND(num) + 2];
+	char buf[BUFSIZE(num)];
 
 	inttoa(num, buf);
 	ap_str(buf);
 }
+
+#undef BUFSIZE
 
 /*
  * Append a question mark to the end of the message.

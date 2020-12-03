@@ -446,12 +446,10 @@ void putstr(const char *s)
 #define TBUF_SIZE INT_STRLEN_BOUND(num)+2
 static void integral_to_string(long num, char *buf)
 {
-	char tbuf[TBUF_SIZE];
-
 #if HAVE_STDIO_H
-	snprintf(tbuf, TBUF_SIZE, "%ld", num);
-	char *s = tbuf;
+	snprintf(buf, TBUF_SIZE, "%ld", num);
 #else
+	char tbuf[TBUF_SIZE];
 	bool neg = (num < 0);
 	char *s = tbuf + sizeof(tbuf);
 	if (neg)
@@ -463,8 +461,8 @@ static void integral_to_string(long num, char *buf)
 	} while ((num /= 10) != 0);
 	if (neg)
 		*--s = '-';
-#endif
 	strcpy(buf, s);
+#endif
 }
 #undef TBUF_SIZE
 

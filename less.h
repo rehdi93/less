@@ -21,4 +21,5 @@ POSITION lstrtopos (char* str, char** end_ptr);
 int pclose(FILE*);
 #endif
 
+/* same as error(msg, NULL_PARG) */
 void error_(const char* msg);
