@@ -4,7 +4,6 @@
  * Routines to do pattern matching.
  */
 
-#include "lessdef.h"
 #include "lesslib.h"
 #include "pattern.h"
 #include "functions.h"
@@ -144,7 +143,7 @@ int compile_pattern(char *pattern, int search_type, PATTERN_TYPE *comp_pattern)
 		cvt_pattern = pattern;
 	else
 	{
-		cvt_pattern = (char*) ecalloc(1, cvt_length(strlen(pattern), CVT_TO_LC));
+		cvt_pattern = (char*) ecalloc(1, (size_t)cvt_length((int)strlen(pattern), CVT_TO_LC));
 		cvt_text(cvt_pattern, pattern, (int *)NULL, (int *)NULL, CVT_TO_LC);
 	}
 	result = compile_pattern2(cvt_pattern, search_type, comp_pattern, 1);
@@ -294,7 +293,7 @@ int match_pattern(PATTERN_TYPE pattern, char *tpattern, char *line, int line_len
 	search_type |= SRCH_NO_REGEX;
 #endif
 	if (search_type & SRCH_NO_REGEX)
-		matched = match(tpattern, strlen(tpattern), line, line_len, sp, ep);
+		matched = match(tpattern, (int)strlen(tpattern), line, line_len, sp, ep);
 	else
 	{
 #if HAVE_GNU_REGEX
