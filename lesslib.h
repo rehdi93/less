@@ -103,6 +103,7 @@ struct wchar_range_table
 struct mlist;
 struct loption;
 struct hilite_tree;
+struct ansi_state;
 
 /*
  * An IFILE represents an input file.

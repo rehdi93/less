@@ -40,7 +40,7 @@ extern int so_fg_color, so_bg_color;
 extern int bl_fg_color, bl_bg_color;
 extern int sgr_mode;
 #if defined(WIN32)
-extern bool vt_enabled;
+extern int vt_enabled;
 #endif
 #endif
 
@@ -116,7 +116,7 @@ void flush()
 	if (is_tty && any_display)
 	{
 		*ob = '\0';
-		if (ctldisp != OPT_ONPLUS || vt_enabled)
+		if (ctldisp != OPT_ONPLUS || (vt_enabled && sgr_mode))
 			WIN32textout(obuf, ob - obuf);
 		else
 		{
@@ -356,11 +356,7 @@ void flush()
 					if (at & 16)
 						f = b ^ 8;
 					f &= 0xf;
-#if defined(WIN32)
-					b &= 0xf | (COMMON_LVB_UNDERSCORE >> 4);
-#else
  					b &= 0xf;
-#endif
 					WIN32setcolors(f, b);
 					p_next = anchor = p + 1;
 				} else

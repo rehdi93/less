@@ -149,8 +149,8 @@ static int sy_fg_color;		/* Color of system text (before less) */
 static int sy_bg_color;
 int sgr_mode;		/* Honor ANSI sequences rather than using above */
 #if defined(WIN32)
-DWORD init_output_mode;		/* The initial console output mode */
-bool vt_enabled;		/* Is virtual terminal processing available? */
+static DWORD init_output_mode;	/* The initial console output mode */
+int vt_enabled = -1;	/* Is virtual terminal processing available? */
 #endif
 #else
 
@@ -1041,6 +1041,7 @@ void get_term()
 	 * before any file operations have been done on fd0.
 	 */
 	SET_BINARY(0);
+	GetConsoleMode(con_out, &init_output_mode);
 	GetConsoleScreenBufferInfo(con_out, &scr);
 	curr_attr = scr.wAttributes;
 	sy_bg_color = (curr_attr & BG_COLORS) >> 4; /* normalize */
@@ -1430,6 +1431,32 @@ static void initcolor()
 #if defined(WIN32)
 
 /*
+ * Enable virtual terminal processing, if available.
+ */
+void win32_init_vt_term()
+{
+	DWORD output_mode;
+
+	if (vt_enabled == 0 || (vt_enabled == 1 && con_out == con_out_ours))
+		return;
+
+	GetConsoleMode(con_out, &output_mode);
+	vt_enabled = SetConsoleMode(con_out,
+		       output_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+	if (vt_enabled)
+	{
+	    auto_wrap = 0;
+	    ignaw = 1;
+	}
+}
+
+static void win32_deinit_vt_term()
+{
+	if (vt_enabled == 1 && con_out == con_out_save)
+		SetConsoleMode(con_out, init_output_mode);
+}
+
+/*
  * Termcap-like init with a private win32 console.
  */
 static void win32_init_term()
@@ -1444,8 +1471,6 @@ static void win32_init_term()
 
 	if (con_out_ours == INVALID_HANDLE_VALUE)
 	{
-		DWORD output_mode;
-
 		/*
 		 * Create our own screen buffer, so that we
 		 * may restore the original when done.
@@ -1456,12 +1481,6 @@ static void win32_init_term()
 			(LPSECURITY_ATTRIBUTES) NULL,
 			CONSOLE_TEXTMODE_BUFFER,
 			(LPVOID) NULL);
-		/*
-		 * Enable virtual terminal processing, if available.
-		 */
-		GetConsoleMode(con_out_ours, &output_mode);
-		vt_enabled = SetConsoleMode(con_out_ours,
-			       output_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 	}
 
 	size.X = scr.srWindow.Right - scr.srWindow.Left + 1;
@@ -1562,6 +1581,7 @@ void init()
 		 */
 		vt_enabled = SetConsoleMode(con_out, init_output_mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 	}
+	win32_init_vt_term();
 #endif
 	initcolor();
 	flush();
@@ -1589,6 +1609,7 @@ void deinit()
 	/* Restore system colors. */
 	SETCOLORS(sy_fg_color, sy_bg_color);
 #if defined(WIN32)
+	win32_deinit_vt_term();
 	if (!(quit_if_one_screen && one_screen))
 	{
 		deinit_mouse();

@@ -8,6 +8,12 @@ NROFF = nroff -t -man
 
 srcdir = .
 
+ifeq ($(USE_PYTHON),1)
+	MKHELP = mkhelp.py
+else
+	MKHELP = mkhelp.pl
+endif
+
 SRC = \
 	main.c screen.c brac.c ch.c charset.c cmdbuf.c \
 	command.c cvt.c decode.c edit.c filename.c forwback.c \
@@ -32,7 +38,7 @@ DISTFILES = \
 	pckeys.h pattern.h position.h os_defs.h \
 	install.sh defines.h.in mkinstalldirs \
 	less.nro less.man lesskey.nro lesskey.man lessecho.nro lessecho.man \
-	less.hlp mkhelp.pl \
+	less.hlp mkhelp.pl mkhelp.py \
 	mkutable $(UNICODE_FILES) \
 	${DISTFILES_W}
 
@@ -49,7 +55,7 @@ release: .FORCE
 help.c: less.hlp 
 	-mv -f ${srcdir}/help.c ${srcdir}/help.c.old
 	rm -rf help.c
-	${srcdir}/mkhelp.pl < less.hlp > help.c
+	${srcdir}/${MKHELP} < less.hlp > help.c
 	if cmp -s help.c help.c.old; then mv -f help.c.old help.c; fi
 
 ${srcdir}/configure ${srcdir}/defines.h.in: ${srcdir}/configure.ac ${srcdir}/Makefile.in

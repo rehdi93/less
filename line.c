@@ -19,6 +19,7 @@
 static char *linebuf = NULL;	/* Buffer which holds the current output line */
 static char *attr = NULL;	/* Extension of linebuf to hold attributes */
 int size_linebuf = 0;	/* Size of line buffer (and attr buffer) */
+static struct ansi_state *line_ansi = NULL;
 
 static int cshift;		/* Current left-shift of output line buffer */
 int hshift;		/* Desired left-shift of output line buffer */
@@ -68,6 +69,13 @@ static char mbc_buf[MAX_UTF_CHAR_LEN];
 static int mbc_buf_len = 0;
 static int mbc_buf_index = 0;
 static POSITION mbc_pos;
+
+/* State while processing an ANSI escape sequence */
+struct ansi_state {
+	int hindex;   /* Index into hyperlink prefix */
+	int hlink;    /* Processing hyperlink address? */
+	int prev_esc; /* Prev char was ESC */
+};
 
 /*
  * Initialize from environment variables.
@@ -271,19 +279,19 @@ static void pshift(int shift)
 	 */
 	while (shifted <= shift && from < curr)
 	{
+		struct ansi_state *pansi;
 		c = linebuf[from];
-		if (ctldisp == OPT_ONPLUS && IS_CSI_START(c))
+		if (ctldisp == OPT_ONPLUS && (pansi = ansi_start(c)) != NULL)
 		{
 			/* Keep cumulative effect.  */
-			linebuf[to] = c;
-			attr[to++] = attr[from++];
 			while (from < curr && linebuf[from])
 			{
 				linebuf[to] = linebuf[from];
 				attr[to++] = attr[from];
-				if (!is_ansi_middle(linebuf[from++]))
+				if (ansi_step(pansi, linebuf[from++]) != ANSI_MID)
 					break;
-			} 
+			}
+			ansi_done(pansi);
 			continue;
 		}
 
@@ -504,28 +512,6 @@ static int backc()
 }
 
 /*
- * Are we currently within a recognized ANSI escape sequence?
- */
-static int in_ansi_esc_seq()
-{
-	char *p;
-
-	/*
-	 * Search backwards for either an ESC (which means we ARE in a seq);
-	 * or an end char (which means we're NOT in a seq).
-	 */
-	for (p = &linebuf[curr];  p > linebuf; )
-	{
-		LWCHAR ch = step_char(&p, -1, linebuf);
-		if (IS_CSI_START(ch))
-			return (1);
-		if (!is_ansi_middle(ch))
-			return (0);
-	}
-	return (0);
-}
-
-/*
  * Is a character the end of an ANSI escape sequence?
  */
 int is_ansi_end(LWCHAR ch)
@@ -551,15 +537,75 @@ int is_ansi_middle(LWCHAR ch)
  * Skip past an ANSI escape sequence.
  * pp is initially positioned just after the CSI_START char.
  */
-void skip_ansi(char **pp, const char *limit)
+void skip_ansi(struct ansi_state *pansi, char **pp, const char *limit)
 {
 	LWCHAR c;
 	do {
 		c = step_char(pp, +1, limit);
-	} while (*pp < limit && is_ansi_middle(c));
-	/* Note that we discard final char, for which is_ansi_middle is false. */
+	} while (*pp < limit && ansi_step(pansi, c) != ANSI_MID);
+	/* Note that we discard final char, for which is_ansi_end is true. */
 }
 
+/*
+ * Determine if a character starts an ANSI escape sequence.
+ * If so, return an ansi_state struct; otherwise return NULL.
+ */
+struct ansi_state *ansi_start(LWCHAR ch)
+{
+	struct ansi_state *pansi;
+
+	if (!IS_CSI_START(ch))
+		return NULL;
+	pansi = ecalloc(1, sizeof(struct ansi_state));
+	pansi->hindex = 0;
+	pansi->hlink = 0;
+	pansi->prev_esc = 0;
+	return pansi;
+}
+
+/*
+ * Determine whether the next char in an ANSI escape sequence
+ * ends the sequence.
+ */
+int ansi_step(struct ansi_state *pansi, LWCHAR ch)
+{
+	if (pansi->hlink)
+	{
+		/* Hyperlink ends with \7 or ESC-backslash. */
+		if (ch == '\7')
+			return ANSI_END;
+		if (pansi->prev_esc && ch == '\\')
+			return ANSI_END;
+		pansi->prev_esc = (ch == ESC);
+		return ANSI_MID;
+	}
+	if (pansi->hindex >= 0)
+	{
+		static char hlink_prefix[] = ESCS "]8;";
+		if (ch == hlink_prefix[pansi->hindex++] ||
+		    (pansi->hindex == 0 && IS_CSI_START(ch)))
+		{
+			if (hlink_prefix[pansi->hindex] == '\0')
+				pansi->hlink = 1; /* now processing hyperlink addr */
+			return ANSI_MID;
+		}
+		pansi->hindex = -1; /* not a hyperlink */
+	}
+	/* Check for SGR sequences */
+	if (is_ansi_middle(ch))
+		return ANSI_MID;
+	if (is_ansi_end(ch))
+		return ANSI_END;
+	return ANSI_ERR;
+}
+
+/*
+ * Free an ansi_state structure.
+ */
+void ansi_done(struct ansi_state *pansi)
+{
+	free(pansi);
+}
 
 /*
  * Append a character and attribute to the line buffer.
@@ -599,28 +645,9 @@ static int store_char(LWCHAR ch, int a, char* rep, POSITION pos)
 	}
 #endif
 
-	if (ctldisp == OPT_ONPLUS && in_ansi_esc_seq())
-	{
-		if (!is_ansi_end(ch) && !is_ansi_middle(ch)) {
-			/* Remove whole unrecognized sequence.  */
-			char *p = &linebuf[curr];
-			LWCHAR bch;
-			do {
-				bch = step_char(&p, -1, linebuf);
-			} while (p > linebuf && !IS_CSI_START(bch));
-			curr = (int) (p - linebuf);
-			return 0;
-		}
-		a = AT_ANSI;	/* Will force re-AT_'ing around it.  */
+	if (a == AT_ANSI) {
 		w = 0;
-	}
-	else if (ctldisp == OPT_ONPLUS && IS_CSI_START(ch))
-	{
-		a = AT_ANSI;	/* Will force re-AT_'ing around it.  */
-		w = 0;
-	}
-	else
-	{
+	} else {
 		char *p = &linebuf[curr];
 		LWCHAR prev_ch = step_char(&p, -1, linebuf);
 		w = pwidth(ch, a, prev_ch);
@@ -823,18 +850,6 @@ int pappend(int c, POSITION pos)
 				goto retry;
  		}
 	}
-
-	/*
-	 * If we need to shift the line, do it.
-	 * But wait until we get to at least the middle of the screen,
-	 * so shifting it doesn't affect the chars we're currently
-	 * pappending.  (Bold & underline can get messed up otherwise.)
-	 */
-	if (cshift < hshift && column > sc_width / 2)
-	{
-		linebuf[curr] = '\0';
-		pshift(hshift - cshift);
-	}
 	if (r)
 	{
 		/* How many chars should caller back up? */
@@ -845,32 +860,76 @@ int pappend(int c, POSITION pos)
 
 static int do_append(LWCHAR ch, char *rep, POSITION pos)
 {
-	int a;
-	LWCHAR prev_ch;
+	if (ctldisp == OPT_ON)
+	{
+		/* Output the character itself. */
+		STORE_CHAR(ch, AT_NORMAL, rep, pos);
+	} else 
+	{
+		/* Output a printable representation of the character. */
+		STORE_PRCHAR((char) ch, pos);
+	}
+	return (0);
+}
 
-	a = AT_NORMAL;
+static int store_ansi(LWCHAR ch, char *rep, POSITION pos)
+{
+	switch (ansi_step(line_ansi, ch))
+	{
+	case ANSI_MID:
+		STORE_CHAR(ch, AT_ANSI, rep, pos);
+		break;
+	case ANSI_END:
+		STORE_CHAR(ch, AT_ANSI, rep, pos);
+		ansi_done(line_ansi);
+		line_ansi = NULL;
+		break;
+	case ANSI_ERR: {
+		/* Remove whole unrecognized sequence.  */
+		char *p = &linebuf[curr];
+		LWCHAR bch;
+		do {
+			bch = step_char(&p, -1, linebuf);
+		} while (p > linebuf && !IS_CSI_START(bch));
+		curr = (int) (p - linebuf);
+		break; }
+	}
+	return (0);
+} 
+
+static int store_bs(LWCHAR ch, char *rep, POSITION pos)
+{
+	/*
+	 * A better test is needed here so we don't
+	 * backspace over part of the printed
+	 * representation of a binary character.
+	 */
+	if (bs_mode == BS_CONTROL)
+		return store_control_char(ch, rep, pos);
+	else if (   curr <= lmargin
+		|| column <= lmargin
+		|| (attr[curr - 1] & (AT_ANSI|AT_BINARY)))
+		STORE_PRCHAR('\b', pos);
+	else if (bs_mode == BS_NORMAL)
+		STORE_CHAR(ch, AT_NORMAL, NULL, pos);
+	else if (bs_mode == BS_SPECIAL)
+		overstrike = backc();
+
+	return 0;
+}
+
+static int do_append(LWCHAR ch, char *rep, POSITION pos)
+{
+	int a = AT_NORMAL;
+
+	if (ctldisp == OPT_ONPLUS && line_ansi == NULL)
+		line_ansi = ansi_start(ch);
+
+	if (line_ansi != NULL)
+		return store_ansi(ch, rep, pos);
 
 	if (ch == '\b')
-	{
-		if (bs_mode == BS_CONTROL)
-			goto do_control_char;
-
-		/*
-		 * A better test is needed here so we don't
-		 * backspace over part of the printed
-		 * representation of a binary character.
-		 */
-		if (   curr <= lmargin
-		    || column <= lmargin
-		    || (attr[curr - 1] & (AT_ANSI|AT_BINARY)))
-			STORE_PRCHAR('\b', pos);
-		else if (bs_mode == BS_NORMAL)
-			STORE_CHAR(ch, AT_NORMAL, NULL, pos);
-		else if (bs_mode == BS_SPECIAL)
-			overstrike = backc();
-
-		return 0;
-	}
+		return store_bs(ch, rep, pos);
 
 	if (overstrike > 0)
 	{
@@ -881,6 +940,7 @@ static int do_append(LWCHAR ch, char *rep, POSITION pos)
 		 * bold (if an identical character is overstruck),
 		 * or just deletion of the character in the buffer.
 		 */
+		LWCHAR prev_ch;
 		overstrike = utf_mode ? -1 : 0;
 		if (utf_mode)
 		{
@@ -930,7 +990,7 @@ static int do_append(LWCHAR ch, char *rep, POSITION pos)
 			overstrike = 0;
 	}
 
-	if (ch == '\t') 
+	if (ch == '\t')
 	{
 		/*
 		 * Expand a tab into spaces.
@@ -938,31 +998,20 @@ static int do_append(LWCHAR ch, char *rep, POSITION pos)
 		switch (bs_mode)
 		{
 		case BS_CONTROL:
-			goto do_control_char;
+			return store_control_char(ch, rep, pos);
 		case BS_NORMAL:
 		case BS_SPECIAL:
 			STORE_TAB(a, pos);
 			break;
 		}
-	} else if ((!utf_mode || is_ascii_char(ch)) && control_char((char)ch))
+		return (0);
+	}
+	if ((!utf_mode || is_ascii_char(ch)) && control_char((char)ch))
 	{
-	do_control_char:
-		if (ctldisp == OPT_ON || (ctldisp == OPT_ONPLUS && IS_CSI_START(ch)))
-		{
-			/*
-			 * Output as a normal character.
-			 */
-			STORE_CHAR(ch, AT_NORMAL, rep, pos);
-		} else 
-		{
-			STORE_PRCHAR((char) ch, pos);
-		}
+		return store_control_char(ch, rep, pos);
 	} else if (utf_mode && ctldisp != OPT_ON && is_ubin_char(ch))
 	{
-		char *s;
-
-		s = prutfchar(ch);
-
+		char *s = prutfchar(ch);
 		if (column + (int) strlen(s) - 1 +
 		    pwidth(' ', binattr, 0) + attr_ewidth(binattr) > sc_width)
 			return (1);

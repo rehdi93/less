@@ -136,9 +136,6 @@ extern char *namelogfile;
 
 static int ch_addbuf();
 
-#if defined(WIN32)
-static void sleep(unsigned long sec) { Sleep(sec*1000); }
-#endif
 
 /*
  * Get the character pointed to by the read pointer.
@@ -312,8 +309,7 @@ read_more:
 				parg.p_string = wait_message();
 				ierror("%s", &parg);
 			}
-
-			sleep(1);
+	 		sleep_ms(2); /* Reduce system load */
 			slept = true;
 
 #if HAVE_STAT_INO

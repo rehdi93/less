@@ -16,6 +16,9 @@
 #include "less.h"
 #include <signal.h>
 #include <setjmp.h>
+#ifdef WIN32
+#include <windows.h>
+#endif
 #if HAVE_TIME_H
 #include <time.h>
 #endif
@@ -24,6 +27,11 @@
 #endif
 #if HAVE_VALUES_H
 #include <values.h>
+#endif
+
+#define USE_POLL (HAVE_POLL && !defined(WIN32) && !DOS_PLATFORM && !defined(__APPLE__))
+#if USE_POLL
+#include <poll.h>
 #endif
 
 /*
@@ -43,6 +51,27 @@ int reading;
 static jmp_buf read_label;
 
 extern int sigs;
+extern int ignore_eoi;
+#if !(defined WIN32 || defined DOS_PLATFORM)
+extern int tty;
+#endif
+
+#if USE_POLL
+/*
+ * Return true if one of the events has occurred on the specified file.
+ */
+	static int
+poll_events(fd, events)
+	int fd;
+	int events;
+{
+	struct pollfd poller = { fd, events, 0 };
+	int n = poll(&poller, 1, 0);
+	if (n <= 0)
+		return 0;
+	return (poller.revents & events);
+}
+#endif
 
 /*
  * Like read() system call, but is deliberately interruptible.
@@ -107,7 +136,25 @@ start:
 			return (-1);
 	}
 #endif
-
+#if USE_POLL
+	if (ignore_eoi)
+	{
+		if (poll_events(tty, POLLIN))
+		{
+			n = read(tty, buf, 1);
+			if (n > 0 && buf[0] == CONTROL('X'))
+			{
+				sigs |= S_INTERRUPT;
+				return (READ_INTR);
+			}
+		}
+		if (poll_events(fd, POLLERR|POLLHUP))
+		{
+			sigs |= S_INTERRUPT;
+			return (READ_INTR);
+		}
+	}
+#endif
 	n = read(fd, buf, len);
 
 #if 1
@@ -117,7 +164,6 @@ start:
 	 * start returning 0 forever, instead of -1.
 	 */
 	{
-		extern int ignore_eoi;
 		if (!ignore_eoi)
 		{
 			static int consecutive_nulls = 0;
@@ -182,18 +228,16 @@ time_t get_time()
 static char * strerror(err)
 	int err;
 {
-#if HAVE_SYS_ERRLIST
 	static char buf[16];
+#if HAVE_SYS_ERRLIST
 	extern char *sys_errlist[];
 	extern int sys_nerr;
   
 	if (err < sys_nerr)
 		return sys_errlist[err];
+#endif
 	sprintf(buf, "Error %d", err);
 	return buf;
-#else
-	return ("cannot open");
-#endif
 }
 #endif
 
@@ -315,3 +359,18 @@ int  isatty(f)
 }
 	
 #endif
+
+void sleep_ms(int ms)
+{
+#ifdef WIN32
+	Sleep(ms);
+#elif HAVE_NANOSLEEP
+	int sec = ms / 1000;
+	struct timespec t = { sec, (ms - sec*1000) * 1000000 };
+	nanosleep(&t, NULL);
+#elif HAVE_USLEEP
+	usleep(ms);
+#else
+	sleep((ms+999) / 1000);
+#endif
+}

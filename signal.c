@@ -51,6 +51,7 @@ static RETSIGTYPE u_interrupt(int type)
 	if (kbhit())
 		getkey();
 #endif
+	set_filter_pattern(NULL, 0);
 	if (reading)
 		intread(); /* May longjmp */
 }

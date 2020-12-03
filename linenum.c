@@ -232,6 +232,8 @@ static void longish()
  */
 static void abort_long()
 {
+	if (loopcount >= 0)
+		return;
 	if (linenums == OPT_ONPLUS)
 		/*
 		 * We were displaying line numbers, so need to repaint.
@@ -290,6 +292,7 @@ LINENUM find_linenum(POSITION pos)
 #if HAVE_TIME
 	startime = get_time();
 #endif
+	loopcount = 0;
 	if (p == &anchor || pos - p->prev->pos < p->pos - pos)
 	{
 		/*
@@ -298,7 +301,6 @@ LINENUM find_linenum(POSITION pos)
 		p = p->prev;
 		if (ch_seek(p->pos))
 			return (0);
-		loopcount = 0;
 		for (linenum = p->line, cpos = p->pos;  cpos < pos;  linenum++)
 		{
 			/*
@@ -330,7 +332,6 @@ LINENUM find_linenum(POSITION pos)
 		 */
 		if (ch_seek(p->pos))
 			return (0);
-		loopcount = 0;
 		for (linenum = p->line, cpos = p->pos;  cpos > pos;  linenum--)
 		{
 			/*
@@ -350,7 +351,7 @@ LINENUM find_linenum(POSITION pos)
 		 */
 		add_lnum(linenum, cpos);
 	}
-
+	loopcount = 0;
 	return (linenum);
 }
 

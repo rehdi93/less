@@ -69,6 +69,7 @@
 #define SRCH_NO_REGEX   (1 << 12) /* Don't use regular expressions */
 #define SRCH_FILTER     (1 << 13) /* Search is for '&' (filter) command */
 #define SRCH_AFTER_TARGET (1 << 14) /* Start search after the target line */
+#define SRCH_WRAP_AROUND (1 << 15) /* Wrap-around search (continue at BOF/EOF) */
 
 #define	SRCH_REVERSE(t)	(((t) & SRCH_FORW) ? \
 				(((t) & ~SRCH_FORW) | SRCH_BACK) : \
@@ -185,5 +186,10 @@
 
 #define	FAKE_HELPFILE	"@/\\less/\\help/\\file/\\@"
 #define FAKE_EMPTYFILE	"@/\\less/\\empty/\\file/\\@"
+
+/* ANSI states */
+#define ANSI_MID    1
+#define ANSI_ERR    2
+#define ANSI_END    3
 
 #endif

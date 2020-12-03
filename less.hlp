@@ -42,6 +42,7 @@
   ESC-n             *  Repeat previous search, spanning files.
   ESC-N             *  Repeat previous search, reverse dir. & spanning files.
   ESC-u                Undo (toggle) search highlighting.
+  ESC-U                Clear search highlighting.
   &_p_a_t_t_e_r_n          *  Display only matching lines.
         ---------------------------------------------------
         A search pattern may begin with one or more of:
@@ -50,6 +51,7 @@
         ^F or @  Start search at FIRST file (for /) or last file (for ?).
         ^K       Highlight matches, but don't move (KEEP position).
         ^R       Don't use REGULAR EXPRESSIONS.
+        ^W       WRAP search if no match found.
  ---------------------------------------------------------------------------
 
                            JJUUMMPPIINNGG
@@ -244,5 +246,3 @@
  TAB ...................................... Complete filename & cycle.
  SHIFT-TAB ...................... ESC-TAB   Complete filename & reverse cycle.
  ctrl-L ................................... Complete filename, list all.
-
-

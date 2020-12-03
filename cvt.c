@@ -60,6 +60,7 @@ void cvt_text(char *odst, char *osrc, int *chpos, int *lenp, int ops)
 	{
 		int src_pos = (int) (src - osrc);
 		int dst_pos = (int) (dst - odst);
+		struct ansi_state *pansi;
 		ch = step_char(&src, +1, src_end);
 		if ((ops & CVT_BS) && ch == '\b' && dst > odst)
 		{
@@ -68,13 +69,16 @@ void cvt_text(char *odst, char *osrc, int *chpos, int *lenp, int ops)
 				dst--;
 			} while (dst > odst && utf_mode &&
 				!IS_ASCII_OCTET(*dst) && !IS_UTF8_LEAD(*dst));
-		} else if ((ops & CVT_ANSI) && IS_CSI_START(ch))
+		} else if ((ops & CVT_ANSI) && (pansi = ansi_start(ch)) != NULL)
 		{
 			/* Skip to end of ANSI escape sequence. */
-			src++;  /* skip the CSI start char */
 			while (src < src_end)
-				if (!is_ansi_middle(*src++))
+			{
+				if (ansi_step(pansi, ch) != ANSI_MID)
 					break;
+				ch = *src++;
+			}
+			ansi_done(pansi);
 		} else
 		{
 			/* Just copy the char to the destination buffer. */
