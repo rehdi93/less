@@ -7,6 +7,7 @@
 #include "lessdef.h"
 #include "lesslib.h"
 #include "pattern.h"
+#include "functions.h"
 
 extern int caseless;
 extern int utf_mode;

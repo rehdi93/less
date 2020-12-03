@@ -57,3 +57,11 @@ extern int reg_show_error;
 #define PATTERN_TYPE          void *
 #define CLEAR_PATTERN(name)   
 #endif
+
+
+int compile_pattern(char *pattern, int search_type, PATTERN_TYPE *comp_pattern);
+void uncompile_pattern(PATTERN_TYPE *pattern);
+int valid_pattern(char *pattern);
+int is_null_pattern(PATTERN_TYPE pattern);
+int match_pattern(PATTERN_TYPE pattern, char *tpattern, char *line, int line_len, char **sp, char **ep, int notbol, int search_type);
+char* pattern_lib_name();
