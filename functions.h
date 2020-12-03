@@ -225,7 +225,7 @@ void plinenum (POSITION pos);
 void pshift_all (void);
 int is_ansi_end (LWCHAR ch);
 int is_ansi_middle (LWCHAR ch);
-void skip_ansi (char **pp, const char *limit);
+void skip_ansi (struct ansi_state *pansi, char **pp, const char *limit);
 int pappend (int c, POSITION pos);
 int pflushmbc (void);
 void pdone (int endline, int chopped, int forw);
@@ -235,6 +235,9 @@ void null_line (void);
 POSITION forw_raw_line (POSITION curr_pos, char **linep, int *line_lenp);
 POSITION back_raw_line (POSITION curr_pos, char **linep, int *line_lenp);
 int rrshift (void);
+struct ansi_state *ansi_start(LWCHAR ch);
+int ansi_step(struct ansi_state *pansi, LWCHAR ch);
+void ansi_done(struct ansi_state *pansi);
 
 /* linenum.c */
 void clr_linenum (void);
@@ -311,6 +314,7 @@ time_t get_time (void);
 char * errno_message (char *filename);
 int percentage (POSITION num, POSITION den);
 POSITION percent_pos (POSITION pos, int percent, long fraction);
+void sleep_ms(int ms);
 
 /* output.c */
 void put_line (void);
@@ -346,7 +350,7 @@ char * wait_message (void);
 void init_search (void);
 void repaint_hilite (int on);
 void clear_attn (void);
-void undo_search (void);
+void undo_search (int clear);
 void clr_hlist (struct hilite_tree *anchor);
 void clr_hilite (void);
 void clr_filter (void);

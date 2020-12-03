@@ -858,7 +858,7 @@ int pappend(int c, POSITION pos)
 	return (r);
 }
 
-static int do_append(LWCHAR ch, char *rep, POSITION pos)
+static int store_control_char(LWCHAR ch, char *rep, POSITION pos)
 {
 	if (ctldisp == OPT_ON)
 	{
