@@ -21,7 +21,7 @@ force_compose.update(range(0xd7cb, 0xd7fb +1))
 
 ucharInfo = namedtuple('ucharInfo', ['codepoint', 'type'])
 
-def print_uni_file(datafile):
+def make_uni_file(datafile):
     ucharacters = []
 
     for line in datafile:
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     TYPE_NAMES = set(arguments.types)
 
     try:
-        print_uni_file(arguments.datafile)
+        make_uni_file(arguments.datafile)
     except KeyboardInterrupt:
         pass
     except Exception as e:

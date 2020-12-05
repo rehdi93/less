@@ -134,7 +134,7 @@ int binattr = AT_STANDOUT;
  *	b binary character
  *	c control character
  */
-static void ichardef(s) char *s;
+static void ichardef(char *s)
 {
 	char *cp;
 	int n;
@@ -189,7 +189,7 @@ static void ichardef(s) char *s;
  * Define a charset, given a charset name.
  * The valid charset names are listed in the "charsets" array.
  */
-static int icharset(name, no_error) char *name; int no_error;
+static int icharset(char *name, int no_error)
 {
 	struct charset *p;
 	struct cs_alias *a;
