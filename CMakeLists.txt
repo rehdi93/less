@@ -34,30 +34,46 @@ set(LESSKEYFILE_SYS "sysless" CACHE STRING "Filename of the system-wide lesskey 
 set(DEF_LESSKEYINFILE ".lesskey" CACHE STRING "Filename of the default lesskey input (in the HOME directory).")
 set(LESSHISTFILE ".lesshst" CACHE STRING "Filename of the history file (in the HOME directory).")
 set(REGEX_LIBRARY regcomp-local CACHE STRING "Select what regular expression library to use ([regcomp-local],posix,pcre2,off).")
+option(USE_PYTHON "Use python instead of perl to generate files" OFF)
 
 set(SECURE ${SECURE_COMPILE})
 
-# generate files ONLY if needed
 find_package(Perl)
-macro(perl_generate filename COMMAND script)
-    find_file(location ${filename} ${CMAKE_SOURCE_DIR} NO_DEFAULT_PATH)
-    if(NOT location)
-        set(genfile ${CMAKE_SOURCE_DIR}/${filename})
+find_package(Python3)
+
+if(PERL_FOUND AND NOT USE_PYTHON)
+    set(generator ${PERL_EXECUTABLE})
+    set(USE_PERL true)
+elseif(Python3_FOUND)
+    set(generator ${Python3_EXECUTABLE})
+else()
+    set(generator generator-NOTFOUND)
+endif()
+
+message("Generator: ${generator}")
+
+function(generate_file_cmd  outputfile basedir COMMAND exe script)
+    set(location ${basedir}/${outputfile})
+    if(NOT EXISTS location)
+        set(genfile ${basedir}/${outputfile})
         add_custom_command(OUTPUT ${genfile}
-            DEPENDS ${PERL_EXECUTABLE} ${script}
-            COMMAND ${PERL_EXECUTABLE} ${script} ${ARGN}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            DEPENDS ${exe} ${script}
+            COMMAND ${exe} ${script} ${ARGN}
+            WORKING_DIRECTORY ${basedir}
             COMMENT "Generating ${genfile} ..."
         )
     else()
         set(genfile ${location})
     endif()
-    
-    list(APPEND generated_files ${genfile})
-    unset(location CACHE)
-endmacro()
+endfunction()
 
-perl_generate(help.c COMMAND mkhelp.pl < "less.hlp" > help.c)
+if(USE_PERL)
+    set(script mkhelp.pl)
+else()
+    set(script mkhelp.py)
+endif()
+
+generate_file_cmd(help.c ${CMAKE_SOURCE_DIR} COMMAND ${generator} ${script} < "less.hlp" > help.c)
 
 
 set(LESS_SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
