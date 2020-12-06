@@ -41,7 +41,6 @@
 #define HAVE_UPPER_LOWER 1
 #define HAVE_WCTYPE 1
 #define HAVE_WCTYPE_H 1
-#define HAVE_REALLOC 1
 
 /*
  * Sizes of various buffers.

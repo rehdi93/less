@@ -117,6 +117,7 @@ char *getenv();
 off_t lseek();
 void* calloc();
 void free();
+void* realloc();
 #endif
 #if !HAVE_STDBOOL_H
 enum boolean { false, true };

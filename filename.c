@@ -688,22 +688,12 @@ char* lglob(char* filename)
 				 * Allocate a bigger one.
 				 */
 				len *= 2;
-#if HAVE_REALLOC
 				p = (char*) realloc(gfilename, len*sizeof(char));
 				if (p == NULL) {
 					error_("Cannot allocate memory");
 					quit(QUIT_ERROR);
 				}
-
 				gfilename = p;
-#else
-				*p = '\0';
-				p = (char *) ecalloc(len, sizeof(char));
-				strcpy(p, gfilename);
-				free(gfilename);
-				gfilename = p;
-				p = gfilename + strlen(gfilename);
-#endif
 			}
 			strcpy(p, qfilename);
 			free(qfilename);

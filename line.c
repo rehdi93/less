@@ -103,14 +103,9 @@ static int expand_linebuf()
 	/* Double the size of the line buffer. */
 	int new_size = size_linebuf * 2;
 
-	/* Just realloc to expand the buffer, if we can. */
-#if HAVE_REALLOC
+	/* Just realloc to expand the buffer. */
 	char *new_buf = (char *) realloc(linebuf, new_size);
 	char *new_attr = (char *) realloc(attr, new_size);
-#else
-	char *new_buf = (char *) calloc(new_size, sizeof(char));
-	char *new_attr = (char *) calloc(new_size, sizeof(char));
-#endif
 	if (new_buf == NULL || new_attr == NULL)
 	{
 		if (new_attr != NULL)
@@ -119,15 +114,7 @@ static int expand_linebuf()
 			free(new_buf);
 		return 1;
 	}
-#if !HAVE_REALLOC
-	/*
-	 * We just calloc'd the buffers; copy the old contents.
-	 */
-	memcpy(new_buf, linebuf, size_linebuf * sizeof(char));
-	memcpy(new_attr, attr, size_linebuf * sizeof(char));
-	free(attr);
-	free(linebuf);
-#endif
+
 	linebuf = new_buf;
 	attr = new_attr;
 	size_linebuf = new_size;
