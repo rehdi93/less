@@ -3,25 +3,27 @@
 // Shared routines bettween the tools
 
 #include "lesslib.h"
+#include "functions.h"
 
 /*
  * Skip leading spaces in a string.
  */
-char* skipsp(char *s)
+char *skipsp(char *s)
 {
-  while (IS_SPACE(*s)) s++;
-  return s;
+	while (IS_SPACE(*s))
+		s++;
+	return s;
 }
 
 /*
  * Skip non-space characters in a string.
  */
-char* skipnsp(char *s)
+char *skipnsp(char *s)
 {
-  while (!IS_SPACE(*s)) s++;
-  return (s);
+	while (!IS_SPACE(*s))
+		s++;
+	return (s);
 }
-
 
 #ifdef WIN32
 /*
@@ -32,23 +34,23 @@ char* skipnsp(char *s)
 */
 char *win32_get_home()
 {
-  char *home = getenv("USERPROFILE");
-  if (home != NULL)
-  {
-    return home;
-  }
-  else
-  {
-    char *drive = getenv("HOMEDRIVE");
-    char *path = getenv("HOMEPATH");
-    if (drive != NULL && path != NULL)
-    {
-      home = (char *)calloc(strlen(drive) + strlen(path) + 1, sizeof(char));
-      strcpy(home, drive);
-      strcat(home, path);
-    }
-    return home;
-  }
+	char *home = getenv("USERPROFILE");
+	if (home != NULL)
+	{
+		return home;
+	}
+	else
+	{
+		char *drive = getenv("HOMEDRIVE");
+		char *path = getenv("HOMEPATH");
+		if (drive != NULL && path != NULL)
+		{
+			home = (char *)calloc(strlen(drive) + strlen(path) + 1, sizeof(char));
+			strcpy(home, drive);
+			strcat(home, path);
+		}
+		return home;
+	}
 }
 
 #endif

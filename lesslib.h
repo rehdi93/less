@@ -208,7 +208,6 @@ int os9_signal (int type, RETSIGTYPE (*handler)());
 #ifndef SEEK_END
 #define SEEK_END 2
 #endif
-
 #ifndef CHAR_BIT
 #define CHAR_BIT 8
 #endif

@@ -1,5 +1,5 @@
-/* Cmake definition file for less.  */
-/* 
+/* Cmake definition file for less.
+
     This file has 3 sections:
     - Global settings.
     - Platform specific settings.
@@ -13,11 +13,8 @@
 
 /* 
     Legacy checks you don't need to worry about.
-    
-    If you're using Cmake at all, your compiler's most likely C99+ compliant.
+    If you're using Cmake at all, your compiler's likely C99+ compliant.
 */
-#define HAVE_ANSI_PROTOS 1
-#define HAVE_CONST 1
 #define HAVE_CTYPE_H 1
 #define HAVE_ERRNO 1
 #define HAVE_ERRNO_H 1
