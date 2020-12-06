@@ -189,6 +189,7 @@ AC_C_CONST
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
+AC_HEADER_STDBOOL
 
 # Autoheader templates for symbols defined later by AC_DEFINE.
 AH_TEMPLATE([HAVE_GNU_REGEX],
@@ -235,6 +236,8 @@ AH_TEMPLATE([MUST_DEFINE_OSPEED],
 	[Define MUST_DEFINE_OSPEED if you have ospeed but it is not defined in termcap.h.])
 AH_TEMPLATE([HAVE_LOCALE],
 	[Define HAVE_LOCALE if you have locale.h and setlocale.])
+AH_TEMPLATE([HAVE_LANGINFO],
+  [Define HAVE_LANGINFO if you have nl_langinfo.])
 AH_TEMPLATE([HAVE_TERMIOS_FUNCS],
 	[Define HAVE_TERMIOS_FUNCS if you have tcgetattr/tcsetattr.])
 AH_TEMPLATE([HAVE_UPPER_LOWER],
