@@ -128,10 +128,7 @@ static void win32_deinit_term();
 #define FG_COLORS       (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY)
 #define BG_COLORS       (BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_INTENSITY)
 #define	MAKEATTR(fg,bg)		((WORD)((fg)|((bg)<<4)))
-#define SETCOLORS(fg,bg) { \
-	curr_attr = MAKEATTR(fg,bg); \
-	if (SetConsoleTextAttribute(con_out, curr_attr) == 0) \
-			error("SETCOLORS failed", NULL_PARG); }
+#define SETCOLORS(fg,bg) WIN32setcolors(fg,bg)
 #endif
 
 #if !UNIX
@@ -2389,7 +2386,9 @@ char WIN32getch()
  */
 void WIN32setcolors(int fg, int bg)
 {
-	SETCOLORS(fg, bg);
+	curr_attr = MAKEATTR(fg,bg);
+	if (SetConsoleTextAttribute(con_out, curr_attr) == 0)
+			error_("SETCOLORS failed");
 }
 
 /*
