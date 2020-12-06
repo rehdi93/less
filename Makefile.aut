@@ -34,7 +34,7 @@ DISTFILES = \
 	${SRC} regexp.c regexp.h \
 	COPYING INSTALL LICENSE Makefile.in Makefile.aut NEWS README \
 	configure.ac lesskey.c lessecho.c scrsize.c \
-	charset.h cmd.h functions.h lglob.h less.h lesslib.h lessdef.h lesspoly.h lesskey.h option.h \
+	charset.h cmd.h functions.h lglob.h less.h lesslib.h lessdef.h lesskey.h option.h \
 	pckeys.h pattern.h position.h os_defs.h \
 	install.sh defines.h.in mkinstalldirs \
 	less.nro less.man lesskey.nro lesskey.man lessecho.nro lessecho.man \
