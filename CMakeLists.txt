@@ -65,7 +65,7 @@ function(generate_file_cmd  filename)
     message(DEBUG "generating '${filename}' using '${exe}'")
 
     if(NOT EXISTS ${output})
-        message("${output} not found.")
+        message(STATUS "${output} not found.")
         add_custom_command(OUTPUT ${output}
             DEPENDS ${exe} ${script}
             COMMAND ${Gen_COMMAND}
@@ -75,7 +75,7 @@ function(generate_file_cmd  filename)
         # don't remove file when cleaning
         set_source_files_properties(${output} PROPERTIES GENERATED no)
     else()
-        message("${filename} found")
+        message(STATUS "${filename} found")
     endif()
 endfunction()
 
@@ -131,7 +131,8 @@ if(UNIX)
 endif()
 
 # find terminal libraries
-find_package(Curses) # curses or ncurses
+# check in the same order as in configure.ac: tinfo, then curses, then termcap
+find_package(Curses QUIET) # curses or ncurses
 find_library(TINFO_LIB NAMES tinfo libtinfo.so libtinfo.so.5)
 find_library(TERMCAP_LIB NAMES termcap libtermcap.so)
 
@@ -151,35 +152,32 @@ else()
     set(TERMINAL_LIBRARY NOTFOUND)
 endif()
 
-message(STATUS "terminal lib: ${TERMINAL_LIBRARY}")
-
-if(NOT TERMINAL_LIBRARY)
-    message(SEND_ERROR "Cannot find terminal libraries")
+if(TERMINAL_LIBRARY)
+    message(STATUS "terminal lib: ${TERMINAL_LIBRARY}")
+else()
+    message(SEND_ERROR "Cannot find terminal library")
 endif()
 
 # find regex library
-if(REGEX_LIBRARY MATCHES regcomp-local)
+if(REGEX_LIBRARY STREQUAL regcomp-local)
     target_sources(less PRIVATE ${CMAKE_SOURCE_DIR}/regexp.c)
     set(HAVE_V8_REGCOMP true)
     set(HAVE_REGEXEC2 true)
-    set(found yes)
-elseif(REGEX_LIBRARY MATCHES posix)
-    set(found HAVE_POSIX_REGCOMP)
-elseif(REGEX_LIBRARY MATCHES pcre2)
+elseif(REGEX_LIBRARY STREQUAL posix)
+    # no action needed, I think...
+elseif(REGEX_LIBRARY STREQUAL pcre2)
     find_library(pcre2_lib NAMES pcre2 libpcre2-8.so libpcre2-8.so.0)
     if(pcre2_lib)
         set(HAVE_PCRE2 true)
         target_link_libraries(less PRIVATE ${pcre2_lib})
-        set(found yes)
     endif()
-elseif(NOT REGEX_LIBRARY)
+elseif(REGEX_LIBRARY STREQUAL off)
     set(NO_REGEX true)
-    set(found yes)
 endif()
 
-message(STATUS "regex lib: ${REGEX_LIBRARY}")
-
-if(NOT found)
+if(REGEX_LIBRARY OR NO_REGEX)
+    message(STATUS "regex lib: ${REGEX_LIBRARY}")
+else()
     message("Cannot find regex lib")
     set(REGEX_LIBRARY NOTFOUND)
 endif()
