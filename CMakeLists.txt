@@ -41,39 +41,50 @@ set(SECURE ${SECURE_COMPILE})
 find_package(Perl)
 find_package(Python3)
 
-if(PERL_FOUND AND NOT USE_PYTHON)
-    set(generator ${PERL_EXECUTABLE})
-    set(USE_PERL true)
-elseif(Python3_FOUND)
-    set(generator ${Python3_EXECUTABLE})
-else()
-    set(generator generator-NOTFOUND)
-endif()
+# generate_file_cmd (filename COMMAND exe script [OUT] [DIR basedir=CMAKE_SOURCE_DIR])
+# add a custom command to generate a file, but only if it doesn't exist.
+# if 'OUT' is specified, ${filename} is appended to the COMMAND
+function(generate_file_cmd  filename)
+    cmake_parse_arguments(Gen "OUT" "DIR" "COMMAND" ${ARGN})
+    if(NOT Gen_DIR)
+        set(Gen_DIR ${CMAKE_SOURCE_DIR})
+    endif()
 
-message("Generator: ${generator}")
+    set(output ${Gen_DIR}/${filename})
 
-function(generate_file_cmd  outputfile basedir COMMAND exe script)
-    set(location ${basedir}/${outputfile})
-    if(NOT EXISTS location)
-        set(genfile ${basedir}/${outputfile})
-        add_custom_command(OUTPUT ${genfile}
-            DEPENDS ${exe} ${script}
-            COMMAND ${exe} ${script} ${ARGN}
-            WORKING_DIRECTORY ${basedir}
-            COMMENT "Generating ${genfile} ..."
-        )
+    if(Gen_COMMAND)
+        if(Gen_OUT)
+            list(APPEND Gen_COMMAND ${output})
+        endif()
     else()
-        set(genfile ${location})
+        message(SEND_ERROR "Command required")
+    endif()
+
+    list(GET Gen_COMMAND 0 exe)
+    list(GET Gen_COMMAND 1 script)
+    message(DEBUG "generating '${filename}' using '${exe}'")
+
+    if(NOT EXISTS ${output})
+        message("${output} not found.")
+        add_custom_command(OUTPUT ${output}
+            DEPENDS ${exe} ${script}
+            COMMAND ${Gen_COMMAND}
+            WORKING_DIRECTORY ${Gen_DIR}
+            COMMENT "Generating ${output} ..."
+        )
+        # don't remove file when cleaning
+        set_source_files_properties(${output} PROPERTIES GENERATED no)
+    else()
+        message("${filename} found")
     endif()
 endfunction()
 
-if(USE_PERL)
-    set(script mkhelp.pl)
+# generated files
+if(PERL_FOUND AND NOT USE_PYTHON)
+    generate_file_cmd(help.c COMMAND ${PERL_EXECUTABLE} mkhelp.pl < "less.hlp" > OUT)
 else()
-    set(script mkhelp.py)
+    generate_file_cmd(help.c COMMAND ${Python3_EXECUTABLE} mkhelp.py < "less.hlp" > OUT)
 endif()
-
-generate_file_cmd(help.c ${CMAKE_SOURCE_DIR} COMMAND ${generator} ${script} < "less.hlp" > help.c)
 
 
 set(LESS_SRC main.c screen.c brac.c ch.c charset.c cmdbuf.c
